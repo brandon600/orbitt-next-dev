@@ -45,6 +45,7 @@ const RewardForm: React.FC = () => {
         />
       </div>
       <DropdownField
+      label = 'sdkfmksldfksmdfl'
       value={rewardValue}
       onChange={(value) => setRewardValue(value)}
         />
