@@ -36,14 +36,11 @@ const RewardForm: React.FC = () => {
         value={rewardName}
         onChange={(value) => setRewardName(value)}
       />
-      <div>
-        <label>Reward Cost</label>
-        <input
-          type="text"
-          value={rewardCost}
-          onChange={(e) => setRewardCost(e.target.value)}
-        />
-      </div>
+      <InputField
+        label="Reward Cost"
+        value={rewardCost}
+        onChange={(value) => setRewardCost(value)}
+      />
       <DropdownField
       label = 'sdkfmksldfksmdfl'
       value={rewardValue}
