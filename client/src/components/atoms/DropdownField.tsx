@@ -71,8 +71,8 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
   required,
 }) => {
   return (
-    <div>
-      {label && <label>{label}</label>}
+    <DropdownFieldContainer>
+      {label && <DropdownFieldLabel>{label}</DropdownFieldLabel>}
       <DropdownFieldSelect
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -87,7 +87,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
         required={required} // Add the 'required' attribute conditionally
       >
       </select>
-    </div>
+    </DropdownFieldContainer>
   );
 };
 
