@@ -14,7 +14,7 @@ position: absolute;
 const SlideoutModal = ({ onClose }: { onClose: () => void }) => {
     return (
         <div>
-      <Overlay />
+        <Overlay />
         <button onClick={onClose}>Close</button>
         <RewardForm />
       </div>
