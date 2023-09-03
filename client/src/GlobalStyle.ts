@@ -3,6 +3,8 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   body {
+    display: flex;
+    margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
     color: #333;
