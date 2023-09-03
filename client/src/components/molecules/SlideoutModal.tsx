@@ -1,6 +1,6 @@
 import React, { CSSProperties, ReactNode, PropsWithChildren, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { Colors } from '../../constants/Colors';
+import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Overlay from '../atoms/Overlay';
 import RewardForm from '../organism/RewardForm';

@@ -1,6 +1,6 @@
 //Colors to be used in the app
 
-export const Colors = {
+const Colors = {
     primary100: '#FAFDFF',
     primary200: '#B8E0FF',
     primary300: '#7AC1FF',
@@ -67,3 +67,5 @@ export const Colors = {
     shades100: '#FFFFFF',
     shades900: '#000000'
 };
+
+export default Colors;
