@@ -9,6 +9,7 @@ function DataDisplay() {
   React.useEffect(() => {
     fetchData(); // Fetch data when the component mounts
   }, []);
+  console.log(data);
   return (
     <div>
       <h2>Data Display</h2>

@@ -6,9 +6,13 @@ import Button from '../components/atoms/Button';
 import RewardTableHead from '@/components/atoms/RewardTableHead';
 import TriggeredReward from '@/components/molecules/TriggeredReward';
 import RewardItem from '@/components/molecules/RewardItem';
-import { Colors } from '@/constants/Colors';
+import RewardOfferings from '@/components/organism/RewardOfferings';
+import Colors from '@/constants/Colors';
 import React, { useState } from 'react';
 import SlideoutModal from '@/components/molecules/SlideoutModal';
+import { mockRewardData } from '@/components/organism/RewardOfferings';
+import GlobalStyle from '../GlobalStyle';
+
 
 const OfferingSettingsAndButtons = styled.div`
  @media ${StyledMediaQuery.XS} {
@@ -26,7 +30,7 @@ const FlexDiv = styled.div`
  background: ${Colors.primary100};
 `
 
-export default function Home() {
+export default function Rewards() {
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
     const handleOverlayOpen = () => {
@@ -46,10 +50,12 @@ export default function Home() {
            {/* Render the overlay when isOverlayOpen is true */}
       {isOverlayOpen && <SlideoutModal onClose={handleOverlayClose} />}
       <FlexDiv>
+        <GlobalStyle />
         <Text
             text='Rewards'
         >
         </Text>
+        <DataDisplay />
         <Button
             typeVariant='primary'
             sizeVariant='large'
@@ -57,15 +63,10 @@ export default function Home() {
             widthVariant='fill'
             onClick={handleOverlayOpen}
         />
-      <RewardTableHead 
-        label1='Rewards'
-        label2='Cost'
-        label3='Terms'
-        label4='Active'
-        label5='Edit'
-    />
         <TriggeredReward />
-        <RewardItem />
+        <RewardOfferings
+            rewardsData={mockRewardData}
+         />
       </FlexDiv>
     </main>
   )

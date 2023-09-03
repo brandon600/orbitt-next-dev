@@ -1,12 +1,21 @@
 import React, { CSSProperties, ReactNode, PropsWithChildren, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { Colors } from '../../constants/Colors';
+import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Text from '../subatomic/Text'
 import Button from '../atoms/Button';
 
+// Define the props interface for RewardItem
+interface RewardItemProps {
+    // Define the types for your props here
+    rewardName: string;
+    rewardCost: number;
+    rewardValue: string;
+    rewardNotes: string;
+    // Add other props as needed
+  }
 
-const RewardItem = styled.div`
+const RewardItemContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
         width: 100%;
@@ -22,7 +31,8 @@ const RewardItem = styled.div`
     }
 
     @media ${StyledMediaQuery.L} {
-        gap: 20px 0px;
+        padding: 20px 0px;
+        gap: 24px;
     }
 `
 
@@ -122,6 +132,13 @@ const RewardNotes = styled.div`
         width: 160px;
         align-items: center;
         flex-shrink: 0;
+
+        p {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 19px;
+            color: ${Colors.neutral700};
+        }
     }
 
     @media ${StyledMediaQuery.L} {
@@ -157,44 +174,44 @@ const RewardEdit = styled.div`
 `
 
 
-const TriggeredReward: React.FC = () => {
+// Define the type for the RewardItem component itself
+const RewardItem: React.FC<RewardItemProps> = ({
+    rewardName,
+    rewardValue,
+    rewardCost,
+    rewardNotes,
+  }) => {
     const handleClick = () => {
-        console.log('handle click');
-    }
-
+      console.log('handle click');
+    };
+  
     return (
-      <RewardItem>
-            <RewardNameAndValue>
-                <h6>Test Reward</h6>
-                <Text 
-                    text="RewardTest"
-                />
-            </RewardNameAndValue>
-            <RewardCost>
-                <Text
-                    text='0'
-                />
-            </RewardCost>
-            <RewardNotes>
-                <Text
-                    text='Notes for reward go here'
-                />
-            </RewardNotes>
-            <RewardActive>
-
-            </RewardActive>
-            <RewardEdit>
-            <Button
-            typeVariant='neutral'
-            sizeVariant='small'
-            label='Edit'
-            widthVariant='content'
+      <RewardItemContainer>
+        <RewardNameAndValue>
+          <h6>{rewardName}</h6>
+          <Text text={rewardValue} />
+        </RewardNameAndValue>
+        <RewardCost>
+          <Text text={rewardCost.toString()} />
+        </RewardCost>
+        <RewardNotes>
+          <Text text={rewardNotes} />
+        </RewardNotes>
+        <RewardActive></RewardActive>
+        <RewardEdit>
+          <Button
+            typeVariant="neutral"
+            sizeVariant="small"
+            label="Edit"
+            widthVariant="content"
             onClick={handleClick}
-        />
-            </RewardEdit>
-        </RewardItem>
+          />
+        </RewardEdit>
+      </RewardItemContainer>
     );
   };
-
   
-  export default TriggeredReward;
+export default RewardItem;
+  
+  
+  

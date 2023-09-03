@@ -9,7 +9,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const {ensureAuthenticated} = require('./helpers/auth');
-const Nexmo = require('nexmo');
 const socketio = require('socket.io');
 
 const cron = require('node-cron');
