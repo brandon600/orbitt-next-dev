@@ -1,7 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import Colors from '../../constants/Colors';
-import Text from '../subatomic/Text'
 
 interface ButtonProps {
   label: string;
