@@ -2,8 +2,8 @@
   "/api/data": "pages/api/data.js",
   "/page": "pages/page.html",
   "/rewards": "pages/rewards.html",
-  "/layout": "pages/layout.html",
   "/_app": "pages/_app.js",
+  "/layout": "pages/layout.html",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/404": "pages/404.html"
