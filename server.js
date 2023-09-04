@@ -43,10 +43,12 @@ mongoose.connect(db.mongoURI, {
 require('./models/Customer');
 require('./models/User');
 require('./models/Reward');
+require('./models/OutboundReward');
 
 const Customer = mongoose.model('customers');
 const User = mongoose.model('users');
 const Reward = mongoose.model('rewards');
+const OutboundReward = mongoose.model('outboundRewards');
 
 // Define the route to fetch user information
 app.get('/api/users/:userId', (req, res) => {
@@ -151,6 +153,7 @@ app.use(
   );
 
 require('./routes/customerInfoRoutes')(app);
+require('./routes/rewardRoutes')(app);
 
 //Passport Config
 require('./config/passport')(passport);

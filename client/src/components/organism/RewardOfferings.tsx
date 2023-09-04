@@ -5,17 +5,8 @@ import StyledMediaQuery from '@/constants/StyledMediaQuery';
 import { styled } from 'styled-components';
 import Colors from '@/constants/Colors';
 import RewardTableHead from '@/components/atoms/RewardTableHead';
+import { RewardData } from '@/types/RewardData';
 
-// Define a type for the data that your organism will receive
-interface RewardData {
-  id: number;
-  name: string;
-  value: string;
-  cost: number;
-  notes: string;
-  active: boolean;
-  // Add other properties as needed
-}
 
 interface RewardOfferingsProps {
   rewardsData: RewardData[]; // An array of RewardData objects
@@ -84,35 +75,12 @@ const RewardOfferingList = styled.div`
     }
 `
 
-export const mockRewardData: RewardData[] = [
-    {
-      id: 1,
-      name: 'Reward 1',
-      value: 'Free Item',
-      cost: 10,
-      notes: 'Notes for Reward 1',
-      active: true
-    },
-    {
-      id: 2,
-      name: 'Reward 2',
-      value: 'Free Item',
-      cost: 20,
-      notes: 'Notes for Reward 2',
-      active: true
-    },
-    {
-      id: 3,
-      name: 'Reward 3',
-      value: 'Free Item',
-      cost: 15,
-      notes: 'Notes for Reward 3',
-      active: false
-    },
-    // Add more objects as needed
-  ];
-
 const RewardOfferings: React.FC<RewardOfferingsProps> = ({ rewardsData }) => {
+    console.log(rewardsData)
+    if (!rewardsData) {
+        // Handle the case when rewardsData is not defined (e.g., still loading)
+        return <p>Loading...</p>; // You can display a loading message or spinner
+      }
   return (
     <RewardOfferingsContainer>
         <HeadingPlusSubheading>
@@ -136,11 +104,11 @@ const RewardOfferings: React.FC<RewardOfferingsProps> = ({ rewardsData }) => {
             <RewardItem
             key={reward.id} // Make sure to provide a unique key for each item
             // Pass the data to the RewardItem component as props
-            rewardName={reward.name}
-            rewardValue={reward.value}
-            rewardCost={reward.cost}
-            rewardNotes={reward.notes}
-            rewardActive={reward.active}
+            rewardName={reward.rewardName}
+            rewardValue={reward.rewardValue}
+            rewardCost={reward.rewardCost}
+            rewardNotes={reward.rewardTerms}
+            rewardActive={reward.rewardActive}
             // Add other props as needed
             />
         ))}

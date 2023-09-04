@@ -63,15 +63,20 @@ zustand__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (a
 // store.ts
 
 const initialData = {
-  userid: '' // Provide an initial value for userid
-  // Add initial values for other properties as needed
+  rewards: [],
+  defaultRewards: [],
+  userid: '' // Add initial values for other properties as needed
 
 };
 const useStore = (0,zustand__WEBPACK_IMPORTED_MODULE_0__["default"])(set => ({
   data: initialData,
   fetchData: async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/users'); // Replace with your API endpoint
+      const response = await fetch('http://localhost:5000/api/users');
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
 
       const data = await response.json();
       set({
@@ -79,7 +84,7 @@ const useStore = (0,zustand__WEBPACK_IMPORTED_MODULE_0__["default"])(set => ({
       });
       console.log(data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching data:', error.message);
     }
   }
 }));
