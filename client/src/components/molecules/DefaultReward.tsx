@@ -3,11 +3,13 @@ import styled, { css } from 'styled-components';
 import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Text from '../subatomic/Text'
+import ToggleSwitch from '../atoms/ToggleSwitch';
 
 interface DefaultRewardItemProps {
     // Define the types for your props here
     defaultRewardName: string;
     defaultRewardValue: number;
+    defaultRewardActive: boolean;
   }
 
 const TriggeredRewardContainer = styled.div`
@@ -145,15 +147,27 @@ const PointsDiv = styled.div`
         }
     }
 `
+
+const ActiveDiv = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+    }
+`
   
   // ... Your RewardTableHead components here ...
   
   const DefaultReward: React.FC<DefaultRewardItemProps> = ({
     defaultRewardName,
     defaultRewardValue,
+    defaultRewardActive
   }) => {
     const handleClick = () => {
       console.log('handle click');
+    };
+    const [isDefaultActive, setIsDefaultActive] = useState(defaultRewardActive);
+
+    const handleToggle = (active: boolean) => {
+      setIsDefaultActive(active);
     };
     return (
       <TriggeredRewardContainer>
@@ -169,6 +183,12 @@ const PointsDiv = styled.div`
                 <PointsDiv>
                     <Text text='point(s)' />
                 </PointsDiv>
+                <ActiveDiv
+                >
+                <ToggleSwitch 
+                    active={isDefaultActive} onChange={handleToggle} 
+                />
+                </ActiveDiv>
             </RewardInfo>
         </RewardInfoPlusToggle>
       </TriggeredRewardContainer>

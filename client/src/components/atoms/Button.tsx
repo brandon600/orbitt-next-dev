@@ -100,6 +100,7 @@ const ButtonComponent = styled.button<ButtonComponentProps>`
 const Button: React.FC<ButtonProps> = ({ label, onClick, typeVariant = 'primary', sizeVariant = 'large', widthVariant='content', ...rest }) => {
   return (
     <ButtonComponent 
+      as="button"
       onClick={onClick}
       typeVariant={typeVariant}
       sizeVariant={sizeVariant}

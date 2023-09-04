@@ -24,13 +24,15 @@ const OfferingSettingsAndButton = styled.div`
 `
 
 const FlexDiv = styled.div`
- display: flex;
- gap: 32px;
- flex-direction: column;
- padding: 24px 16px;
- width: 100vw;
- box-sizing: border-box;
- background: ${Colors.primary100};
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    gap: 32px;
+    flex-direction: column;
+    padding: 24px 16px;
+    width: 100vw;
+    box-sizing: border-box;
+    background: ${Colors.primary100};
+}
 `
 
 const RewardsPageTitle = styled.div`
