@@ -7,11 +7,16 @@ import RewardTableHead from '@/components/atoms/RewardTableHead';
 import RewardSettings from '@/components/organism/RewardSettings';
 import RewardOfferings from '@/components/organism/RewardOfferings';
 import Colors from '@/constants/Colors';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SlideoutModal from '@/components/molecules/SlideoutModal';
-import { mockRewardData } from '@/components/organism/RewardOfferings';
-import { mockDefaultRewardData } from '@/components/organism/RewardSettings';
 import GlobalStyle from '../GlobalStyle';
+import { useStore } from '../store/store'; // Import your store
+import { getServers } from 'dns';
+
+interface RewardsProps {
+    rewardsData: []; // Replace YourDataTypeHere with the actual type of your rewards data
+    defaultRewardsData: []; // Replace YourDataTypeHere with the actual type of your default rewards data
+}
 
 
 const OfferingSettingsAndButton = styled.div`
@@ -55,49 +60,91 @@ const RewardOfferingsAndSettings = styled.div`
  }
 `
 
-export default function Rewards() {
-    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+export async function getServerSideProps() {
+    try {
+        // Fetch rewards data
+        const response1 = await fetch('http://localhost:5000/current-rewards');
+        if (!response1.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const rewardsData = await response1.json();
 
-    const handleOverlayOpen = () => {
-        setIsOverlayOpen(true);
-      };
-    
-      const handleOverlayClose = () => {
-        setIsOverlayOpen(false);
-      };
+        // Fetch reward offerings data
+        const response2 = await fetch('http://localhost:5000/current-outbound-rewards');
+        if (!response2.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const defaultRewardsData = await response2.json();
 
-    const handleClick = () => {
-        console.log('clicked')
+        // Return the fetched data as props
+        return {
+            props: {
+                rewardsData,
+                defaultRewardsData,
+            },
+        };
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return {
+            props: {
+                rewardsData: [],
+                defaultRewardsData: [],
+            },
+        };
     }
-
-  return (
-      <FlexDiv>
-      {isOverlayOpen && <SlideoutModal onClose={handleOverlayClose} />}
-        <GlobalStyle />
-        <DataDisplay />
-        <RewardsPageTitle>
-            <Text
-                text='Rewards'
-            >
-            </Text>
-        </RewardsPageTitle>
-        <OfferingSettingsAndButton>
-        <Button
-            typeVariant='primary'
-            sizeVariant='large'
-            label='Add Reward'
-            widthVariant='fill'
-            onClick={handleOverlayOpen}
-        />
-        <RewardOfferingsAndSettings>
-            <RewardOfferings
-                rewardsData={mockRewardData}
-            />
-            <RewardSettings
-                defaultRewardsData={mockDefaultRewardData}
-            />
-        </RewardOfferingsAndSettings>
-        </OfferingSettingsAndButton>
-      </FlexDiv>
-  )
 }
+
+
+function Rewards({ rewardsData, defaultRewardsData }: RewardsProps) {
+    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+    const { data, fetchData } = useStore();
+    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading2, setIsLoading2] = useState(true);
+
+
+const handleOverlayOpen = () => {
+    setIsOverlayOpen(true);
+  };
+
+  const handleOverlayClose = () => {
+    setIsOverlayOpen(false);
+  };
+
+const handleClick = () => {
+    console.log('clicked')
+}
+   // Initialize the store on the client side
+   useEffect(() => {
+    fetchData();
+}, []);
+
+
+    const storeData = useStore.getState(); // Get the current state of the store
+    console.log('Store Data:', storeData); // Log the entire store data
+
+    return (
+        <FlexDiv>
+            {isOverlayOpen && <SlideoutModal onClose={handleOverlayClose} />}
+            <GlobalStyle />
+            <DataDisplay />
+            <RewardsPageTitle>
+                <Text text='Rewards' />
+            </RewardsPageTitle>
+            <OfferingSettingsAndButton>
+                <Button
+                    typeVariant='primary'
+                    sizeVariant='large'
+                    label='Add Reward'
+                    widthVariant='fill'
+                    onClick={handleOverlayOpen}
+                />
+                <RewardOfferingsAndSettings>
+                    <RewardOfferings rewardsData={rewardsData} />
+                    <RewardSettings defaultRewardsData={defaultRewardsData} />
+                </RewardOfferingsAndSettings>
+            </OfferingSettingsAndButton>
+        </FlexDiv>
+    );
+}
+
+export default Rewards;

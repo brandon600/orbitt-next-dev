@@ -1,18 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import DefaultReward from '../molecules/DefaultReward';
 import Text from '../subatomic/Text';
 import StyledMediaQuery from '@/constants/StyledMediaQuery';
 import { styled } from 'styled-components';
 import Colors from '@/constants/Colors';
-
-// Define a type for the data that your organism will receive
-interface DefaultRewardData {
-  id: number;
-  name: string;
-  value: number;
-  active: boolean;
-  // Add other properties as needed
-}
+import { DefaultRewardData } from '../../types/DefaultRewardData';
 
 interface RewardSettingsProps {
   defaultRewardsData: DefaultRewardData[]; // An array of RewardData objects
@@ -84,30 +76,12 @@ const RewardSettingsList = styled.div`
     }
 `
 
-
-export const mockDefaultRewardData: DefaultRewardData[] = [
-    {
-      id: 1,
-      name: 'Reward 1',
-      value: 2,
-      active: true,
-    },
-    {
-      id: 2,
-      name: 'Reward 2',
-      value: 2,
-      active: true,
-    },
-    {
-      id: 3,
-      name: 'Reward 3',
-      value: 2,
-      active: false,
-    },
-    // Add more objects as needed
-  ];
-
 const RewardSettings: React.FC<RewardSettingsProps> = ({ defaultRewardsData }) => {
+    console.log(defaultRewardsData)
+  
+    if (!defaultRewardsData) {
+      return <p>Loading...</p>;
+    }
   return (
     <RewardSettingsContainer>
         <HeadingPlusSubheading>
@@ -122,11 +96,11 @@ const RewardSettings: React.FC<RewardSettingsProps> = ({ defaultRewardsData }) =
         <RewardSettingsList>
             {defaultRewardsData.map((defaultReward) => (
             <DefaultReward
-            key={defaultReward.id} // Make sure to provide a unique key for each item
+            key={defaultReward._id} // Make sure to provide a unique key for each item
             // Pass the data to the RewardItem component as props
-            defaultRewardName={defaultReward.name}
-            defaultRewardValue={defaultReward.value}
-            defaultRewardActive={defaultReward.active}
+            defaultRewardName={defaultReward.rewardName}
+            defaultRewardValue={defaultReward.rewardValue}
+            defaultRewardActive={defaultReward.rewardActive}
             // Add other props as needed
             />
         ))}
