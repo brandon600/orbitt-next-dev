@@ -4,6 +4,7 @@ import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Text from '../subatomic/Text'
 import Button from '../atoms/Button';
+import ToggleSwitch from '../atoms/ToggleSwitch';
 
 // Define the props interface for RewardItem
 interface RewardItemProps {
@@ -12,6 +13,7 @@ interface RewardItemProps {
     rewardCost: number;
     rewardValue: string;
     rewardNotes: string;
+    rewardActive: boolean;
     // Add other props as needed
   }
 
@@ -180,10 +182,17 @@ const RewardItem: React.FC<RewardItemProps> = ({
     rewardValue,
     rewardCost,
     rewardNotes,
+    rewardActive
   }) => {
     const handleClick = () => {
       console.log('handle click');
     };
+
+    const [isActive, setIsActive] = useState(rewardActive);
+
+  const handleToggle = (active: boolean) => {
+    setIsActive(active);
+  };
   
     return (
       <RewardItemContainer>
@@ -197,7 +206,11 @@ const RewardItem: React.FC<RewardItemProps> = ({
         <RewardNotes>
           <Text text={rewardNotes} />
         </RewardNotes>
-        <RewardActive></RewardActive>
+        <RewardActive>
+        <ToggleSwitch 
+            active={isActive} onChange={handleToggle} 
+        />
+        </RewardActive>
         <RewardEdit>
           <Button
             typeVariant="neutral"

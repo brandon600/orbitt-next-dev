@@ -10,6 +10,7 @@ interface DefaultRewardData {
   id: number;
   name: string;
   value: number;
+  active: boolean;
   // Add other properties as needed
 }
 
@@ -89,16 +90,19 @@ export const mockDefaultRewardData: DefaultRewardData[] = [
       id: 1,
       name: 'Reward 1',
       value: 2,
+      active: true,
     },
     {
       id: 2,
       name: 'Reward 2',
       value: 2,
+      active: true,
     },
     {
       id: 3,
       name: 'Reward 3',
       value: 2,
+      active: false,
     },
     // Add more objects as needed
   ];
@@ -122,6 +126,7 @@ const RewardSettings: React.FC<RewardSettingsProps> = ({ defaultRewardsData }) =
             // Pass the data to the RewardItem component as props
             defaultRewardName={defaultReward.name}
             defaultRewardValue={defaultReward.value}
+            defaultRewardActive={defaultReward.active}
             // Add other props as needed
             />
         ))}

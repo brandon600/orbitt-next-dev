@@ -13,6 +13,7 @@ interface RewardData {
   value: string;
   cost: number;
   notes: string;
+  active: boolean;
   // Add other properties as needed
 }
 
@@ -90,6 +91,7 @@ export const mockRewardData: RewardData[] = [
       value: 'Free Item',
       cost: 10,
       notes: 'Notes for Reward 1',
+      active: true
     },
     {
       id: 2,
@@ -97,6 +99,7 @@ export const mockRewardData: RewardData[] = [
       value: 'Free Item',
       cost: 20,
       notes: 'Notes for Reward 2',
+      active: true
     },
     {
       id: 3,
@@ -104,6 +107,7 @@ export const mockRewardData: RewardData[] = [
       value: 'Free Item',
       cost: 15,
       notes: 'Notes for Reward 3',
+      active: false
     },
     // Add more objects as needed
   ];
@@ -136,6 +140,7 @@ const RewardOfferings: React.FC<RewardOfferingsProps> = ({ rewardsData }) => {
             rewardValue={reward.value}
             rewardCost={reward.cost}
             rewardNotes={reward.notes}
+            rewardActive={reward.active}
             // Add other props as needed
             />
         ))}
