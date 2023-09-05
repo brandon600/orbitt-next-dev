@@ -11,9 +11,10 @@ import React, { useState, useEffect } from 'react';
 import Overlay from '@/components/atoms/Overlay';
 import RewardForm from '@/components/organism/RewardForm';
 import GlobalStyle from '../GlobalStyle';
-import { useStore } from '../store/store'; // Import your store
+import { useStore, AppState } from '../store/store'; // Import your store
 import { getServers } from 'dns';
 import { AnimatePresence } from 'framer-motion';
+import Toast from '@/components/atoms/Toast';
 
 interface RewardsProps {
     rewardsData: []; // Replace YourDataTypeHere with the actual type of your rewards data
@@ -150,8 +151,14 @@ function useBodyScrollLock(isLocked: boolean) {
 
 
 function Rewards({ rewardsData, defaultRewardsData }: RewardsProps) {
+    const { data, fetchData, toast, hideToast } = useStore((state: AppState) => ({
+        data: state.data,
+        fetchData: state.fetchData,
+        toast: state.toast,
+        hideToast: state.hideToast,
+      }));
+
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
-    const { data, fetchData } = useStore();
     const [isLoading, setIsLoading] = useState(true);
     const [isLoading2, setIsLoading2] = useState(true);
     useBodyScrollLock(isOverlayOpen);
@@ -180,6 +187,11 @@ const handleClick = () => {
     return (
         <FlexDiv>
             <AnimatePresence>
+            {toast.visible && (
+                <Toast key="toast" />
+            )}
+            </AnimatePresence>
+            <AnimatePresence>
             {isOverlayOpen && <Overlay />}
             </AnimatePresence>
             <AnimatePresence>
@@ -191,6 +203,12 @@ const handleClick = () => {
                 <Text text='Rewards' />
             </RewardsPageTitle>
             <ButtonWrap>
+            <Button
+  buttonTypeVariant='primary'
+  sizeVariant='small'
+  label='Hide Toast'
+  onClick={hideToast}
+/>
             <Button
                 buttonTypeVariant='primary'
                 sizeVariant='large'
