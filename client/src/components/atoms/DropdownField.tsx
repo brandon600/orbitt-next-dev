@@ -8,6 +8,7 @@ interface DropdownFieldProps {
   onChange: (value: string) => void;
   label?: string; // Make the label optional
   required?: boolean; // Make it possible to mark the field as required
+  useDefaultDropdown: boolean;
 }
 
 const DropdownFieldContainer = styled.div`
@@ -36,59 +37,145 @@ const DropdownFieldLabel = styled.label`
     }
 `
 
+const DropdownFieldLabel2 = styled.label`
+    @media ${StyledMediaQuery.XS} {
+        display: flex; 
+        flex-direction: row;
+        gap: 4px;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 19px;
+        color: ${Colors.neutral700};
+
+        p {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 19px;
+        }
+    }
+`
+
 const DropdownFieldSelect = styled.select`
     @media ${StyledMediaQuery.XS} {
-        display: flex;
-        height: 48px;
-        padding: 0px 4px 0px 12px;
-        justify-content: space-between;
-        align-items: center;
-        align-self: stretch;
-        border-radius: 8px;
-        background ${Colors.shades100};
-        color: 300;
+      font: inherit;
+      font-size: 16px;
+      font-family: inherit;
+      background-color: ${Colors.shades100};
+      border: none;
+      padding: 0rem;
+      margin: 0;
+      box-sizing: border-box;
+      width: 100%;
+      cursor: pointer;
+      outline: none;
+      display: flex;
+      height: 48px;
+      padding: 0px 4px 0px 12px;
+      justify-content: space-between;
+      align-items: center;
+      align-self: stretch;
+      border-radius: 8px;
+      color: ${Colors.neutral300};
+
+      &:focus {
+        border 1px solid ${Colors.neutral600};
+        color: ${Colors.neutral600};
+    }
+        
+    }
+`
+
+const DropdownFieldSelect2 = styled.select`
+    @media ${StyledMediaQuery.XS} {
+      font: inherit;
+      font-size: 16px;
+      font-family: inherit;
+      background-color: ${Colors.neutral100};
+      border: none;
+      padding: 0rem;
+      margin: 0;
+      box-sizing: border-box;
+      width: 100%;
+      cursor: pointer;
+      outline: none;
+      display: flex;
+      height: 48px;
+      padding: 0px 4px 0px 12px;
+      justify-content: space-between;
+      align-items: center;
+      align-self: stretch;
+      border-radius: 8px;
+      color: ${Colors.neutral600};
 
         &:focus {
             border 1px solid ${Colors.neutral600};
             color: ${Colors.neutral600};
-
         }
-
-        option {
-            color: ${Colors.neutral300};
-          }
-        
-          :checked {
-            color: ${Colors.neutral600};
-          }
     }
 `
 
-const DropdownField: React.FC<DropdownFieldProps> = ({
+const RequiredAsterisk = styled.span`
+  @media ${StyledMediaQuery.XS} {
+    color: red; // Style the asterisk with your desired color
+    margin-left: 4px; // Add spacing between the text and the asterisk
+  }
+`;
+
+const DropdownField: React.FC<DropdownFieldProps & { useDefaultDropdown: boolean }> = ({
   value,
   onChange,
   label,
   required,
+  useDefaultDropdown
 }) => {
-  return (
-    <DropdownFieldContainer>
-      {label && <DropdownFieldLabel>{label}</DropdownFieldLabel>}
-      <DropdownFieldSelect
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required={required} // Add the 'required' attribute conditionally
-      >
-      <option value="value1">Value 1</option>
-        <option value="value2">Value 2</option>
-      </DropdownFieldSelect>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required={required} // Add the 'required' attribute conditionally
-      >
-      </select>
-    </DropdownFieldContainer>
-  );
+
+  const DefaultDropdown = () => {
+    return (
+      <DropdownFieldContainer>
+          <DropdownFieldLabel>
+          {label}
+          </DropdownFieldLabel>
+        <DropdownFieldSelect
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          required={required} // Add the 'required' attribute conditionally
+        >
+          <option value="value1">Value 1</option>
+          <option value="value2">Value 2</option>
+        </DropdownFieldSelect>
+      </DropdownFieldContainer>
+    );
+  }
+
+  const FormDropdown = () => {
+    return (
+      <DropdownFieldContainer>
+        <DropdownFieldLabel2>
+          {required && <RequiredAsterisk>*</RequiredAsterisk>} {/* Render asterisk if 'required' prop is true */}
+          {label}
+          </DropdownFieldLabel2>
+        <DropdownFieldSelect2
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          required={required} // Add the 'required' attribute conditionally
+        >
+          <option value="Free Item">Free Item</option>
+          <option value="5% Off">5% Off</option>
+          <option value="10% Off">10% Off</option>
+          <option value="15% Off">15% Off</option>
+          <option value="25% Off">25% Off</option>
+          <option value="50% Off">50% Off</option>
+        </DropdownFieldSelect2>
+      </DropdownFieldContainer>
+    );
+  }
+
+    // Use the selected component based on the 'useDefaultDropdown' prop
+    const SelectedDropdown = useDefaultDropdown ? DefaultDropdown : FormDropdown;
+
+    return (
+      <SelectedDropdown />
+    );
 };
 
 export default DropdownField;

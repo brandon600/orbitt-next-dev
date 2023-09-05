@@ -15,7 +15,7 @@ exports.modules = {
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_0__);
 // src/GlobalStyles.ts
 
-const GlobalStyle = (0,styled_components__WEBPACK_IMPORTED_MODULE_0__.createGlobalStyle)(["body{display:flex;margin:0;font-family:Arial,sans-serif;background-color:#f0f0f0;color:#333;}h1,h2,h3,h4,h5,h6,p{margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;margin-inline-end:0px;}"]);
+const GlobalStyle = (0,styled_components__WEBPACK_IMPORTED_MODULE_0__.createGlobalStyle)(["body{display:flex;margin:0;font-family:Arial,sans-serif;background-color:#f0f0f0;color:#333;}h1,h2,h3,h4,h5,h6,p{margin-block-start:0px;margin-block-end:0px;margin-inline-start:0px;margin-inline-end:0px;}form{display:flex;flex-direction:column;margin-top:0em;}input{padding:0;font:inherit;font-size:16px;background-color:transparent;margin:0;text-align:left;appearance:none;cursor:text;outline:none;select{background-color:pink;font:inherit;font-size:16px;font-family:inherit;background-color:transparent;border:none;border-color:padding:0.25rem;margin:0;box-sizing:border-box;width:100%;cursor:pointer;outline:none;}"]);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GlobalStyle);
 
 /***/ }),
@@ -32,7 +32,7 @@ const GlobalStyle = (0,styled_components__WEBPACK_IMPORTED_MODULE_0__.createGlob
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _constants_Colors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2287);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5893);
-const _excluded = ["label", "onClick", "typeVariant", "sizeVariant", "widthVariant"];
+const _excluded = ["label", "onClick", "buttonTypeVariant", "sizeVariant", "buttonWidthVariant"];
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
@@ -64,35 +64,271 @@ const ButtonComponent = styled_components__WEBPACK_IMPORTED_MODULE_1___default()
   displayName: "Button__ButtonComponent",
   componentId: "sc-evl40u-0"
 })(["display:flex;align-items:center;justify-content:center;border-radius:6px;cursor:pointer;", ";", ";width:", ";"], ({
-  typeVariant
-}) => buttonTypeSheet[typeVariant || 'primary'], ({
+  buttonTypeVariant
+}) => buttonTypeSheet[buttonTypeVariant || 'primary'], ({
   sizeVariant
 }) => buttonSizeSheet[sizeVariant || 'large'], ({
-  widthVariant
-}) => widthVariant === 'fill' ? '100%' : 'auto');
+  buttonWidthVariant
+}) => buttonWidthVariant === 'fill' ? '100%' : 'auto');
 
 const Button = _ref => {
   let {
     label,
     onClick,
-    typeVariant = 'primary',
+    buttonTypeVariant = 'primary',
     sizeVariant = 'large',
-    widthVariant = 'content'
+    buttonWidthVariant = 'content'
   } = _ref,
       rest = _objectWithoutProperties(_ref, _excluded);
 
   return /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx(ButtonComponent, _objectSpread(_objectSpread({
     as: "button",
     onClick: onClick,
-    typeVariant: typeVariant,
+    buttonTypeVariant: buttonTypeVariant,
     sizeVariant: sizeVariant,
-    widthVariant: widthVariant
+    buttonWidthVariant: buttonWidthVariant
   }, rest), {}, {
     children: label
   }));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Button);
+
+/***/ }),
+
+/***/ 1094:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Z: () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6689);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7518);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _constants_Colors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2287);
+/* harmony import */ var _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(8338);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(5893);
+
+
+
+
+
+
+const DropdownFieldContainer = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "DropdownField__DropdownFieldContainer",
+  componentId: "sc-1blcj3-0"
+})(["@media ", "{display:flex;width:100%;flex-direction:column;align-items:flex-start;gap:8px;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS);
+const DropdownFieldLabel = styled_components__WEBPACK_IMPORTED_MODULE_1___default().label.withConfig({
+  displayName: "DropdownField__DropdownFieldLabel",
+  componentId: "sc-1blcj3-1"
+})(["@media ", "{display:flex;font-size:12px;font-weight:500;line-height:15px;color:", ";p{font-size:16px;font-weight:500;line-height:19px;}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral400);
+const DropdownFieldLabel2 = styled_components__WEBPACK_IMPORTED_MODULE_1___default().label.withConfig({
+  displayName: "DropdownField__DropdownFieldLabel2",
+  componentId: "sc-1blcj3-2"
+})(["@media ", "{display:flex;flex-direction:row;gap:4px;font-size:16px;font-weight:400;line-height:19px;color:", ";p{font-size:16px;font-weight:500;line-height:19px;}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral700);
+const DropdownFieldSelect = styled_components__WEBPACK_IMPORTED_MODULE_1___default().select.withConfig({
+  displayName: "DropdownField__DropdownFieldSelect",
+  componentId: "sc-1blcj3-3"
+})(["@media ", "{font:inherit;font-size:16px;font-family:inherit;background-color:", ";border:none;padding:0rem;margin:0;box-sizing:border-box;width:100%;cursor:pointer;outline:none;display:flex;height:48px;padding:0px 4px 0px 12px;justify-content:space-between;align-items:center;align-self:stretch;border-radius:8px;color:", ";&:focus{border 1px solid ", ";color:", ";}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.shades100, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral300, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral600, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral600);
+const DropdownFieldSelect2 = styled_components__WEBPACK_IMPORTED_MODULE_1___default().select.withConfig({
+  displayName: "DropdownField__DropdownFieldSelect2",
+  componentId: "sc-1blcj3-4"
+})(["@media ", "{font:inherit;font-size:16px;font-family:inherit;background-color:", ";border:none;padding:0rem;margin:0;box-sizing:border-box;width:100%;cursor:pointer;outline:none;display:flex;height:48px;padding:0px 4px 0px 12px;justify-content:space-between;align-items:center;align-self:stretch;border-radius:8px;color:", ";&:focus{border 1px solid ", ";color:", ";}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral100, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral600, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral600, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral600);
+const RequiredAsterisk = styled_components__WEBPACK_IMPORTED_MODULE_1___default().span.withConfig({
+  displayName: "DropdownField__RequiredAsterisk",
+  componentId: "sc-1blcj3-5"
+})(["@media ", "{color:red;margin-left:4px;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS);
+
+const DropdownField = ({
+  value,
+  onChange,
+  label,
+  required,
+  useDefaultDropdown
+}) => {
+  const DefaultDropdown = () => {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(DropdownFieldContainer, {
+      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx(DropdownFieldLabel, {
+        children: label
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(DropdownFieldSelect, {
+        value: value,
+        onChange: e => onChange(e.target.value),
+        required: required // Add the 'required' attribute conditionally
+        ,
+        children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx("option", {
+          value: "value1",
+          children: "Value 1"
+        }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx("option", {
+          value: "value2",
+          children: "Value 2"
+        })]
+      })]
+    });
+  };
+
+  const FormDropdown = () => {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(DropdownFieldContainer, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(DropdownFieldLabel2, {
+        children: [required && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx(RequiredAsterisk, {
+          children: "*"
+        }), " ", label]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(DropdownFieldSelect2, {
+        value: value,
+        onChange: e => onChange(e.target.value),
+        required: required // Add the 'required' attribute conditionally
+        ,
+        children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx("option", {
+          value: "Free Item",
+          children: "Free Item"
+        }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx("option", {
+          value: "5% Off",
+          children: "5% Off"
+        }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx("option", {
+          value: "10% Off",
+          children: "10% Off"
+        }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx("option", {
+          value: "15% Off",
+          children: "15% Off"
+        }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx("option", {
+          value: "25% Off",
+          children: "25% Off"
+        }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx("option", {
+          value: "50% Off",
+          children: "50% Off"
+        })]
+      })]
+    });
+  }; // Use the selected component based on the 'useDefaultDropdown' prop
+
+
+  const SelectedDropdown = useDefaultDropdown ? DefaultDropdown : FormDropdown;
+  return /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx(SelectedDropdown, {});
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DropdownField);
+
+/***/ }),
+
+/***/ 4895:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Z: () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6689);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7518);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _constants_Colors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2287);
+/* harmony import */ var _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(8338);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(5893);
+
+
+
+
+
+
+const InputFieldContainer = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "InputField__InputFieldContainer",
+  componentId: "sc-16qn2iy-0"
+})(["@media ", "{display:flex;width:100%;flex-direction:column;align-items:flex-start;gap:8px;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS);
+const InputFieldLabel = styled_components__WEBPACK_IMPORTED_MODULE_1___default().label.withConfig({
+  displayName: "InputField__InputFieldLabel",
+  componentId: "sc-16qn2iy-1"
+})(["@media ", "{display:flex;flex-direction:row;gap:4px;font-size:16px;font-weight:400;line-height:19px;color:", ";}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral700);
+const RequiredAsterisk = styled_components__WEBPACK_IMPORTED_MODULE_1___default().span.withConfig({
+  displayName: "InputField__RequiredAsterisk",
+  componentId: "sc-16qn2iy-2"
+})(["@media ", "{color:", ";}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.error500);
+const InputFieldInput = styled_components__WEBPACK_IMPORTED_MODULE_1___default().input.withConfig({
+  displayName: "InputField__InputFieldInput",
+  componentId: "sc-16qn2iy-3"
+})(["@media ", "{display:flex;height:32px;padding:8px 12px;align-items:center;align-self:stretch;border-radius:8px;background:", ";color:", ";border:none;&:focus{border:1px solid ", ";color:", ";}&::placeholder{color:", ";}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral100, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral600, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.primary400, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.primary400, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral300);
+
+const InputField = ({
+  label,
+  value,
+  onChange,
+  required,
+  // Accept the 'required' prop
+  placeholder // Accept the 'placeholder' prop
+
+}) => {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(InputFieldContainer, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(InputFieldLabel, {
+      children: [required && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx(RequiredAsterisk, {
+        children: "*"
+      }), " ", label]
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx(InputFieldInput, {
+      type: "text",
+      value: value,
+      onChange: e => onChange(e.target.value),
+      required: required // Add the 'required' attribute conditionally
+      ,
+      placeholder: placeholder // Pass the 'placeholder' prop
+
+    })]
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (InputField);
+
+/***/ }),
+
+/***/ 3256:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Z: () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6689);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7518);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(8338);
+/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6197);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(5893);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([framer_motion__WEBPACK_IMPORTED_MODULE_3__]);
+framer_motion__WEBPACK_IMPORTED_MODULE_3__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+
+
+
+
+
+const OverlayDiv = styled_components__WEBPACK_IMPORTED_MODULE_1___default()(framer_motion__WEBPACK_IMPORTED_MODULE_3__.motion.div).withConfig({
+  displayName: "Overlay__OverlayDiv",
+  componentId: "sc-wo64qz-0"
+})(["@media ", "{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.4);backdrop-filter:blur(4px);display:flex;justify-content:center;align-items:center;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.XS);
+
+const Overlay = () => {
+  return /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx(OverlayDiv, {
+    initial: {
+      opacity: 0,
+      backdropFilter: "blur(0px)"
+    } // initial state (hidden to the right)
+    ,
+    animate: {
+      opacity: 1,
+      backdropFilter: "blur(4px)"
+    } // end state (appears from the right)
+    ,
+    exit: {
+      opacity: 0,
+      backdropFilter: "blur(0px)"
+    } // exit state (disappears to the right)
+    ,
+    transition: {
+      duration: .2
+    } // animation takes 400ms with easeInOut easing
+
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Overlay);
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } });
 
 /***/ }),
 
@@ -106,23 +342,30 @@ const Button = _ref => {
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7518);
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5893);
+/* harmony import */ var _constants_Colors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2287);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5893);
 
 
 
 
+
+//  padding: ${(props) => (props.isChecked ? '0px 4px 0px 0px' : '0px 0px 0px 4px')};
 const ToggleContainer = styled_components__WEBPACK_IMPORTED_MODULE_1___default().label.withConfig({
   displayName: "ToggleSwitch__ToggleContainer",
   componentId: "sc-1e3v1ch-0"
-})(["position:relative;display:flex;width:64px;height:32px;"]);
+})(["display:flex;width:64px;height:32px;cursor:pointer;border-radius:20px;background-color:", ";transition:background-color 0.4s;"], props => props.active ? _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.success600 : _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral300);
 const SwitchInput = styled_components__WEBPACK_IMPORTED_MODULE_1___default().input.withConfig({
   displayName: "ToggleSwitch__SwitchInput",
   componentId: "sc-1e3v1ch-1"
-})(["opacity:0;width:0;height:0;"]);
-const Slider = styled_components__WEBPACK_IMPORTED_MODULE_1___default().span.withConfig({
+})(["display:none;"]);
+const Slider = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
   displayName: "ToggleSwitch__Slider",
   componentId: "sc-1e3v1ch-2"
-})(["position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:", ";transition:0.4s;border-radius:20px;&:before{position:absolute;content:'';height:24px;width:24px;left:", ";bottom:4px;background-color:white;transition:0.4s;border-radius:50%;}"], props => props.isChecked ? '#10B981' : '#ccc', props => props.isChecked ? '36px' : '4px');
+})(["flex:1;display:flex;align-items:center;transition:0.4s;"]);
+const SliderButton = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "ToggleSwitch__SliderButton",
+  componentId: "sc-1e3v1ch-3"
+})(["width:24px;height:24px;background-color:white;border-radius:50%;margin-left:", ";transition:margin-left 0.2s ease-in-out;"], props => props.active ? 'calc(100% - 28px)' : '4px');
 
 const ToggleSwitch = ({
   active,
@@ -132,13 +375,16 @@ const ToggleSwitch = ({
     onChange(!active); // Notify parent component of the change
   };
 
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(ToggleContainer, {
-    children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx(SwitchInput, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(ToggleContainer, {
+    active: active,
+    children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx(SwitchInput, {
       type: "checkbox",
       checked: active,
       onChange: handleToggle
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx(Slider, {
-      isChecked: active
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx(Slider, {
+      children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx(SliderButton, {
+        active: active
+      })
     })]
   });
 };
@@ -147,134 +393,29 @@ const ToggleSwitch = ({
 
 /***/ }),
 
-/***/ 8836:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ 5175:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
 
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  Z: () => (/* binding */ molecules_SlideoutModal)
-});
-
-// EXTERNAL MODULE: external "react"
-var external_react_ = __webpack_require__(6689);
-// EXTERNAL MODULE: external "styled-components"
-var external_styled_components_ = __webpack_require__(7518);
-var external_styled_components_default = /*#__PURE__*/__webpack_require__.n(external_styled_components_);
-// EXTERNAL MODULE: ./src/constants/StyledMediaQuery.ts
-var StyledMediaQuery = __webpack_require__(8338);
-// EXTERNAL MODULE: ./node_modules/react/jsx-runtime.js
-var jsx_runtime = __webpack_require__(5893);
-;// CONCATENATED MODULE: ./src/components/atoms/Overlay.tsx
-
-
-
-
-const OverlayDiv = external_styled_components_default().div.withConfig({
-  displayName: "Overlay__OverlayDiv",
-  componentId: "sc-wo64qz-0"
-})(["@media ", "{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.4);backdrop-filter:blur(4px);display:flex;justify-content:center;align-items:center;}"], StyledMediaQuery/* default */.Z.XS);
-
-const Overlay = () => {
-  return /*#__PURE__*/jsx_runtime.jsx(OverlayDiv, {});
-};
-
-/* harmony default export */ const atoms_Overlay = (Overlay);
-// EXTERNAL MODULE: ./src/constants/Colors.ts
-var Colors = __webpack_require__(2287);
-;// CONCATENATED MODULE: ./src/components/atoms/InputField.tsx
-
-
-
-
-
-
-const InputFieldContainer = external_styled_components_default().div.withConfig({
-  displayName: "InputField__InputFieldContainer",
-  componentId: "sc-16qn2iy-0"
-})(["@media ", "{display:flex;width:100%;flex-direction:column;align-items:flex-start;gap:8px;}"], StyledMediaQuery/* default */.Z.XS);
-const InputFieldLabel = external_styled_components_default().label.withConfig({
-  displayName: "InputField__InputFieldLabel",
-  componentId: "sc-16qn2iy-1"
-})(["@media ", "{font-size:16px;font-weight:400;line-height:19px;color:", ";}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral700);
-const InputFieldInput = external_styled_components_default().input.withConfig({
-  displayName: "InputField__InputFieldInput",
-  componentId: "sc-16qn2iy-2"
-})(["@media ", "{display:flex;height:32px;padding:8px 12px;align-items:center;align-self:stretch;border-radius:8px;background:", ";&:focus{border 1px solid ", ";color:", ";}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.shades100, Colors/* default */.Z.primary400, Colors/* default */.Z.primary400);
-
-const InputField = ({
-  label,
-  value,
-  onChange,
-  required // Accept the 'required' prop
-
-}) => {
-  return /*#__PURE__*/(0,jsx_runtime.jsxs)(InputFieldContainer, {
-    children: [/*#__PURE__*/jsx_runtime.jsx(InputFieldLabel, {
-      children: label
-    }), /*#__PURE__*/jsx_runtime.jsx(InputFieldInput, {
-      type: "text",
-      value: value,
-      onChange: e => onChange(e.target.value),
-      required: required // Add the 'required' attribute conditionally
-
-    })]
-  });
-};
-
-/* harmony default export */ const atoms_InputField = (InputField);
-;// CONCATENATED MODULE: ./src/components/atoms/DropdownField.tsx
-
-
-
-
-
-
-const DropdownFieldContainer = external_styled_components_default().div.withConfig({
-  displayName: "DropdownField__DropdownFieldContainer",
-  componentId: "sc-1blcj3-0"
-})(["@media ", "{display:flex;width:100%;flex-direction:column;align-items:flex-start;gap:8px;}"], StyledMediaQuery/* default */.Z.XS);
-const DropdownFieldLabel = external_styled_components_default().label.withConfig({
-  displayName: "DropdownField__DropdownFieldLabel",
-  componentId: "sc-1blcj3-1"
-})(["@media ", "{display:flex;font-size:12px;font-weight:500;line-height:15px;color:", ";p{font-size:16px;font-weight:500;line-height:19px;}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral400);
-const DropdownFieldSelect = external_styled_components_default().select.withConfig({
-  displayName: "DropdownField__DropdownFieldSelect",
-  componentId: "sc-1blcj3-2"
-})(["@media ", "{display:flex;height:48px;padding:0px 4px 0px 12px;justify-content:space-between;align-items:center;align-self:stretch;border-radius:8px;background ", ";color:300;&:focus{border 1px solid ", ";color:", ";}option{color:", ";}:checked{color:", ";}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.shades100, Colors/* default */.Z.neutral600, Colors/* default */.Z.neutral600, Colors/* default */.Z.neutral300, Colors/* default */.Z.neutral600);
-
-const DropdownField = ({
-  value,
-  onChange,
-  label,
-  required
-}) => {
-  return /*#__PURE__*/(0,jsx_runtime.jsxs)(DropdownFieldContainer, {
-    children: [label && /*#__PURE__*/jsx_runtime.jsx(DropdownFieldLabel, {
-      children: label
-    }), /*#__PURE__*/(0,jsx_runtime.jsxs)(DropdownFieldSelect, {
-      value: value,
-      onChange: e => onChange(e.target.value),
-      required: required // Add the 'required' attribute conditionally
-      ,
-      children: [/*#__PURE__*/jsx_runtime.jsx("option", {
-        value: "value1",
-        children: "Value 1"
-      }), /*#__PURE__*/jsx_runtime.jsx("option", {
-        value: "value2",
-        children: "Value 2"
-      })]
-    }), /*#__PURE__*/jsx_runtime.jsx("select", {
-      value: value,
-      onChange: e => onChange(e.target.value),
-      required: required // Add the 'required' attribute conditionally
-
-    })]
-  });
-};
-
-/* harmony default export */ const atoms_DropdownField = (DropdownField);
-;// CONCATENATED MODULE: ./src/components/organism/RewardForm.tsx
+__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Z: () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6689);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _atoms_InputField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4895);
+/* harmony import */ var _atoms_DropdownField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1094);
+/* harmony import */ var _subatomic_Text__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(711);
+/* harmony import */ var _atoms_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6552);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7518);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(8338);
+/* harmony import */ var _constants_Colors__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(2287);
+/* harmony import */ var _subatomic_Icons_CancelIcon__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(5611);
+/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(6197);
+/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(8187);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(5893);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([framer_motion__WEBPACK_IMPORTED_MODULE_9__, _store_store__WEBPACK_IMPORTED_MODULE_10__]);
+([framer_motion__WEBPACK_IMPORTED_MODULE_9__, _store_store__WEBPACK_IMPORTED_MODULE_10__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 // components/RewardForm.tsx
 
 
@@ -283,89 +424,208 @@ const DropdownField = ({
 
 
 
-const RewardFormDiv = external_styled_components_.styled.div.withConfig({
-  displayName: "RewardForm__RewardFormDiv",
-  componentId: "sc-1vny7h3-0"
-})(["@media ", "{display:flex;position:absolute;z-index:90;}"], StyledMediaQuery/* default */.Z.XS);
 
-const RewardForm = () => {
+
+
+ // Import your store
+
+
+
+const ModalCloseButton = styled_components__WEBPACK_IMPORTED_MODULE_5__.styled.div.withConfig({
+  displayName: "RewardForm__ModalCloseButton",
+  componentId: "sc-1vny7h3-0"
+})(["@media ", "{display:flex;position:absolute;top:20px;right:20px;z-index:1000;svg{width:48px;height:48px;}}@media ", "{top:24px;right:24px;svg{width:64px;height:64px;}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.XS, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.S);
+const RewardFormDiv = (0,framer_motion__WEBPACK_IMPORTED_MODULE_9__.motion)(styled_components__WEBPACK_IMPORTED_MODULE_5__.styled.div.withConfig({
+  displayName: "RewardForm__RewardFormDiv",
+  componentId: "sc-1vny7h3-1"
+})(["@media ", "{position:fixed;right:0;top:0;display:flex;width:280px;height:100vh;background:", ";flex-direction:column;align-items:flex-start;flex-shrink:0;z-index:900;}@media ", "{width:400px;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_7__/* ["default"] */ .Z.shades100, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.S));
+const RewardFormContent = styled_components__WEBPACK_IMPORTED_MODULE_5__.styled.div.withConfig({
+  displayName: "RewardForm__RewardFormContent",
+  componentId: "sc-1vny7h3-2"
+})(["@media ", "{display:flex;flex-direction:column;gap:24px;width:100%;padding:88px 16px 16px 16px;box-sizing:border-box;overflow-y:auto;max-height:100vh - 96px;}@media ", "{padding:120px 24px 24px 24px;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.XS, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.S);
+const RewardFormHeading = styled_components__WEBPACK_IMPORTED_MODULE_5__.styled.div.withConfig({
+  displayName: "RewardForm__RewardFormHeading",
+  componentId: "sc-1vny7h3-3"
+})(["@media ", "{display:flex;color:", ";p{font-size:24px;font-weight:800;line-height:29px;}}@media ", "{p{font-size:32px;line-height:39px;}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_7__/* ["default"] */ .Z.neutral700, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.S);
+const FormAndButton = styled_components__WEBPACK_IMPORTED_MODULE_5__.styled.div.withConfig({
+  displayName: "RewardForm__FormAndButton",
+  componentId: "sc-1vny7h3-4"
+})(["@media ", "{display:flex;width:100%;flex-direction:column;align-items:flex-start;gap:16px;align-self:stretch;form{display:flex;gap:24px;width:100%;}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.XS);
+const FormFieldsAndLabel = styled_components__WEBPACK_IMPORTED_MODULE_5__.styled.div.withConfig({
+  displayName: "RewardForm__FormFieldsAndLabel",
+  componentId: "sc-1vny7h3-5"
+})(["@media ", "{display:flex;flex-direction:column;width:100%;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.XS);
+const RequiredLabel = styled_components__WEBPACK_IMPORTED_MODULE_5__.styled.div.withConfig({
+  displayName: "RewardForm__RequiredLabel",
+  componentId: "sc-1vny7h3-6"
+})(["@media ", "{display:flex;align-items:flex-start;gap:4px;color:", ";p{font-size:16px;}h6{font-size:14px;font-weight:500;}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_7__/* ["default"] */ .Z.error500);
+const FormFields = styled_components__WEBPACK_IMPORTED_MODULE_5__.styled.div.withConfig({
+  displayName: "RewardForm__FormFields",
+  componentId: "sc-1vny7h3-7"
+})(["@media ", "{display:flex;flex-direction:column;align-items:flex-start;gap:16px;width:100%;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.XS);
+
+const RewardForm = ({
+  onClose
+}) => {
   const {
     0: rewardName,
     1: setRewardName
-  } = (0,external_react_.useState)('');
+  } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const {
     0: rewardCost,
     1: setRewardCost
-  } = (0,external_react_.useState)('');
+  } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const {
     0: rewardTerms,
     1: setRewardTerms
-  } = (0,external_react_.useState)('');
+  } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const {
     0: rewardValue,
     1: setRewardValue
-  } = (0,external_react_.useState)('value1');
+  } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('Free Item');
+  const {
+    0: isRewardNameValid,
+    1: setRewardNameValid
+  } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const {
+    0: isRewardCostValid,
+    1: setRewardCostValid
+  } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    console.log('Reward Name:', rewardName);
-    console.log('Reward Cost:', rewardCost);
-    console.log('Reward Value:', rewardValue);
-    console.log('Reward Terms:', rewardTerms); // Handle form submission (e.g., send data to the server)
+  const handleSubmit = async e => {
+    e.preventDefault(); // Get global state data
+
+    const {
+      data
+    } = _store_store__WEBPACK_IMPORTED_MODULE_10__/* .useStore */ .o.getState(); // Directly access Zustand state
+
+    console.log(data); // Collect reward details and some global state data into an object
+
+    const payload = {
+      rewardDetails: {
+        name: rewardName,
+        cost: rewardCost,
+        terms: rewardTerms,
+        value: rewardValue
+      },
+      user: data // example global state data
+      // include any other relevant state data
+
+    }; // Make POST request to your Express server
+
+    try {
+      const response = await fetch('http://localhost:5000/add-reward', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Success:', data); // Additional logic here (e.g., close the form, refresh rewards list, etc.)
+      } else {
+        console.log('Failed:', response);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+    onClose();
   };
 
-  return /*#__PURE__*/jsx_runtime.jsx(RewardFormDiv, {
-    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("form", {
-      onSubmit: handleSubmit,
-      children: [/*#__PURE__*/jsx_runtime.jsx(atoms_InputField, {
-        label: "Reward Name",
-        value: rewardName,
-        onChange: value => setRewardName(value)
-      }), /*#__PURE__*/jsx_runtime.jsx(atoms_InputField, {
-        label: "Reward Cost",
-        value: rewardCost,
-        onChange: value => setRewardCost(value)
-      }), /*#__PURE__*/jsx_runtime.jsx(atoms_DropdownField, {
-        label: "sdkfmksldfksmdfl",
-        value: rewardValue,
-        onChange: value => setRewardValue(value)
-      }), /*#__PURE__*/jsx_runtime.jsx(atoms_InputField, {
-        label: "Reward Terms",
-        value: rewardTerms,
-        onChange: value => setRewardTerms(value)
-      }), /*#__PURE__*/jsx_runtime.jsx("button", {
-        type: "submit",
-        children: "Submit"
-      })]
-    })
-  });
-};
-
-/* harmony default export */ const organism_RewardForm = (RewardForm);
-;// CONCATENATED MODULE: ./src/components/molecules/SlideoutModal.tsx
-
-
-
-
-
-
-const OverlayContent = external_styled_components_default().div.withConfig({
-  displayName: "SlideoutModal__OverlayContent",
-  componentId: "sc-en7ipe-0"
-})(["position:absolute;display:flex;z-index:100;"]);
-
-const SlideoutModal = ({
-  onClose
-}) => {
-  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-    children: [/*#__PURE__*/jsx_runtime.jsx(atoms_Overlay, {}), /*#__PURE__*/jsx_runtime.jsx("button", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(RewardFormDiv, {
+    initial: {
+      x: "100%"
+    } // initial state (hidden to the right)
+    ,
+    animate: {
+      x: "0%"
+    } // end state (appears from the right)
+    ,
+    exit: {
+      x: "100%"
+    } // exit state (disappears to the right)
+    ,
+    transition: {
+      duration: 0.4,
+      ease: [0.88, 0, 0.16, 1]
+    } // animation takes 400ms with easeInOut easing
+    ,
+    children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx(ModalCloseButton, {
       onClick: onClose,
-      children: "Close"
-    }), /*#__PURE__*/jsx_runtime.jsx(organism_RewardForm, {})]
+      children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx(_subatomic_Icons_CancelIcon__WEBPACK_IMPORTED_MODULE_8__/* .CancelIcon */ .F, {
+        fill: _constants_Colors__WEBPACK_IMPORTED_MODULE_7__/* ["default"] */ .Z.neutral700
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(RewardFormContent, {
+      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx(RewardFormHeading, {
+        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx(_subatomic_Text__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+          text: "Add New Reward"
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(FormAndButton, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(RequiredLabel, {
+          children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx(_subatomic_Text__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+            text: "*",
+            color: _constants_Colors__WEBPACK_IMPORTED_MODULE_7__/* ["default"] */ .Z.error500
+          }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx("h6", {
+            children: "Required"
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)("form", {
+          onSubmit: handleSubmit,
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(FormFields, {
+            children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx(_atoms_InputField__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z, {
+              label: "Reward Name",
+              value: rewardName,
+              onChange: value => {
+                setRewardName(value);
+                setRewardNameValid(!!value); // Validate based on whether the input is not empty
+              },
+              required: true,
+              placeholder: "Ex: Hamburer"
+            }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx(_atoms_InputField__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z, {
+              label: "Reward Cost",
+              value: rewardCost,
+              onChange: value => {
+                setRewardCost(value);
+                setRewardCostValid(!!value);
+              },
+              required: true,
+              placeholder: "Ex: 10"
+            }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx(_atoms_DropdownField__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z, {
+              value: rewardValue,
+              onChange: value => setRewardValue(value),
+              label: "Reward Value",
+              useDefaultDropdown: false,
+              required: true
+            }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx(_atoms_InputField__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z, {
+              label: "Reward Terms",
+              value: rewardTerms,
+              onChange: value => setRewardTerms(value),
+              placeholder: "Ex: Need 10 stars for this"
+            })]
+          }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx(_atoms_Button__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
+            buttonTypeVariant: isRewardNameValid && isRewardCostValid
+            /* && Add conditions for other fields */
+            ? 'primary' : 'disabled',
+            sizeVariant: "large",
+            label: "Submit",
+            buttonWidthVariant: "fill",
+            onClick: handleSubmit,
+            type: "submit",
+            disabled: !isRewardNameValid || !isRewardCostValid
+            /* || Add conditions for other fields */
+
+          })]
+        })]
+      })]
+    })]
   });
 };
 
-/* harmony default export */ const molecules_SlideoutModal = (SlideoutModal);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RewardForm);
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } });
 
 /***/ }),
 
@@ -473,10 +733,10 @@ const RewardItem = ({
       })
     }), /*#__PURE__*/jsx_runtime.jsx(RewardEdit, {
       children: /*#__PURE__*/jsx_runtime.jsx(Button/* default */.Z, {
-        typeVariant: "neutral",
+        buttonTypeVariant: "neutral",
         sizeVariant: "small",
         label: "Edit",
-        widthVariant: "content",
+        buttonWidthVariant: "content",
         onClick: handleClick
       })
     })]
@@ -793,6 +1053,32 @@ const RewardSettings = ({
 
 /***/ }),
 
+/***/ 5611:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   F: () => (/* binding */ CancelIcon)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6689);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5893);
+
+
+const CancelIcon = props => {
+  return /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx("svg", {
+    width: "24",
+    height: "24",
+    viewBox: "0 0 24 24",
+    fill: props.fill,
+    xmlns: "http://www.w3.org/2000/svg",
+    children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx("path", {
+      d: "M7.9 16.1C8.01667 16.2333 8.14583 16.3 8.2875 16.3C8.42917 16.3 8.56667 16.2333 8.7 16.1L12 12.8L15.325 16.125C15.4417 16.2417 15.575 16.2958 15.725 16.2875C15.875 16.2792 16 16.2167 16.1 16.1C16.2333 15.9833 16.3 15.8542 16.3 15.7125C16.3 15.5708 16.2333 15.4333 16.1 15.3L12.8 12L16.125 8.675C16.2417 8.55833 16.2958 8.425 16.2875 8.275C16.2792 8.125 16.2167 8 16.1 7.9C15.9833 7.76667 15.8542 7.7 15.7125 7.7C15.5708 7.7 15.4333 7.76667 15.3 7.9L12 11.2L8.675 7.875C8.55833 7.75833 8.425 7.70417 8.275 7.7125C8.125 7.72083 8 7.78333 7.9 7.9C7.76667 8.01667 7.7 8.14583 7.7 8.2875C7.7 8.42917 7.76667 8.56667 7.9 8.7L11.2 12L7.875 15.325C7.75833 15.4417 7.70417 15.575 7.7125 15.725C7.72083 15.875 7.78333 16 7.9 16.1V16.1ZM12 21.5C10.6667 21.5 9.42083 21.2583 8.2625 20.775C7.10417 20.2917 6.09583 19.6208 5.2375 18.7625C4.37917 17.9042 3.70833 16.8958 3.225 15.7375C2.74167 14.5792 2.5 13.3333 2.5 12C2.5 10.6667 2.74167 9.425 3.225 8.275C3.70833 7.125 4.37917 6.12083 5.2375 5.2625C6.09583 4.40417 7.10417 3.72917 8.2625 3.2375C9.42083 2.74583 10.6667 2.5 12 2.5C13.3333 2.5 14.575 2.74583 15.725 3.2375C16.875 3.72917 17.8792 4.40417 18.7375 5.2625C19.5958 6.12083 20.2708 7.125 20.7625 8.275C21.2542 9.425 21.5 10.6667 21.5 12C21.5 13.3333 21.2542 14.5792 20.7625 15.7375C20.2708 16.8958 19.5958 17.9042 18.7375 18.7625C17.8792 19.6208 16.875 20.2917 15.725 20.775C14.575 21.2583 13.3333 21.5 12 21.5ZM12 20.375C14.3 20.375 16.2708 19.5542 17.9125 17.9125C19.5542 16.2708 20.375 14.3 20.375 12C20.375 9.7 19.5542 7.72917 17.9125 6.0875C16.2708 4.44583 14.3 3.625 12 3.625C9.7 3.625 7.72917 4.44583 6.0875 6.0875C4.44583 7.72917 3.625 9.7 3.625 12C3.625 14.3 4.44583 16.2708 6.0875 17.9125C7.72917 19.5542 9.7 20.375 12 20.375Z"
+    })
+  });
+};
+
+/***/ }),
+
 /***/ 711:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -965,23 +1251,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   getServerSideProps: () => (/* binding */ getServerSideProps)
 /* harmony export */ });
-/* harmony import */ var _components_DataDisplay__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2294);
-/* harmony import */ var _components_subatomic_Text__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(711);
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7518);
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(8338);
-/* harmony import */ var _components_atoms_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6552);
-/* harmony import */ var _components_organism_RewardSettings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(8860);
-/* harmony import */ var _components_organism_RewardOfferings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(7575);
-/* harmony import */ var _constants_Colors__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(2287);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(6689);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _components_molecules_SlideoutModal__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(8836);
+/* harmony import */ var _components_subatomic_Text__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(711);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7518);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(8338);
+/* harmony import */ var _components_atoms_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6552);
+/* harmony import */ var _components_organism_RewardSettings__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(8860);
+/* harmony import */ var _components_organism_RewardOfferings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7575);
+/* harmony import */ var _constants_Colors__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(2287);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(6689);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(3256);
+/* harmony import */ var _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(5175);
 /* harmony import */ var _GlobalStyle__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(7711);
 /* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(8187);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(5893);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_components_DataDisplay__WEBPACK_IMPORTED_MODULE_0__, _store_store__WEBPACK_IMPORTED_MODULE_11__]);
-([_components_DataDisplay__WEBPACK_IMPORTED_MODULE_0__, _store_store__WEBPACK_IMPORTED_MODULE_11__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(6197);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(5893);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _store_store__WEBPACK_IMPORTED_MODULE_11__, framer_motion__WEBPACK_IMPORTED_MODULE_12__]);
+([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _store_store__WEBPACK_IMPORTED_MODULE_11__, framer_motion__WEBPACK_IMPORTED_MODULE_12__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 
 
 
@@ -997,22 +1284,27 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_com
 
 
 
-const OfferingSettingsAndButton = styled_components__WEBPACK_IMPORTED_MODULE_2___default().div.withConfig({
-  displayName: "rewards__OfferingSettingsAndButton",
-  componentId: "sc-tgm17z-0"
-})(["@media ", "{display:flex;flex-direction:column;gap:40px;width:100%;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS);
-const FlexDiv = styled_components__WEBPACK_IMPORTED_MODULE_2___default().div.withConfig({
+
+const FlexDiv = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
   displayName: "rewards__FlexDiv",
+  componentId: "sc-tgm17z-0"
+})(["@media ", "{display:flex;gap:40px;flex-direction:column;padding:24px 16px;width:100vw;box-sizing:border-box;background:", ";}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.primary100);
+const TitlePlusButton = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "rewards__TitlePlusButton",
   componentId: "sc-tgm17z-1"
-})(["@media ", "{display:flex;gap:32px;flex-direction:column;padding:24px 16px;width:100vw;box-sizing:border-box;background:", ";}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_7__/* ["default"] */ .Z.primary100);
-const RewardsPageTitle = styled_components__WEBPACK_IMPORTED_MODULE_2___default().div.withConfig({
+})(["@media ", "{display:flex;flex-direction:column;align-items:flex-start;gap:32px;}@media ", "{display:flex;flex-direction:row;justify-content:space-between;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.XS, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.S);
+const RewardsPageTitle = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
   displayName: "rewards__RewardsPageTitle",
   componentId: "sc-tgm17z-2"
-})(["@media ", "{display:flex;color:", ";p{font-size:32px;font-weight:800;line-height:39px;}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_7__/* ["default"] */ .Z.neutral700);
-const RewardOfferingsAndSettings = styled_components__WEBPACK_IMPORTED_MODULE_2___default().div.withConfig({
+})(["@media ", "{display:flex;color:", ";p{font-size:32px;line-height:39px;font-weight:800;}}@media ", "{display:flex;color:", ";p{font-size:40px;line-height:48px;}}@media ", "{display:flex;color:", ";p{font-size:48px;line-height:58px;}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.neutral700, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.S, _constants_Colors__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.neutral700, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.L, _constants_Colors__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z.neutral700);
+const RewardOfferingsAndSettings = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
   displayName: "rewards__RewardOfferingsAndSettings",
   componentId: "sc-tgm17z-3"
-})(["@media ", "{display:flex;flex-direction:column;gap:64px;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS);
+})(["@media ", "{display:flex;flex-direction:column;gap:64px;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.XS);
+const ButtonWrap = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "rewards__ButtonWrap",
+  componentId: "sc-tgm17z-4"
+})(["@media ", "{display:flex;width:100%;}@media ", "{width:auto;align-self:flex-start;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.XS, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.S);
 async function getServerSideProps() {
   try {
     // Fetch rewards data
@@ -1049,6 +1341,20 @@ async function getServerSideProps() {
   }
 }
 
+function useBodyScrollLock(isLocked) {
+  (0,react__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
+    if (isLocked) {
+      document.body.style.overflowY = 'hidden';
+    } else {
+      document.body.style.overflowY = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflowY = 'auto';
+    };
+  }, [isLocked]);
+}
+
 function Rewards({
   rewardsData,
   defaultRewardsData
@@ -1056,7 +1362,7 @@ function Rewards({
   const {
     0: isOverlayOpen,
     1: setIsOverlayOpen
-  } = (0,react__WEBPACK_IMPORTED_MODULE_8__.useState)(false);
+  } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)(false);
   const {
     data,
     fetchData
@@ -1064,11 +1370,12 @@ function Rewards({
   const {
     0: isLoading,
     1: setIsLoading
-  } = (0,react__WEBPACK_IMPORTED_MODULE_8__.useState)(true);
+  } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)(true);
   const {
     0: isLoading2,
     1: setIsLoading2
-  } = (0,react__WEBPACK_IMPORTED_MODULE_8__.useState)(true);
+  } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)(true);
+  useBodyScrollLock(isOverlayOpen);
 
   const handleOverlayOpen = () => {
     setIsOverlayOpen(true);
@@ -1083,33 +1390,39 @@ function Rewards({
   }; // Initialize the store on the client side
 
 
-  (0,react__WEBPACK_IMPORTED_MODULE_8__.useEffect)(() => {
+  (0,react__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
     fetchData();
   }, []);
   const storeData = _store_store__WEBPACK_IMPORTED_MODULE_11__/* .useStore */ .o.getState(); // Get the current state of the store
 
   console.log('Store Data:', storeData); // Log the entire store data
 
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(FlexDiv, {
-    children: [isOverlayOpen && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(_components_molecules_SlideoutModal__WEBPACK_IMPORTED_MODULE_9__/* ["default"] */ .Z, {
-      onClose: handleOverlayClose
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(_GlobalStyle__WEBPACK_IMPORTED_MODULE_10__/* ["default"] */ .Z, {}), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(_components_DataDisplay__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z, {}), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(RewardsPageTitle, {
-      children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(_components_subatomic_Text__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z, {
-        text: "Rewards"
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(FlexDiv, {
+    children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_12__.AnimatePresence, {
+      children: isOverlayOpen && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx(_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__/* ["default"] */ .Z, {})
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_12__.AnimatePresence, {
+      children: isOverlayOpen && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx(_components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__/* ["default"] */ .Z, {
+        onClose: handleOverlayClose
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(OfferingSettingsAndButton, {
-      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(_components_atoms_Button__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
-        typeVariant: "primary",
-        sizeVariant: "large",
-        label: "Add Reward",
-        widthVariant: "fill",
-        onClick: handleOverlayOpen
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(RewardOfferingsAndSettings, {
-        children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(_components_organism_RewardOfferings__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z, {
-          rewardsData: rewardsData
-        }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(_components_organism_RewardSettings__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z, {
-          defaultRewardsData: defaultRewardsData
-        })]
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx(_GlobalStyle__WEBPACK_IMPORTED_MODULE_10__/* ["default"] */ .Z, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(TitlePlusButton, {
+      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx(RewardsPageTitle, {
+        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx(_components_subatomic_Text__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z, {
+          text: "Rewards"
+        })
+      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx(ButtonWrap, {
+        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx(_components_atoms_Button__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+          buttonTypeVariant: "primary",
+          sizeVariant: "large",
+          label: "Add Reward",
+          buttonWidthVariant: "fill",
+          onClick: handleOverlayOpen
+        })
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsxs)(RewardOfferingsAndSettings, {
+      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx(_components_organism_RewardOfferings__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z, {
+        rewardsData: rewardsData
+      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_13__.jsx(_components_organism_RewardSettings__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
+        defaultRewardsData: defaultRewardsData
       })]
     })]
   });
@@ -1278,6 +1591,13 @@ module.exports = require("styled-components");
 
 /***/ }),
 
+/***/ 6197:
+/***/ ((module) => {
+
+module.exports = import("framer-motion");;
+
+/***/ }),
+
 /***/ 6912:
 /***/ ((module) => {
 
@@ -1292,7 +1612,7 @@ module.exports = import("zustand");;
 var __webpack_require__ = require("../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [492,249,855,893,294], () => (__webpack_exec__(1552)));
+var __webpack_exports__ = __webpack_require__.X(0, [492,249,855,893,187], () => (__webpack_exec__(1552)));
 module.exports = __webpack_exports__;
 
 })();

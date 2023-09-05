@@ -8,10 +8,12 @@ import RewardSettings from '@/components/organism/RewardSettings';
 import RewardOfferings from '@/components/organism/RewardOfferings';
 import Colors from '@/constants/Colors';
 import React, { useState, useEffect } from 'react';
-import SlideoutModal from '@/components/molecules/SlideoutModal';
+import Overlay from '@/components/atoms/Overlay';
+import RewardForm from '@/components/organism/RewardForm';
 import GlobalStyle from '../GlobalStyle';
 import { useStore } from '../store/store'; // Import your store
 import { getServers } from 'dns';
+import { AnimatePresence } from 'framer-motion';
 
 interface RewardsProps {
     rewardsData: []; // Replace YourDataTypeHere with the actual type of your rewards data
@@ -19,19 +21,10 @@ interface RewardsProps {
 }
 
 
-const OfferingSettingsAndButton = styled.div`
- @media ${StyledMediaQuery.XS} {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    width: 100%;
- }
-`
-
 const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
     display: flex;
-    gap: 32px;
+    gap: 40px;
     flex-direction: column;
     padding: 24px 16px;
     width: 100vw;
@@ -40,14 +33,47 @@ const FlexDiv = styled.div`
 }
 `
 
+const TitlePlusButton = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 32px;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+`
+
 const RewardsPageTitle = styled.div`
  @media ${StyledMediaQuery.XS} {
     display: flex;
     color: ${Colors.neutral700};
     p {
         font-size: 32px;
-        font-weight: 800;
         line-height: 39px;
+        font-weight: 800;
+    }
+ }
+
+ @media ${StyledMediaQuery.S} {
+    display: flex;
+    color: ${Colors.neutral700};
+    p {
+        font-size: 40px;
+        line-height: 48px;
+    }
+ }
+
+ @media ${StyledMediaQuery.L} {
+    display: flex;
+    color: ${Colors.neutral700};
+    p {
+        font-size: 48px;
+        line-height: 58px;
     }
  }
 `
@@ -59,6 +85,20 @@ const RewardOfferingsAndSettings = styled.div`
         gap: 64px;
  }
 `
+
+const ButtonWrap = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    width: 100%;
+   
+}
+
+ @media ${StyledMediaQuery.S} {
+    width: auto;
+    align-self: flex-start;
+  }
+`
+
 
 export async function getServerSideProps() {
     try {
@@ -94,12 +134,27 @@ export async function getServerSideProps() {
     }
 }
 
+function useBodyScrollLock(isLocked: boolean) {
+    useEffect(() => {
+      if (isLocked) {
+        document.body.style.overflowY = 'hidden';
+      } else {
+        document.body.style.overflowY = 'auto';
+      }
+  
+      return () => {
+        document.body.style.overflowY = 'auto';
+      };
+    }, [isLocked]);
+  }
+
 
 function Rewards({ rewardsData, defaultRewardsData }: RewardsProps) {
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
     const { data, fetchData } = useStore();
     const [isLoading, setIsLoading] = useState(true);
     const [isLoading2, setIsLoading2] = useState(true);
+    useBodyScrollLock(isOverlayOpen);
 
 
 const handleOverlayOpen = () => {
@@ -124,25 +179,31 @@ const handleClick = () => {
 
     return (
         <FlexDiv>
-            {isOverlayOpen && <SlideoutModal onClose={handleOverlayClose} />}
+            <AnimatePresence>
+            {isOverlayOpen && <Overlay />}
+            </AnimatePresence>
+            <AnimatePresence>
+                {isOverlayOpen && <RewardForm onClose={handleOverlayClose} />}
+            </AnimatePresence>
             <GlobalStyle />
-            <DataDisplay />
+            <TitlePlusButton>
             <RewardsPageTitle>
                 <Text text='Rewards' />
             </RewardsPageTitle>
-            <OfferingSettingsAndButton>
-                <Button
-                    typeVariant='primary'
-                    sizeVariant='large'
-                    label='Add Reward'
-                    widthVariant='fill'
-                    onClick={handleOverlayOpen}
-                />
+            <ButtonWrap>
+            <Button
+                buttonTypeVariant='primary'
+                sizeVariant='large'
+                label='Add Reward'
+                buttonWidthVariant='fill'
+                onClick={handleOverlayOpen}
+            />
+            </ButtonWrap>
+            </TitlePlusButton>
                 <RewardOfferingsAndSettings>
                     <RewardOfferings rewardsData={rewardsData} />
                     <RewardSettings defaultRewardsData={defaultRewardsData} />
                 </RewardOfferingsAndSettings>
-            </OfferingSettingsAndButton>
         </FlexDiv>
     );
 }

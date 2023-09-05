@@ -4,16 +4,18 @@ import Colors from '../../constants/Colors';
 
 interface ButtonProps {
   label: string;
-  onClick: () => void;
-  typeVariant?: 'primary' | 'secondary' | 'neutral' | 'disabled' | 'smsBlast' | 'error';
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void; // Accept an event argument
+  buttonTypeVariant?: 'primary' | 'secondary' | 'neutral' | 'disabled' | 'smsBlast' | 'error';
   sizeVariant?: 'small' | 'large';
-  widthVariant?: 'fill' | 'content';
+  buttonWidthVariant?: 'fill' | 'content';
+  type?: 'button' | 'submit' | 'reset'; // Include the 'type' prop
+  disabled?: boolean; // Add the disabled prop to the interface
 }
 
 interface ButtonComponentProps {
-  typeVariant?: ButtonProps['typeVariant'];
+  buttonTypeVariant?: ButtonProps['buttonTypeVariant'];
   sizeVariant?: ButtonProps['sizeVariant'];
-  widthVariant?: ButtonProps['widthVariant'];
+  buttonWidthVariant?: ButtonProps['buttonWidthVariant'];
 }
 
 const buttonTypeSheet = {
@@ -89,22 +91,22 @@ const ButtonComponent = styled.button<ButtonComponentProps>`
   justify-content: center;
   border-radius: 6px;
   cursor: pointer;
-  ${({ typeVariant }) => buttonTypeSheet[typeVariant || 'primary']};
+  ${({ buttonTypeVariant }) => buttonTypeSheet[buttonTypeVariant || 'primary']};
   ${({ sizeVariant }) => buttonSizeSheet[sizeVariant || 'large']};
 
   /* Width Styles */
-  width: ${({ widthVariant }) =>
-    widthVariant === 'fill' ? '100%' : 'auto'};
+  width: ${({ buttonWidthVariant }) =>
+    buttonWidthVariant === 'fill' ? '100%' : 'auto'};
 `
 
-const Button: React.FC<ButtonProps> = ({ label, onClick, typeVariant = 'primary', sizeVariant = 'large', widthVariant='content', ...rest }) => {
+const Button: React.FC<ButtonProps> = ({ label, onClick, buttonTypeVariant = 'primary', sizeVariant = 'large', buttonWidthVariant='content', ...rest }) => {
   return (
     <ButtonComponent 
       as="button"
       onClick={onClick}
-      typeVariant={typeVariant}
+      buttonTypeVariant={buttonTypeVariant}
       sizeVariant={sizeVariant}
-      widthVariant={widthVariant}
+      buttonWidthVariant={buttonWidthVariant}
       {...rest}
     >
          {label}

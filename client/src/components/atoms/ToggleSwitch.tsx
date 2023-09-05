@@ -3,42 +3,44 @@ import styled from 'styled-components';
 import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 
-const ToggleContainer = styled.label`
-  position: relative;
+
+interface ToggleProps {
+  active: boolean;
+}
+
+
+//  padding: ${(props) => (props.isChecked ? '0px 4px 0px 0px' : '0px 0px 0px 4px')};
+const ToggleContainer = styled.label<ToggleProps>`
   display: flex;
   width: 64px;
   height: 32px;
+  cursor: pointer;
+  border-radius: 20px;
+  background-color: ${(props) => (props.active ? Colors.success600 : Colors.neutral300)};
+  transition: background-color 0.4s;
 `;
 
 const SwitchInput = styled.input`
-  opacity: 0;
-  width: 0;
-  height: 0;
+  display: none; /* Hide the default checkbox */
 `;
 
-const Slider = styled.span<{ isChecked: boolean }>`
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: ${(props) => (props.isChecked ? '#10B981' : '#ccc')};
+const Slider = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
   transition: 0.4s;
-  border-radius: 20px;
-
-  &:before {
-    position: absolute;
-    content: '';
-    height: 24px;
-    width: 24px;
-    left: ${(props) => (props.isChecked ? '36px' : '4px')};
-    bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-  }
 `;
+
+const SliderButton = styled.div<ToggleProps>`
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 50%;
+  margin-left: ${(props) => (props.active ? 'calc(100% - 28px)' : '4px')};
+  transition: margin-left 0.2s ease-in-out;
+`;
+
+
 
 interface ToggleSwitchProps {
   active: boolean;
@@ -51,9 +53,14 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ active, onChange }) => {
   };
 
   return (
-    <ToggleContainer>
+    <ToggleContainer active={active}>
       <SwitchInput type="checkbox" checked={active} onChange={handleToggle} />
-      <Slider isChecked={active} />
+        <Slider 
+        >
+          <SliderButton 
+            active={active}
+          />
+        </Slider>
     </ToggleContainer>
   );
 };

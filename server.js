@@ -50,110 +50,13 @@ const User = mongoose.model('users');
 const Reward = mongoose.model('rewards');
 const OutboundReward = mongoose.model('outboundRewards');
 
-// Define the route to fetch user information
-app.get('/api/users/:userId', (req, res) => {
-    const userId = req.params.userId;
-    User.findOne({userid: userId})
-      .then(user => {
-        if (!user) {
-          return res.status(404).json({ error: 'User not found' });
-        }
-        res.json(user);
-      })
-      .catch(error => {
-        console.error('Failed to fetch user:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      });
-  });
-
-  app.get('/api/users/:userId/rewards', async (req, res) => {
-    const userId = req.params.userId;
-  
-    try {
-      // Find the user by userId
-      const user = await User.findOne({userid: userId});
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-      const rcs = await Reward.find({user: userId})
-        .catch(err => console.log(err));
-        const currentRewards = Array.from(rcs);
-        res.json(currentRewards);
-    } catch (error) {
-      console.error('Failed to fetch rewards:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
-
-  app.get('/api/customers/:userId/:phoneNumber', async (req, res) => {
-    console.log('hsoidfhsodhfoshdfoishdf')
-    console.log(req.params)
-    try {
-      const { phoneNumber } = req.params;
-      const {userId } = req.params;
-  
-      // Remove all non-digit characters and spaces
-      const cleanedInput = phoneNumber.replace(/\D/g, "");
-  
-      // Extract the area code and phone number
-      const areaCode1 = cleanedInput.slice(0, 3);
-      const phoneNumber1 = cleanedInput.slice(3, 10);
-  
-      // Assuming you have a Mongoose model for customers named 'Customer'
-      const customer = await Customer.findOne({
-        user: userId, // Assuming you have user information associated with customers
-        areaCodeNumber: areaCode1,
-        phoneNumber1: phoneNumber1,
-      });
-  
-      if (!customer) {
-        // Customer not found
-        return res.status(404).json({ message: 'Customer not found' });
-      }
-  
-      // Customer found, send it as a response
-      res.status(200).json(customer);
-    } catch (error) {
-      console.error('Error searching for customer:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
-
-
-  app.get('/api/users/:userId/:customerId', async (req, res) => {
-    const userId = req.params.userId;
-    const customerId = req.params.customerId;
-  
-    try {
-      // Find the user by userId
-      const user = await User.findOne({userid: userId});
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-  
-      // Find the customer with the specified customerId and matching userId
-      const customer = await Customer.findOne({user: userId, customerid: customerId});
-      if (!customer) {
-        return res.status(404).json({ error: 'Customer not found' });
-      }
-  
-      res.json(customer);
-    } catch (error) {
-      console.error('Failed to fetch customer:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
 app.use(
-    cookieSession({
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-      keys: ['dfgrshdfxfdshergfdsvccgdfcxfbv']
-    })
-  );
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: ['dfgrshdfxfdshergfdsvccgdfcxfbv']
+  })
+);
 
-require('./routes/customerInfoRoutes')(app);
-require('./routes/rewardRoutes')(app);
 
 //Passport Config
 require('./config/passport')(passport);
@@ -167,9 +70,9 @@ app.use(methodOverride('_method'))
 
 //Express Session Middleware
 app.use(session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
 }));
 
 //Passport middleware
@@ -181,14 +84,16 @@ app.use(flash());
 
 //Global Variables
 app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    res.locals.error = req.flash('error');
-    next();
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
 })
 
 require('./routes/authRoutes')(app);
 require('./routes/customerInfoRoutes')(app);
+require('./routes/rewardRoutes')(app);
+
 
 
   if (process.env.NODE_ENV === 'production') {
