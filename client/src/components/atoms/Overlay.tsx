@@ -3,7 +3,9 @@ import styled, { css } from 'styled-components';
 import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 
-const OverlayDiv = styled.div`
+import { motion } from 'framer-motion';
+
+const OverlayDiv = styled(motion.div)`
     @media ${StyledMediaQuery.XS} {
         position: fixed;
         top: 0;
@@ -20,7 +22,12 @@ const OverlayDiv = styled.div`
 
 const Overlay = () => {
     return (
-      <OverlayDiv />
+      <OverlayDiv 
+      initial={{ opacity: 0, backdropFilter: "blur(0px)" }}  // initial state (hidden to the right)
+      animate={{ opacity: 1, backdropFilter: "blur(4px)"  }}  // end state (appears from the right)
+      exit={{ opacity: 0, backdropFilter: "blur(0px)"  }}  // exit state (disappears to the right)
+      transition={{ duration: .2 }} // animation takes 400ms with easeInOut easing
+      />
     );
   };
   

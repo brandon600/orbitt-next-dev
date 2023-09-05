@@ -213,10 +213,10 @@ const RewardItem: React.FC<RewardItemProps> = ({
         </RewardActive>
         <RewardEdit>
           <Button
-            typeVariant="neutral"
+            buttonTypeVariant="neutral"
             sizeVariant="small"
             label="Edit"
-            widthVariant="content"
+            buttonWidthVariant="content"
             onClick={handleClick}
           />
         </RewardEdit>

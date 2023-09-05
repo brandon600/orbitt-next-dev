@@ -4,8 +4,6 @@ import { RewardData } from '../types/RewardData';
 import { DefaultRewardData } from '../types/DefaultRewardData';
 
 export interface UserData {
-  rewards: RewardData[]; // Define the Reward type
-  defaultRewards: DefaultRewardData[];
   userid: string;
   // Add other properties here as needed
 }
@@ -16,8 +14,6 @@ interface AppState {
 }
 
 const initialData: UserData = {
-  rewards: [],
-  defaultRewards: [],
   userid: '',
   // Add initial values for other properties as needed
 };
