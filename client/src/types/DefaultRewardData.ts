@@ -4,5 +4,6 @@ export interface DefaultRewardData {
     rewardName: string;
     rewardValue: number;
     rewardActive: boolean;
+    index: number;
     // Add other properties as needed
 }

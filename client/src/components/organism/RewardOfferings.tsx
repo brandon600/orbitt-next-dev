@@ -10,6 +10,8 @@ import { RewardData } from '@/types/RewardData';
 
 interface RewardOfferingsProps {
   rewardsData: RewardData[]; // An array of RewardData objects
+  onPendingChange: (index: number, newValue: boolean) => void;
+  originalRewardToggles: boolean[];
 }
 
 const RewardOfferingsContainer = styled.div`
@@ -75,7 +77,7 @@ const RewardOfferingList = styled.div`
     }
 `
 
-const RewardOfferings: React.FC<RewardOfferingsProps> = ({ rewardsData }) => {
+const RewardOfferings: React.FC<RewardOfferingsProps> = ({ rewardsData, onPendingChange, originalRewardToggles }) => {
     console.log(rewardsData)
     if (!rewardsData) {
         // Handle the case when rewardsData is not defined (e.g., still loading)
@@ -100,16 +102,21 @@ const RewardOfferings: React.FC<RewardOfferingsProps> = ({ rewardsData }) => {
             label4='Active'
             label5='Edit'
         />
-            {rewardsData.map((reward) => (
+            {rewardsData.map((reward, index) => (
             <RewardItem
-            key={reward.id} // Make sure to provide a unique key for each item
-            // Pass the data to the RewardItem component as props
-            rewardName={reward.rewardName}
-            rewardValue={reward.rewardValue}
-            rewardCost={reward.rewardCost}
-            rewardNotes={reward.rewardTerms}
-            rewardActive={reward.rewardActive}
-            // Add other props as needed
+                key={reward.id} // Make sure to provide a unique key for each item
+                // Pass the data to the RewardItem component as props
+                index={index}
+                id={reward.id}
+                _id={reward._id}
+                originalRewardValue={originalRewardToggles[index]}
+                rewardName={reward.rewardName}
+                rewardValue={reward.rewardValue}
+                rewardCost={reward.rewardCost}
+                rewardTerms={reward.rewardTerms}
+                rewardActive={reward.rewardActive}
+                onRewardToggleChange={onPendingChange}
+                // Add other props as needed
             />
         ))}
         </RewardOfferingList>
