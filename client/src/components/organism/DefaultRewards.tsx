@@ -73,7 +73,7 @@ const RewardSettingsList = styled.div`
         width: 100%;
     }
 
-    @media ${StyledMediaQuery.L} {
+    @media ${StyledMediaQuery.S} {
         gap: 32px;
     }
 `

@@ -2,7 +2,7 @@
 (() => {
 var exports = {};
 exports.id = 177;
-exports.ids = [177,888,660];
+exports.ids = [177,660];
 exports.modules = {
 
 /***/ 7711:
@@ -682,7 +682,7 @@ const HeadingPlusSubheading = external_styled_components_.styled.div.withConfig(
 const RewardSettingsList = external_styled_components_.styled.div.withConfig({
   displayName: "DefaultRewards__RewardSettingsList",
   componentId: "sc-jqrbah-2"
-})(["@media ", "{display:flex;flex-direction:column;gap:24px;width:100%;}@media ", "{gap:32px;}"], StyledMediaQuery/* default */.Z.XS, StyledMediaQuery/* default */.Z.L);
+})(["@media ", "{display:flex;flex-direction:column;gap:24px;width:100%;}@media ", "{gap:32px;}"], StyledMediaQuery/* default */.Z.XS, StyledMediaQuery/* default */.Z.S);
 
 const DefaultRewards = ({
   defaultRewardsData,
@@ -864,7 +864,7 @@ const EditRewardForm = ({
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const updatedReward = await response.json();
         showToast('Reward updated successfully!', 'success'); // Additional logic here (e.g., close the form, refresh rewards list, etc.)
       } else {
         showToast('Failed to update reward.', 'error');
@@ -1784,9 +1784,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(8187);
 /* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(6197);
 /* harmony import */ var _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(9418);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(5893);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__, _store_store__WEBPACK_IMPORTED_MODULE_12__, framer_motion__WEBPACK_IMPORTED_MODULE_13__, _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__]);
-([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__, _store_store__WEBPACK_IMPORTED_MODULE_12__, framer_motion__WEBPACK_IMPORTED_MODULE_13__, _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(4612);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(5893);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__, _store_store__WEBPACK_IMPORTED_MODULE_12__, framer_motion__WEBPACK_IMPORTED_MODULE_13__, _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__, socket_io_client__WEBPACK_IMPORTED_MODULE_15__]);
+([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__, _store_store__WEBPACK_IMPORTED_MODULE_12__, framer_motion__WEBPACK_IMPORTED_MODULE_13__, _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__, socket_io_client__WEBPACK_IMPORTED_MODULE_15__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -1806,6 +1807,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
  // Import your store
+
 
 
 
@@ -1882,7 +1884,7 @@ function useBodyScrollLock(isLocked) {
 }
 
 function Rewards({
-  rewardsData,
+  rewardsData: initialRewardsData,
   defaultRewardsData
 }) {
   const {
@@ -1940,6 +1942,34 @@ function Rewards({
     0: selectedReward,
     1: setSelectedReward
   } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)(null);
+  const {
+    0: rewardsData,
+    1: setRewardsData
+  } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)(initialRewardsData);
+  (0,react__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
+    console.log("Setting up socket connection.");
+    const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_15__["default"])("http://localhost:5000"); // Listen for 'reward-updated' events
+
+    socket.on("reward-updated", updatedReward => {
+      // Update the rewardsData state here
+      console.log(updatedReward);
+      const updatedRewardsData = rewardsData.map(reward => {
+        if (reward.rewardid === updatedReward.rewardid) {
+          return updatedReward;
+        }
+
+        return reward;
+      });
+      setRewardsData(updatedRewardsData);
+    });
+    socket.on("disconnect", () => {
+      console.log("Disconnected from the server");
+    });
+    return () => {
+      // Cleanup: Disconnect socket when component is unmounted
+      socket.disconnect();
+    };
+  }, [rewardsData]);
   (0,react__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
     setOriginalRewardToggles(rewardsData.map(reward => reward.rewardActive));
     setCurrentRewardToggles(rewardsData.map(reward => reward.rewardActive));
@@ -2034,34 +2064,34 @@ function Rewards({
 
   console.log('Store Data:', storeData); // Log the entire store data
 
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(FlexDiv, {
-    children: [hasPendingChanges && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
-      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx("p", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsxs)(FlexDiv, {
+    children: [hasPendingChanges && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsxs)("div", {
+      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx("p", {
         children: "You have pending changes to save. Click the button to save."
-      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx("button", {
+      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx("button", {
         onClick: handleSaveChanges,
         children: "Save Changes"
       })]
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
-      children: toast.visible && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(_components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__/* ["default"] */ .Z, {}, "toast")
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
-      children: (isOverlayOpen || isEditFormOpen) && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__/* ["default"] */ .Z, {})
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
-      children: isOverlayOpen && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(_components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__/* ["default"] */ .Z, {
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
+      children: toast.visible && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__/* ["default"] */ .Z, {}, "toast")
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
+      children: (isOverlayOpen || isEditFormOpen) && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__/* ["default"] */ .Z, {})
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
+      children: isOverlayOpen && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__/* ["default"] */ .Z, {
         onClose: handleOverlayClose
       })
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
-      children: isEditFormOpen && selectedReward && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(_components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__/* ["default"] */ .Z, _objectSpread(_objectSpread({}, selectedReward), {}, {
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
+      children: isEditFormOpen && selectedReward && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__/* ["default"] */ .Z, _objectSpread(_objectSpread({}, selectedReward), {}, {
         rewardCost: selectedReward.rewardCost.toString(),
         onClose: handleEditFormClose
       }))
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(_GlobalStyle__WEBPACK_IMPORTED_MODULE_11__/* ["default"] */ .Z, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(TitlePlusButton, {
-      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(RewardsPageTitle, {
-        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(_components_subatomic_Text__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z, {
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_GlobalStyle__WEBPACK_IMPORTED_MODULE_11__/* ["default"] */ .Z, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsxs)(TitlePlusButton, {
+      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(RewardsPageTitle, {
+        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_subatomic_Text__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z, {
           text: "Rewards"
         })
-      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(ButtonWrap, {
-        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(_components_atoms_Button__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(ButtonWrap, {
+        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_atoms_Button__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
           buttonTypeVariant: "primary",
           sizeVariant: "large",
           label: "Add Reward",
@@ -2069,13 +2099,13 @@ function Rewards({
           onClick: handleOverlayOpen
         })
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(RewardOfferingsAndSettings, {
-      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(_components_organism_RewardOfferings__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z, {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsxs)(RewardOfferingsAndSettings, {
+      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_organism_RewardOfferings__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z, {
         rewardsData: rewardsData,
         onPendingChange: handleRewardsPendingChange,
         originalRewardToggles: originalRewardToggles,
         onEditClick: handleEditClick
-      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx(_components_organism_DefaultRewards__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
+      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_organism_DefaultRewards__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
         defaultRewardsData: defaultRewardsData,
         onDefaultRewardsPendingChange: handleDefaultRewardsPendingChange,
         originalDefaultRewardsToggles: originalDefaultRewardsToggles
@@ -2090,7 +2120,7 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 1552:
+/***/ 7180:
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
@@ -2115,11 +2145,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7182);
 /* harmony import */ var next_dist_pages_document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(1492);
 /* harmony import */ var next_dist_pages_document__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(next_dist_pages_document__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var next_dist_pages_app__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(1249);
-/* harmony import */ var next_dist_pages_app__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(next_dist_pages_app__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6126);
 /* harmony import */ var private_next_pages_rewards_tsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(8069);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([private_next_pages_rewards_tsx__WEBPACK_IMPORTED_MODULE_5__]);
-private_next_pages_rewards_tsx__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_4__, private_next_pages_rewards_tsx__WEBPACK_IMPORTED_MODULE_5__]);
+([private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_4__, private_next_pages_rewards_tsx__WEBPACK_IMPORTED_MODULE_5__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 // @ts-ignore this need to be imported from next/dist to be external
 
 
@@ -2158,7 +2187,7 @@ const routeModule = new PagesRouteModule({
         filename: ""
     },
     components: {
-        App: (next_dist_pages_app__WEBPACK_IMPORTED_MODULE_4___default()),
+        App: private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_4__["default"],
         Document: (next_dist_pages_document__WEBPACK_IMPORTED_MODULE_3___default())
     },
     userland: private_next_pages_rewards_tsx__WEBPACK_IMPORTED_MODULE_5__
@@ -2226,13 +2255,6 @@ module.exports = require("next/dist/shared/lib/is-plain-object.js");
 
 /***/ }),
 
-/***/ 9232:
-/***/ ((module) => {
-
-module.exports = require("next/dist/shared/lib/utils.js");
-
-/***/ }),
-
 /***/ 6689:
 /***/ ((module) => {
 
@@ -2254,6 +2276,13 @@ module.exports = import("framer-motion");;
 
 /***/ }),
 
+/***/ 4612:
+/***/ ((module) => {
+
+module.exports = import("socket.io-client");;
+
+/***/ }),
+
 /***/ 6912:
 /***/ ((module) => {
 
@@ -2268,7 +2297,7 @@ module.exports = import("zustand");;
 var __webpack_require__ = require("../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [492,249,855,893,187], () => (__webpack_exec__(1552)));
+var __webpack_exports__ = __webpack_require__.X(0, [492,815,126,187], () => (__webpack_exec__(7180)));
 module.exports = __webpack_exports__;
 
 })();

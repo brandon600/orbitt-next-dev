@@ -1,7 +1,7 @@
 {
+  "/_app": "pages/_app.js",
   "/api/data": "pages/api/data.js",
   "/page": "pages/page.html",
-  "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/layout": "pages/layout.html",
   "/rewards": "pages/rewards.js",

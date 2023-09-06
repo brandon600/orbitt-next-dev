@@ -18,6 +18,7 @@ import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import { RewardData }  from '@/types/RewardData';
 import { DefaultRewardData } from '@/types/DefaultRewardData';
+import io from "socket.io-client";
 
 interface RewardsProps {
     rewardsData: RewardData[]; // Replace YourDataTypeHere with the actual type of your rewards data
@@ -156,7 +157,7 @@ function useBodyScrollLock(isLocked: boolean) {
   }
 
 
-function Rewards({ rewardsData, defaultRewardsData }: RewardsProps) {
+function Rewards({ rewardsData: initialRewardsData, defaultRewardsData }: RewardsProps) {
     const { data, fetchData, toast, hideToast, showToast } = useStore((state: AppState) => ({
         data: state.data,
         fetchData: state.fetchData,
@@ -177,6 +178,42 @@ function Rewards({ rewardsData, defaultRewardsData }: RewardsProps) {
 
     const [isEditFormOpen, setIsEditFormOpen] = useState(false); // New state for form visibility
     const [selectedReward, setSelectedReward] = useState<RewardData | null>(null);
+
+    const [rewardsData, setRewardsData] = useState(initialRewardsData);
+
+
+
+    useEffect(() => {
+      console.log("Setting up socket connection.");
+      const socket = io("http://localhost:5000");
+    
+      // Listen for 'reward-updated' events
+      socket.on("reward-updated", (updatedReward) => {
+        // Update the rewardsData state here
+        console.log(updatedReward)
+        const updatedRewardsData = rewardsData.map((reward) => {
+          if (reward.rewardid === updatedReward.rewardid) {
+            return updatedReward;
+          }
+          return reward;
+        });
+        setRewardsData(updatedRewardsData);
+      });
+
+      socket.on("disconnect", () => {
+        console.log("Disconnected from the server");
+      });
+    
+      return () => {
+        // Cleanup: Disconnect socket when component is unmounted
+        socket.disconnect();
+      };
+  }, [rewardsData]);
+
+  
+
+
+
 
     useEffect(() => {
         setOriginalRewardToggles(rewardsData.map((reward) => reward.rewardActive));
@@ -214,17 +251,17 @@ function Rewards({ rewardsData, defaultRewardsData }: RewardsProps) {
         setSelectedReward(null);
       };
 
-const handleOverlayOpen = () => {
-    setIsOverlayOpen(true);
-  };
+    const handleOverlayOpen = () => {
+        setIsOverlayOpen(true);
+      };
 
-  const handleOverlayClose = () => {
-    setIsOverlayOpen(false);
-  };
+    const handleOverlayClose = () => {
+      setIsOverlayOpen(false);
+    };
 
-const handleClick = () => {
-    console.log('clicked')
-}
+    const handleClick = () => {
+        console.log('clicked')
+    }
    // Initialize the store on the client side
    useEffect(() => {
     fetchData();
@@ -279,12 +316,12 @@ async function handleSaveChanges() {
 
     return (
         <FlexDiv>
-    {hasPendingChanges && (
-        <div>
-            <p>You have pending changes to save. Click the button to save.</p>
-            <button onClick={handleSaveChanges}>Save Changes</button>
-        </div>
-      )}
+        {hasPendingChanges && (
+            <div>
+                <p>You have pending changes to save. Click the button to save.</p>
+                <button onClick={handleSaveChanges}>Save Changes</button>
+            </div>
+          )}
             <AnimatePresence>
             {toast.visible && (
                 <Toast key="toast" />
