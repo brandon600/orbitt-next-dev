@@ -51,4 +51,42 @@ module.exports = (app) => {
       );
     });
 
+
+ 
+    
+    app.post('/update-active-rewards/', async (req, res) => {
+      const { updatedRewards, updatedDefaultRewards } = req.body;
+    
+      const rewardsTrueArray = updatedRewards
+        .filter(reward => reward.rewardActive === true)
+        .map(reward => reward._id);
+    
+      const rewardsFalseArray = updatedRewards
+        .filter(reward => reward.rewardActive === false)
+        .map(reward => reward._id);
+    
+      const defaultRewardsTrueArray = updatedDefaultRewards
+        .filter(defaultReward => defaultReward.rewardActive === true)
+        .map(defaultReward => defaultReward._id);
+    
+      const defaultRewardsFalseArray = updatedDefaultRewards
+        .filter(defaultReward => defaultReward.rewardActive === false)
+        .map(defaultReward => defaultReward._id);
+    
+      try {
+        await Reward.updateMany({ _id: { $in: rewardsTrueArray } }, { $set: { rewardActive: true } });
+        await Reward.updateMany({ _id: { $in: rewardsFalseArray } }, { $set: { rewardActive: false } });
+    
+        await OutboundReward.updateMany({ _id: { $in: defaultRewardsTrueArray } }, { $set: { rewardActive: true } });
+        await OutboundReward.updateMany({ _id: { $in: defaultRewardsFalseArray } }, { $set: { rewardActive: false } });
+    
+        console.log('Successfully updated rewards and default rewards');
+        res.status(200).json({ message: 'Successfully updated all rewards and default rewards' });
+    
+      } catch (error) {
+        console.error('Failed to update rewards:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+      }
+    });    
+
 }

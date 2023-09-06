@@ -5,17 +5,14 @@ import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Text from '../subatomic/Text'
 import Button from '../atoms/Button';
 import ToggleSwitch from '../atoms/ToggleSwitch';
+import { RewardData } from '@/types/RewardData';
 
 // Define the props interface for RewardItem
-interface RewardItemProps {
-    // Define the types for your props here
-    rewardName: string;
-    rewardCost: number;
-    rewardValue: string;
-    rewardNotes: string;
-    rewardActive: boolean;
+interface RewardItemProps extends RewardData {
+    originalRewardValue: boolean;
+    onRewardToggleChange: (index: number, newValue: boolean) => void;
     // Add other props as needed
-  }
+}
 
 const RewardItemContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -181,8 +178,11 @@ const RewardItem: React.FC<RewardItemProps> = ({
     rewardName,
     rewardValue,
     rewardCost,
-    rewardNotes,
-    rewardActive
+    rewardActive,
+    rewardTerms,
+    index,
+    originalRewardValue,
+    onRewardToggleChange
   }) => {
     const handleClick = () => {
       console.log('handle click');
@@ -190,8 +190,9 @@ const RewardItem: React.FC<RewardItemProps> = ({
 
     const [isActive, setIsActive] = useState(rewardActive);
 
-  const handleToggle = (active: boolean) => {
-    setIsActive(active);
+const handleToggle = (newValue: boolean) => {
+    setIsActive(newValue);
+    onRewardToggleChange(index, newValue);
   };
   
     return (
@@ -204,7 +205,7 @@ const RewardItem: React.FC<RewardItemProps> = ({
           <Text text={rewardCost.toString()} />
         </RewardCost>
         <RewardNotes>
-          <Text text={rewardNotes} />
+          <Text text={rewardTerms} />
         </RewardNotes>
         <RewardActive>
         <ToggleSwitch 

@@ -137,7 +137,7 @@ const Toast: React.FC = () => {
       }, 3200);
       return () => {
         clearTimeout(timerForBar);
-     //   clearTimeout(timerForToast);
+        clearTimeout(timerForToast);
       };
     }
   }, [toast, hideToast]);

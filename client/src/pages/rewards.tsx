@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import StyledMediaQuery from '../constants/StyledMediaQuery';
 import Button from '../components/atoms/Button';
 import RewardTableHead from '@/components/atoms/RewardTableHead';
-import RewardSettings from '@/components/organism/RewardSettings';
+import DefaultRewards from '@/components/organism/DefaultRewards';
 import RewardOfferings from '@/components/organism/RewardOfferings';
 import Colors from '@/constants/Colors';
 import React, { useState, useEffect } from 'react';
@@ -15,10 +15,12 @@ import { useStore, AppState } from '../store/store'; // Import your store
 import { getServers } from 'dns';
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
+import { RewardData }  from '@/types/RewardData';
+import { DefaultRewardData } from '@/types/DefaultRewardData';
 
 interface RewardsProps {
-    rewardsData: []; // Replace YourDataTypeHere with the actual type of your rewards data
-    defaultRewardsData: []; // Replace YourDataTypeHere with the actual type of your default rewards data
+    rewardsData: RewardData[]; // Replace YourDataTypeHere with the actual type of your rewards data
+    defaultRewardsData: DefaultRewardData[]; // Replace YourDataTypeHere with the actual type of your default rewards data
 }
 
 
@@ -135,6 +137,7 @@ export async function getServerSideProps() {
     }
 }
 
+
 function useBodyScrollLock(isLocked: boolean) {
     useEffect(() => {
       if (isLocked) {
@@ -151,18 +154,47 @@ function useBodyScrollLock(isLocked: boolean) {
 
 
 function Rewards({ rewardsData, defaultRewardsData }: RewardsProps) {
-    const { data, fetchData, toast, hideToast } = useStore((state: AppState) => ({
+    const { data, fetchData, toast, hideToast, showToast } = useStore((state: AppState) => ({
         data: state.data,
         fetchData: state.fetchData,
         toast: state.toast,
         hideToast: state.hideToast,
+        showToast: state.showToast
       }));
 
+    const [hasPendingChanges, setHasPendingChanges] = useState(false);
+    const [originalRewardToggles, setOriginalRewardToggles] = useState<boolean[]>([]);
+    const [currentRewardToggles, setCurrentRewardToggles] = useState<boolean[]>([]);
+    const [originalDefaultRewardsToggles, setOriginalDefaultRewardsToggles] = useState<boolean[]>([]);
+    const [currentDefaultRewardsToggles, setCurrentDefaultRewardsToggles] = useState<boolean[]>([]);
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isLoading2, setIsLoading2] = useState(true);
     useBodyScrollLock(isOverlayOpen);
 
+    useEffect(() => {
+        setOriginalRewardToggles(rewardsData.map((reward) => reward.rewardActive));
+        setCurrentRewardToggles(rewardsData.map((reward) => reward.rewardActive));
+      }, [rewardsData]);
+
+    useEffect(() => {
+    setOriginalDefaultRewardsToggles(defaultRewardsData.map((defaultReward) => defaultReward.rewardActive));
+    setCurrentDefaultRewardsToggles(defaultRewardsData.map((defaultReward) => defaultReward.rewardActive));
+    }, [defaultRewardsData]);
+
+      const handleRewardsPendingChange = (index: number, newValue: boolean) => {
+        const newCurrentToggles = [...currentRewardToggles];
+        newCurrentToggles[index] = newValue;
+        setCurrentRewardToggles(newCurrentToggles);
+        setHasPendingChanges(!originalRewardToggles.every((val, i) => val === newCurrentToggles[i]));
+      };
+
+      const handleDefaultRewardsPendingChange = (index: number, newValue: boolean) => {
+        const newcurrentDefaultRewardsToggles = [...currentDefaultRewardsToggles];
+        newcurrentDefaultRewardsToggles[index] = newValue;
+        setCurrentDefaultRewardsToggles(newcurrentDefaultRewardsToggles);
+        setHasPendingChanges(!originalDefaultRewardsToggles.every((val, i) => val === newcurrentDefaultRewardsToggles[i]));
+      };
 
 const handleOverlayOpen = () => {
     setIsOverlayOpen(true);
@@ -180,12 +212,61 @@ const handleClick = () => {
     fetchData();
 }, []);
 
-
+async function handleSaveChanges() {
+    const updatedRewardsData = rewardsData.map((reward, index) => ({
+      ...reward,
+      rewardActive: currentRewardToggles[index]
+    }));
+  
+    const updatedDefaultRewardsData = defaultRewardsData.map((defaultReward, index) => ({
+      ...defaultReward,
+      rewardActive: currentDefaultRewardsToggles[index]
+    }));
+  
+    const payload = {
+      updatedRewards: updatedRewardsData,
+      updatedDefaultRewards: updatedDefaultRewardsData
+    };
+  
+    console.log(`Sending updated data: ${JSON.stringify(payload)}`);
+  
+    try {
+      const response = await fetch('http://localhost:5000/update-active-rewards', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+  
+      if (response.ok) {
+        console.log('Successfully updated rewards and default rewards');
+        showToast('Successfully updated rewards!', 'success'); // Added toast message
+        setOriginalRewardToggles(currentRewardToggles);
+        setOriginalDefaultRewardsToggles(currentDefaultRewardsToggles);
+        setHasPendingChanges(false);
+      } else {
+        console.log('Failed to update rewards.');
+        showToast('Failed to update rewards.', 'error');
+      }
+    } catch (error) {
+      console.error('Error updating rewards:', error);
+      showToast('Error updating rewards.', 'error');
+    }
+  }
+  
+  
     const storeData = useStore.getState(); // Get the current state of the store
     console.log('Store Data:', storeData); // Log the entire store data
 
     return (
         <FlexDiv>
+    {hasPendingChanges && (
+        <div>
+            <p>You have pending changes to save. Click the button to save.</p>
+            <button onClick={handleSaveChanges}>Save Changes</button>
+        </div>
+      )}
             <AnimatePresence>
             {toast.visible && (
                 <Toast key="toast" />
@@ -204,12 +285,6 @@ const handleClick = () => {
             </RewardsPageTitle>
             <ButtonWrap>
             <Button
-  buttonTypeVariant='primary'
-  sizeVariant='small'
-  label='Hide Toast'
-  onClick={hideToast}
-/>
-            <Button
                 buttonTypeVariant='primary'
                 sizeVariant='large'
                 label='Add Reward'
@@ -219,8 +294,8 @@ const handleClick = () => {
             </ButtonWrap>
             </TitlePlusButton>
                 <RewardOfferingsAndSettings>
-                    <RewardOfferings rewardsData={rewardsData} />
-                    <RewardSettings defaultRewardsData={defaultRewardsData} />
+                    <RewardOfferings rewardsData={rewardsData} onPendingChange={handleRewardsPendingChange} originalRewardToggles={originalRewardToggles} />
+                    <DefaultRewards defaultRewardsData={defaultRewardsData} onDefaultRewardsPendingChange={handleDefaultRewardsPendingChange} originalDefaultRewardsToggles={originalDefaultRewardsToggles} />
                 </RewardOfferingsAndSettings>
         </FlexDiv>
     );

@@ -435,7 +435,8 @@ const Toast = () => {
         hideToast();
       }, 3200);
       return () => {
-        clearTimeout(timerForBar); //   clearTimeout(timerForToast);
+        clearTimeout(timerForBar);
+        clearTimeout(timerForToast);
       };
     }
   }, [toast, hideToast]);
@@ -546,6 +547,185 @@ const ToggleSwitch = ({
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ToggleSwitch);
+
+/***/ }),
+
+/***/ 7105:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  Z: () => (/* binding */ organism_DefaultRewards)
+});
+
+// EXTERNAL MODULE: external "react"
+var external_react_ = __webpack_require__(6689);
+// EXTERNAL MODULE: external "styled-components"
+var external_styled_components_ = __webpack_require__(7518);
+var external_styled_components_default = /*#__PURE__*/__webpack_require__.n(external_styled_components_);
+// EXTERNAL MODULE: ./src/constants/Colors.ts
+var Colors = __webpack_require__(2287);
+// EXTERNAL MODULE: ./src/constants/StyledMediaQuery.ts
+var StyledMediaQuery = __webpack_require__(8338);
+// EXTERNAL MODULE: ./src/components/subatomic/Text.tsx
+var Text = __webpack_require__(711);
+// EXTERNAL MODULE: ./src/components/atoms/ToggleSwitch.tsx
+var ToggleSwitch = __webpack_require__(5030);
+// EXTERNAL MODULE: ./node_modules/react/jsx-runtime.js
+var jsx_runtime = __webpack_require__(5893);
+;// CONCATENATED MODULE: ./src/components/molecules/DefaultRewardItem.tsx
+
+
+
+
+
+
+
+
+const TriggeredRewardContainer = external_styled_components_default().div.withConfig({
+  displayName: "DefaultRewardItem__TriggeredRewardContainer",
+  componentId: "sc-1b8nh8y-0"
+})(["@media ", "{display:flex;width:100%;gap:12px;flex-direction:column;justify-content:center;color:", ";p{font-size:20px;font-weight:500;line-height:24px;}border-bottom:1px solid ", ";}@media ", "{gap:16px;width:440px;p{font-size:24px;font-weight:500;line-height:29px;}}@media ", "{width:560px;}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral700, Colors/* default */.Z.neutral200, StyledMediaQuery/* default */.Z.S, StyledMediaQuery/* default */.Z.L);
+const RewardInfoPlusToggle = external_styled_components_default().div.withConfig({
+  displayName: "DefaultRewardItem__RewardInfoPlusToggle",
+  componentId: "sc-1b8nh8y-1"
+})(["@media ", "{display:flex;padding:8px 12px;align-items:center;gap:8px;align-self:stretch;background:", ";border-radius:8px;}@media ", "{justify-content:space-between;}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral200, StyledMediaQuery/* default */.Z.S);
+const RewardInfo = external_styled_components_default().div.withConfig({
+  displayName: "DefaultRewardItem__RewardInfo",
+  componentId: "sc-1b8nh8y-2"
+})(["@media ", "{display:flex;align-items:center;gap:16px;}@media ", "{gap:16px;}"], StyledMediaQuery/* default */.Z.XS, StyledMediaQuery/* default */.Z.S);
+const GiveCustomersDiv = external_styled_components_default().div.withConfig({
+  displayName: "DefaultRewardItem__GiveCustomersDiv",
+  componentId: "sc-1b8nh8y-3"
+})(["@media ", "{display:flex;color:", ";p{font-size:14px;font-weight:500;line-height:22px;}}@media ", "{p{font-size:20px;font-weight:500;line-height:24px;}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral700, StyledMediaQuery/* default */.Z.S);
+const PointsGivenDiv = external_styled_components_default().div.withConfig({
+  displayName: "DefaultRewardItem__PointsGivenDiv",
+  componentId: "sc-1b8nh8y-4"
+})(["@media ", "{display:flex;height:48px;padding:0px 8px;justify-content:center;align-items:center;color:", ";background:", ";border-radius:8px;p{font-size:20px;font-weight:800;line-height:24px;}}@media ", "{padding:0px 16px;p{font-size:24px;font-weight:800;line-height:29px;}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral700, Colors/* default */.Z.shades100, StyledMediaQuery/* default */.Z.S);
+const PointsDiv = external_styled_components_default().div.withConfig({
+  displayName: "DefaultRewardItem__PointsDiv",
+  componentId: "sc-1b8nh8y-5"
+})(["@media ", "{display:flex;height:48px;align-items:center;gap:12px;color:", ";p{font-size:14px;font-weight:500;line-height:22px;}}@media ", "{p{font-size:20px;font-weight:500;line-height:24px;}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral700, StyledMediaQuery/* default */.Z.S);
+const ActiveDiv = external_styled_components_default().div.withConfig({
+  displayName: "DefaultRewardItem__ActiveDiv",
+  componentId: "sc-1b8nh8y-6"
+})(["@media ", "{display:flex;}"], StyledMediaQuery/* default */.Z.XS);
+
+const DefaultRewardItem = ({
+  rewardName: defaultRewardName,
+  rewardValue: defaultRewardValue,
+  rewardActive: defaultRewardActive,
+  index,
+  onDefaultToggleChange
+}) => {
+  const handleClick = () => {
+    console.log('handle click');
+  };
+
+  const {
+    0: isDefaultActive,
+    1: setIsDefaultActive
+  } = (0,external_react_.useState)(defaultRewardActive);
+
+  const handleToggle = newValue => {
+    setIsDefaultActive(newValue);
+    onDefaultToggleChange(index, newValue);
+  };
+
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(TriggeredRewardContainer, {
+    children: [/*#__PURE__*/jsx_runtime.jsx(Text/* default */.Z, {
+      text: defaultRewardName
+    }), /*#__PURE__*/jsx_runtime.jsx(RewardInfoPlusToggle, {
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)(RewardInfo, {
+        children: [/*#__PURE__*/jsx_runtime.jsx(GiveCustomersDiv, {
+          children: /*#__PURE__*/jsx_runtime.jsx(Text/* default */.Z, {
+            text: "Give customers"
+          })
+        }), /*#__PURE__*/jsx_runtime.jsx(PointsGivenDiv, {
+          children: /*#__PURE__*/jsx_runtime.jsx(Text/* default */.Z, {
+            text: defaultRewardValue.toString()
+          })
+        }), /*#__PURE__*/jsx_runtime.jsx(PointsDiv, {
+          children: /*#__PURE__*/jsx_runtime.jsx(Text/* default */.Z, {
+            text: "point(s)"
+          })
+        }), /*#__PURE__*/jsx_runtime.jsx(ActiveDiv, {
+          children: /*#__PURE__*/jsx_runtime.jsx(ToggleSwitch/* default */.Z, {
+            active: isDefaultActive,
+            onChange: handleToggle
+          })
+        })]
+      })
+    })]
+  });
+};
+
+/* harmony default export */ const molecules_DefaultRewardItem = (DefaultRewardItem);
+;// CONCATENATED MODULE: ./src/components/organism/DefaultRewards.tsx
+
+
+
+
+
+
+
+
+const RewardSettingsContainer = external_styled_components_.styled.div.withConfig({
+  displayName: "DefaultRewards__RewardSettingsContainer",
+  componentId: "sc-jqrbah-0"
+})(["@media ", "{display:flex;flex-direction:column;width:100%;gap:24px;}@media ", "{gap:32px;}"], StyledMediaQuery/* default */.Z.XS, StyledMediaQuery/* default */.Z.L);
+const HeadingPlusSubheading = external_styled_components_.styled.div.withConfig({
+  displayName: "DefaultRewards__HeadingPlusSubheading",
+  componentId: "sc-jqrbah-1"
+})(["@media ", "{display:flex;flex-direction:column;align-items:flex-start;gap:4px;align-self:stretch;h3{font-size:24px;font-weight:800;line-height:29px;color:", "}p{font-size:16px;font-weight:500;line-height:19px;color:", ";}}@media ", "{gap:8px;h3{font-size:32px;font-weight:800;line-height:39px;}p{font-size:20px;font-weight:500;line-height:24px;}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral600, Colors/* default */.Z.neutral400, StyledMediaQuery/* default */.Z.L);
+const RewardSettingsList = external_styled_components_.styled.div.withConfig({
+  displayName: "DefaultRewards__RewardSettingsList",
+  componentId: "sc-jqrbah-2"
+})(["@media ", "{display:flex;flex-direction:column;gap:24px;width:100%;}@media ", "{gap:32px;}"], StyledMediaQuery/* default */.Z.XS, StyledMediaQuery/* default */.Z.L);
+
+const DefaultRewards = ({
+  defaultRewardsData,
+  onDefaultRewardsPendingChange,
+  originalDefaultRewardsToggles
+}) => {
+  console.log(defaultRewardsData);
+
+  if (!defaultRewardsData) {
+    return /*#__PURE__*/jsx_runtime.jsx("p", {
+      children: "Loading..."
+    });
+  }
+
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(RewardSettingsContainer, {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)(HeadingPlusSubheading, {
+      children: [/*#__PURE__*/jsx_runtime.jsx("h3", {
+        children: "Reward Settings"
+      }), /*#__PURE__*/jsx_runtime.jsx(Text/* default */.Z, {
+        text: "Setup the default triggers for issuing reward stars"
+      })]
+    }), /*#__PURE__*/jsx_runtime.jsx(RewardSettingsList, {
+      children: defaultRewardsData.map(({
+        rewardName: defaultRewardName,
+        rewardValue: defaultRewardValue,
+        rewardActive: defaultRewardActive,
+        _id,
+        id
+      }, index) => /*#__PURE__*/jsx_runtime.jsx(molecules_DefaultRewardItem, {
+        _id: _id,
+        id: id,
+        index: index,
+        originalDefaultValue: originalDefaultRewardsToggles[index],
+        rewardName: defaultRewardName,
+        rewardValue: defaultRewardValue,
+        rewardActive: defaultRewardActive,
+        onDefaultToggleChange: onDefaultRewardsPendingChange
+      }, id))
+    })]
+  });
+};
+
+/* harmony default export */ const organism_DefaultRewards = (DefaultRewards);
 
 /***/ }),
 
@@ -822,7 +1002,6 @@ var jsx_runtime = __webpack_require__(5893);
 
 
 
- // Define the props interface for RewardItem
 
 
 
@@ -855,8 +1034,11 @@ const RewardItem = ({
   rewardName,
   rewardValue,
   rewardCost,
-  rewardNotes,
-  rewardActive
+  rewardActive,
+  rewardTerms,
+  index,
+  originalRewardValue,
+  onRewardToggleChange
 }) => {
   const handleClick = () => {
     console.log('handle click');
@@ -867,8 +1049,9 @@ const RewardItem = ({
     1: setIsActive
   } = (0,external_react_.useState)(rewardActive);
 
-  const handleToggle = active => {
-    setIsActive(active);
+  const handleToggle = newValue => {
+    setIsActive(newValue);
+    onRewardToggleChange(index, newValue);
   };
 
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(RewardItemContainer, {
@@ -884,7 +1067,7 @@ const RewardItem = ({
       })
     }), /*#__PURE__*/jsx_runtime.jsx(RewardNotes, {
       children: /*#__PURE__*/jsx_runtime.jsx(Text/* default */.Z, {
-        text: rewardNotes
+        text: rewardTerms
       })
     }), /*#__PURE__*/jsx_runtime.jsx(RewardActive, {
       children: /*#__PURE__*/jsx_runtime.jsx(ToggleSwitch/* default */.Z, {
@@ -1004,7 +1187,9 @@ const RewardOfferingList = external_styled_components_.styled.div.withConfig({
 })(["@media ", "{display:flex;flex-direction:column;width:100%;}"], StyledMediaQuery/* default */.Z.XS);
 
 const RewardOfferings = ({
-  rewardsData
+  rewardsData,
+  onPendingChange,
+  originalRewardToggles
 }) => {
   console.log(rewardsData);
 
@@ -1029,14 +1214,19 @@ const RewardOfferings = ({
         label3: "Terms",
         label4: "Active",
         label5: "Edit"
-      }), rewardsData.map(reward => /*#__PURE__*/jsx_runtime.jsx(molecules_RewardItem, {
+      }), rewardsData.map((reward, index) => /*#__PURE__*/jsx_runtime.jsx(molecules_RewardItem, {
         // Make sure to provide a unique key for each item
         // Pass the data to the RewardItem component as props
+        index: index,
+        id: reward.id,
+        _id: reward._id,
+        originalRewardValue: originalRewardToggles[index],
         rewardName: reward.rewardName,
         rewardValue: reward.rewardValue,
         rewardCost: reward.rewardCost,
-        rewardNotes: reward.rewardTerms,
-        rewardActive: reward.rewardActive // Add other props as needed
+        rewardTerms: reward.rewardTerms,
+        rewardActive: reward.rewardActive,
+        onRewardToggleChange: onPendingChange // Add other props as needed
 
       }, reward.id))]
     })]
@@ -1044,172 +1234,6 @@ const RewardOfferings = ({
 };
 
 /* harmony default export */ const organism_RewardOfferings = (RewardOfferings);
-
-/***/ }),
-
-/***/ 8860:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  Z: () => (/* binding */ organism_RewardSettings)
-});
-
-// EXTERNAL MODULE: external "react"
-var external_react_ = __webpack_require__(6689);
-// EXTERNAL MODULE: external "styled-components"
-var external_styled_components_ = __webpack_require__(7518);
-var external_styled_components_default = /*#__PURE__*/__webpack_require__.n(external_styled_components_);
-// EXTERNAL MODULE: ./src/constants/Colors.ts
-var Colors = __webpack_require__(2287);
-// EXTERNAL MODULE: ./src/constants/StyledMediaQuery.ts
-var StyledMediaQuery = __webpack_require__(8338);
-// EXTERNAL MODULE: ./src/components/subatomic/Text.tsx
-var Text = __webpack_require__(711);
-// EXTERNAL MODULE: ./src/components/atoms/ToggleSwitch.tsx
-var ToggleSwitch = __webpack_require__(5030);
-// EXTERNAL MODULE: ./node_modules/react/jsx-runtime.js
-var jsx_runtime = __webpack_require__(5893);
-;// CONCATENATED MODULE: ./src/components/molecules/DefaultReward.tsx
-
-
-
-
-
-
-
-
-const TriggeredRewardContainer = external_styled_components_default().div.withConfig({
-  displayName: "DefaultReward__TriggeredRewardContainer",
-  componentId: "sc-o9okz5-0"
-})(["@media ", "{display:flex;width:100%;gap:12px;flex-direction:column;justify-content:center;color:", ";p{font-size:20px;font-weight:500;line-height:24px;}border-bottom:1px solid ", ";}@media ", "{gap:16px;width:440px;p{font-size:24px;font-weight:500;line-height:29px;}}@media ", "{width:560px;}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral700, Colors/* default */.Z.neutral200, StyledMediaQuery/* default */.Z.S, StyledMediaQuery/* default */.Z.L);
-const RewardInfoPlusToggle = external_styled_components_default().div.withConfig({
-  displayName: "DefaultReward__RewardInfoPlusToggle",
-  componentId: "sc-o9okz5-1"
-})(["@media ", "{display:flex;padding:8px 12px;align-items:center;gap:8px;align-self:stretch;background:", ";border-radius:8px;}@media ", "{justify-content:space-between;}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral200, StyledMediaQuery/* default */.Z.S);
-const RewardInfo = external_styled_components_default().div.withConfig({
-  displayName: "DefaultReward__RewardInfo",
-  componentId: "sc-o9okz5-2"
-})(["@media ", "{display:flex;align-items:center;gap:16px;}@media ", "{gap:16px;}"], StyledMediaQuery/* default */.Z.XS, StyledMediaQuery/* default */.Z.S);
-const GiveCustomersDiv = external_styled_components_default().div.withConfig({
-  displayName: "DefaultReward__GiveCustomersDiv",
-  componentId: "sc-o9okz5-3"
-})(["@media ", "{display:flex;color:", ";p{font-size:14px;font-weight:500;line-height:22px;}}@media ", "{p{font-size:20px;font-weight:500;line-height:24px;}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral700, StyledMediaQuery/* default */.Z.S);
-const PointsGivenDiv = external_styled_components_default().div.withConfig({
-  displayName: "DefaultReward__PointsGivenDiv",
-  componentId: "sc-o9okz5-4"
-})(["@media ", "{display:flex;height:48px;padding:0px 8px;justify-content:center;align-items:center;color:", ";background:", ";border-radius:8px;p{font-size:20px;font-weight:800;line-height:24px;}}@media ", "{padding:0px 16px;p{font-size:24px;font-weight:800;line-height:29px;}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral700, Colors/* default */.Z.shades100, StyledMediaQuery/* default */.Z.S);
-const PointsDiv = external_styled_components_default().div.withConfig({
-  displayName: "DefaultReward__PointsDiv",
-  componentId: "sc-o9okz5-5"
-})(["@media ", "{display:flex;height:48px;align-items:center;gap:12px;color:", ";p{font-size:14px;font-weight:500;line-height:22px;}}@media ", "{p{font-size:20px;font-weight:500;line-height:24px;}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral700, StyledMediaQuery/* default */.Z.S);
-const ActiveDiv = external_styled_components_default().div.withConfig({
-  displayName: "DefaultReward__ActiveDiv",
-  componentId: "sc-o9okz5-6"
-})(["@media ", "{display:flex;}"], StyledMediaQuery/* default */.Z.XS); // ... Your RewardTableHead components here ...
-
-const DefaultReward = ({
-  defaultRewardName,
-  defaultRewardValue,
-  defaultRewardActive
-}) => {
-  const handleClick = () => {
-    console.log('handle click');
-  };
-
-  const {
-    0: isDefaultActive,
-    1: setIsDefaultActive
-  } = (0,external_react_.useState)(defaultRewardActive);
-
-  const handleToggle = active => {
-    setIsDefaultActive(active);
-  };
-
-  return /*#__PURE__*/(0,jsx_runtime.jsxs)(TriggeredRewardContainer, {
-    children: [/*#__PURE__*/jsx_runtime.jsx(Text/* default */.Z, {
-      text: defaultRewardName
-    }), /*#__PURE__*/jsx_runtime.jsx(RewardInfoPlusToggle, {
-      children: /*#__PURE__*/(0,jsx_runtime.jsxs)(RewardInfo, {
-        children: [/*#__PURE__*/jsx_runtime.jsx(GiveCustomersDiv, {
-          children: /*#__PURE__*/jsx_runtime.jsx(Text/* default */.Z, {
-            text: "Give customers"
-          })
-        }), /*#__PURE__*/jsx_runtime.jsx(PointsGivenDiv, {
-          children: /*#__PURE__*/jsx_runtime.jsx(Text/* default */.Z, {
-            text: defaultRewardValue.toString()
-          })
-        }), /*#__PURE__*/jsx_runtime.jsx(PointsDiv, {
-          children: /*#__PURE__*/jsx_runtime.jsx(Text/* default */.Z, {
-            text: "point(s)"
-          })
-        }), /*#__PURE__*/jsx_runtime.jsx(ActiveDiv, {
-          children: /*#__PURE__*/jsx_runtime.jsx(ToggleSwitch/* default */.Z, {
-            active: isDefaultActive,
-            onChange: handleToggle
-          })
-        })]
-      })
-    })]
-  });
-};
-
-/* harmony default export */ const molecules_DefaultReward = (DefaultReward);
-;// CONCATENATED MODULE: ./src/components/organism/RewardSettings.tsx
-
-
-
-
-
-
-
-
-const RewardSettingsContainer = external_styled_components_.styled.div.withConfig({
-  displayName: "RewardSettings__RewardSettingsContainer",
-  componentId: "sc-gwzfwe-0"
-})(["@media ", "{display:flex;flex-direction:column;width:100%;gap:24px;}@media ", "{gap:32px;}"], StyledMediaQuery/* default */.Z.XS, StyledMediaQuery/* default */.Z.L);
-const HeadingPlusSubheading = external_styled_components_.styled.div.withConfig({
-  displayName: "RewardSettings__HeadingPlusSubheading",
-  componentId: "sc-gwzfwe-1"
-})(["@media ", "{display:flex;flex-direction:column;align-items:flex-start;gap:4px;align-self:stretch;h3{font-size:24px;font-weight:800;line-height:29px;color:", "}p{font-size:16px;font-weight:500;line-height:19px;color:", ";}}@media ", "{gap:8px;h3{font-size:32px;font-weight:800;line-height:39px;}p{font-size:20px;font-weight:500;line-height:24px;}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral600, Colors/* default */.Z.neutral400, StyledMediaQuery/* default */.Z.L);
-const RewardSettingsList = external_styled_components_.styled.div.withConfig({
-  displayName: "RewardSettings__RewardSettingsList",
-  componentId: "sc-gwzfwe-2"
-})(["@media ", "{display:flex;flex-direction:column;gap:24px;width:100%;}@media ", "{gap:32px;}"], StyledMediaQuery/* default */.Z.XS, StyledMediaQuery/* default */.Z.L);
-
-const RewardSettings = ({
-  defaultRewardsData
-}) => {
-  console.log(defaultRewardsData);
-
-  if (!defaultRewardsData) {
-    return /*#__PURE__*/jsx_runtime.jsx("p", {
-      children: "Loading..."
-    });
-  }
-
-  return /*#__PURE__*/(0,jsx_runtime.jsxs)(RewardSettingsContainer, {
-    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)(HeadingPlusSubheading, {
-      children: [/*#__PURE__*/jsx_runtime.jsx("h3", {
-        children: "Reward Settings"
-      }), /*#__PURE__*/jsx_runtime.jsx(Text/* default */.Z, {
-        text: "Setup the default triggers for issuing reward stars"
-      })]
-    }), /*#__PURE__*/jsx_runtime.jsx(RewardSettingsList, {
-      children: defaultRewardsData.map(defaultReward => /*#__PURE__*/jsx_runtime.jsx(molecules_DefaultReward, {
-        // Make sure to provide a unique key for each item
-        // Pass the data to the RewardItem component as props
-        defaultRewardName: defaultReward.rewardName,
-        defaultRewardValue: defaultReward.rewardValue,
-        defaultRewardActive: defaultReward.rewardActive // Add other props as needed
-
-      }, defaultReward._id))
-    })]
-  });
-};
-
-/* harmony default export */ const organism_RewardSettings = (RewardSettings);
 
 /***/ }),
 
@@ -1494,7 +1518,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(8338);
 /* harmony import */ var _components_atoms_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6552);
-/* harmony import */ var _components_organism_RewardSettings__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(8860);
+/* harmony import */ var _components_organism_DefaultRewards__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(7105);
 /* harmony import */ var _components_organism_RewardOfferings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7575);
 /* harmony import */ var _constants_Colors__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(2287);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(6689);
@@ -1508,6 +1532,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(5893);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _store_store__WEBPACK_IMPORTED_MODULE_11__, framer_motion__WEBPACK_IMPORTED_MODULE_12__, _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_13__]);
 ([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _store_store__WEBPACK_IMPORTED_MODULE_11__, framer_motion__WEBPACK_IMPORTED_MODULE_12__, _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_13__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -1603,13 +1633,35 @@ function Rewards({
     data,
     fetchData,
     toast,
-    hideToast
+    hideToast,
+    showToast
   } = (0,_store_store__WEBPACK_IMPORTED_MODULE_11__/* .useStore */ .o)(state => ({
     data: state.data,
     fetchData: state.fetchData,
     toast: state.toast,
-    hideToast: state.hideToast
+    hideToast: state.hideToast,
+    showToast: state.showToast
   }));
+  const {
+    0: hasPendingChanges,
+    1: setHasPendingChanges
+  } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)(false);
+  const {
+    0: originalRewardToggles,
+    1: setOriginalRewardToggles
+  } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)([]);
+  const {
+    0: currentRewardToggles,
+    1: setCurrentRewardToggles
+  } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)([]);
+  const {
+    0: originalDefaultRewardsToggles,
+    1: setOriginalDefaultRewardsToggles
+  } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)([]);
+  const {
+    0: currentDefaultRewardsToggles,
+    1: setCurrentDefaultRewardsToggles
+  } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)([]);
   const {
     0: isOverlayOpen,
     1: setIsOverlayOpen
@@ -1623,6 +1675,28 @@ function Rewards({
     1: setIsLoading2
   } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)(true);
   useBodyScrollLock(isOverlayOpen);
+  (0,react__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
+    setOriginalRewardToggles(rewardsData.map(reward => reward.rewardActive));
+    setCurrentRewardToggles(rewardsData.map(reward => reward.rewardActive));
+  }, [rewardsData]);
+  (0,react__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
+    setOriginalDefaultRewardsToggles(defaultRewardsData.map(defaultReward => defaultReward.rewardActive));
+    setCurrentDefaultRewardsToggles(defaultRewardsData.map(defaultReward => defaultReward.rewardActive));
+  }, [defaultRewardsData]);
+
+  const handleRewardsPendingChange = (index, newValue) => {
+    const newCurrentToggles = [...currentRewardToggles];
+    newCurrentToggles[index] = newValue;
+    setCurrentRewardToggles(newCurrentToggles);
+    setHasPendingChanges(!originalRewardToggles.every((val, i) => val === newCurrentToggles[i]));
+  };
+
+  const handleDefaultRewardsPendingChange = (index, newValue) => {
+    const newcurrentDefaultRewardsToggles = [...currentDefaultRewardsToggles];
+    newcurrentDefaultRewardsToggles[index] = newValue;
+    setCurrentDefaultRewardsToggles(newcurrentDefaultRewardsToggles);
+    setHasPendingChanges(!originalDefaultRewardsToggles.every((val, i) => val === newcurrentDefaultRewardsToggles[i]));
+  };
 
   const handleOverlayOpen = () => {
     setIsOverlayOpen(true);
@@ -1640,12 +1714,59 @@ function Rewards({
   (0,react__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
     fetchData();
   }, []);
+
+  async function handleSaveChanges() {
+    const updatedRewardsData = rewardsData.map((reward, index) => _objectSpread(_objectSpread({}, reward), {}, {
+      rewardActive: currentRewardToggles[index]
+    }));
+    const updatedDefaultRewardsData = defaultRewardsData.map((defaultReward, index) => _objectSpread(_objectSpread({}, defaultReward), {}, {
+      rewardActive: currentDefaultRewardsToggles[index]
+    }));
+    const payload = {
+      updatedRewards: updatedRewardsData,
+      updatedDefaultRewards: updatedDefaultRewardsData
+    };
+    console.log(`Sending updated data: ${JSON.stringify(payload)}`);
+
+    try {
+      const response = await fetch('http://localhost:5000/update-active-rewards', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        console.log('Successfully updated rewards and default rewards');
+        showToast('Successfully updated rewards!', 'success'); // Added toast message
+
+        setOriginalRewardToggles(currentRewardToggles);
+        setOriginalDefaultRewardsToggles(currentDefaultRewardsToggles);
+        setHasPendingChanges(false);
+      } else {
+        console.log('Failed to update rewards.');
+        showToast('Failed to update rewards.', 'error');
+      }
+    } catch (error) {
+      console.error('Error updating rewards:', error);
+      showToast('Error updating rewards.', 'error');
+    }
+  }
+
   const storeData = _store_store__WEBPACK_IMPORTED_MODULE_11__/* .useStore */ .o.getState(); // Get the current state of the store
 
   console.log('Store Data:', storeData); // Log the entire store data
 
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)(FlexDiv, {
-    children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_12__.AnimatePresence, {
+    children: [hasPendingChanges && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx("p", {
+        children: "You have pending changes to save. Click the button to save."
+      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx("button", {
+        onClick: handleSaveChanges,
+        children: "Save Changes"
+      })]
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_12__.AnimatePresence, {
       children: toast.visible && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(_components_atoms_Toast__WEBPACK_IMPORTED_MODULE_13__/* ["default"] */ .Z, {}, "toast")
     }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_12__.AnimatePresence, {
       children: isOverlayOpen && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__/* ["default"] */ .Z, {})
@@ -1658,25 +1779,24 @@ function Rewards({
         children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(_components_subatomic_Text__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z, {
           text: "Rewards"
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)(ButtonWrap, {
-        children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(_components_atoms_Button__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
-          buttonTypeVariant: "primary",
-          sizeVariant: "small",
-          label: "Hide Toast",
-          onClick: hideToast
-        }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(_components_atoms_Button__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(ButtonWrap, {
+        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(_components_atoms_Button__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
           buttonTypeVariant: "primary",
           sizeVariant: "large",
           label: "Add Reward",
           buttonWidthVariant: "fill",
           onClick: handleOverlayOpen
-        })]
+        })
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)(RewardOfferingsAndSettings, {
       children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(_components_organism_RewardOfferings__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z, {
-        rewardsData: rewardsData
-      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(_components_organism_RewardSettings__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
-        defaultRewardsData: defaultRewardsData
+        rewardsData: rewardsData,
+        onPendingChange: handleRewardsPendingChange,
+        originalRewardToggles: originalRewardToggles
+      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx(_components_organism_DefaultRewards__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
+        defaultRewardsData: defaultRewardsData,
+        onDefaultRewardsPendingChange: handleDefaultRewardsPendingChange,
+        originalDefaultRewardsToggles: originalDefaultRewardsToggles
       })]
     })]
   });

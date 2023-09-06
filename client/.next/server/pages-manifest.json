@@ -1,9 +1,9 @@
 {
+  "/_error": "pages/_error.js",
   "/api/data": "pages/api/data.js",
   "/page": "pages/page.html",
   "/_app": "pages/_app.js",
   "/layout": "pages/layout.html",
-  "/_error": "pages/_error.js",
   "/rewards": "pages/rewards.js",
   "/_document": "pages/_document.js",
   "/404": "pages/404.html"
