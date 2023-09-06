@@ -27,9 +27,6 @@ type EditRewardFormProps = {
     onClose: () => void;
   };
 
-  interface RewardFormProps {
-    onClose: () => void;
-  }
   
   const ModalCloseButton = styled.div`
       @media ${StyledMediaQuery.XS} {

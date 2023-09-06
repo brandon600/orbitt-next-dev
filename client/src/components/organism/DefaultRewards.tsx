@@ -11,6 +11,7 @@ interface DefaultRewardsProps {
   defaultRewardsData: DefaultRewardData[]; // An array of RewardData objects
   onDefaultRewardsPendingChange: (index: number, newValue: boolean) => void;
   originalDefaultRewardsToggles: boolean[];
+  onEditClick: (reward: DefaultRewardData) => void;
 }
 
 const RewardSettingsContainer = styled.div`
@@ -79,7 +80,7 @@ const RewardSettingsList = styled.div`
     }
 `		
 
-const DefaultRewards: React.FC<DefaultRewardsProps> = ({ defaultRewardsData, onDefaultRewardsPendingChange, originalDefaultRewardsToggles, }) => {
+const DefaultRewards: React.FC<DefaultRewardsProps> = ({ defaultRewardsData, onDefaultRewardsPendingChange, originalDefaultRewardsToggles, onEditClick }) => {
     console.log(defaultRewardsData)
   
     if (!defaultRewardsData) {
@@ -97,7 +98,14 @@ const DefaultRewards: React.FC<DefaultRewardsProps> = ({ defaultRewardsData, onD
             />
         </HeadingPlusSubheading>
         <RewardSettingsList>
-            {defaultRewardsData.map(({ rewardName: defaultRewardName, rewardValue: defaultRewardValue, rewardActive: defaultRewardActive, _id, id }, index) => (
+            {defaultRewardsData.map((
+				{ rewardName: defaultRewardName, 
+				  rewardValue: defaultRewardValue, 
+				  rewardActive: defaultRewardActive, 
+				  _id, 
+				  id,
+				  rewardNumberId 
+				}, index) => (
             <DefaultRewardItem
                 key={id}
                 _id={_id}
@@ -107,7 +115,9 @@ const DefaultRewards: React.FC<DefaultRewardsProps> = ({ defaultRewardsData, onD
                 rewardName={defaultRewardName}
                 rewardValue={defaultRewardValue}
                 rewardActive={defaultRewardActive}
+				rewardNumberId={rewardNumberId}
                 onDefaultToggleChange={onDefaultRewardsPendingChange}
+				onEditClick={onEditClick}
             />
         ))}
         </RewardSettingsList>

@@ -11,6 +11,7 @@ import React, { useState, useEffect } from 'react';
 import Overlay from '@/components/atoms/Overlay';
 import RewardForm from '@/components/organism/RewardForm';
 import EditRewardForm from '@/components/organism/EditRewardForm';
+import EditDefaultRewardForm from '@/components/organism/EditDefaultRewardForm';
 import GlobalStyle from '../GlobalStyle';
 import { useStore, AppState } from '../store/store'; // Import your store
 import { getServers } from 'dns';
@@ -107,7 +108,6 @@ const ButtonWrap = styled.div`
   }
 `
 
-
 export async function getServerSideProps() {
     try {
         // Fetch rewards data
@@ -158,7 +158,7 @@ function useBodyScrollLock(isLocked: boolean) {
   }
 
 
-function Rewards({ rewardsData: initialRewardsData, defaultRewardsData }: RewardsProps) {
+function Rewards({ rewardsData: initialRewardsData, defaultRewardsData: initialDefaultRewardsData }: RewardsProps) {
     const { data, fetchData, toast, hideToast, showToast } = useStore((state: AppState) => ({
         data: state.data,
         fetchData: state.fetchData,
@@ -180,7 +180,11 @@ function Rewards({ rewardsData: initialRewardsData, defaultRewardsData }: Reward
     const [isEditFormOpen, setIsEditFormOpen] = useState(false); // New state for form visibility
     const [selectedReward, setSelectedReward] = useState<RewardData | null>(null);
 
+    const [isEditDefaultFormOpen, setIsEditDefaultFormOpen] = useState(false); // New state for form visibility
+    const [selectedDefaultReward, setSelectedDefaultReward] = useState<DefaultRewardData | null>(null);
+
     const [rewardsData, setRewardsData] = useState(initialRewardsData);
+    const [defaultRewardsData, setDefaultRewardsData] = useState(initialDefaultRewardsData);
 
 
     useEffect(() => {
@@ -211,6 +215,35 @@ function Rewards({ rewardsData: initialRewardsData, defaultRewardsData }: Reward
   }, [rewardsData]);
 
 
+  useEffect(() => {
+    console.log("Setting up socket connection.");
+    const socket = io("http://localhost:5000");
+  
+      // Listen for 'default-reward-updated' events
+      socket.on("default-reward-updated", (updatedDefaultReward) => {
+        console.log(updatedDefaultReward)
+        // Update the rewardsData state here
+        console.log(updatedDefaultReward)
+        const updatedDefaultRewardsData = defaultRewardsData.map((defaultReward) => {
+          if (defaultReward.rewardNumberId === updatedDefaultReward.rewardNumberId) {
+            return updatedDefaultReward;
+          }
+          return defaultReward;
+        });
+        setDefaultRewardsData(updatedDefaultRewardsData);
+      });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from the server");
+    });
+  
+    return () => {
+      // Cleanup: Disconnect socket when component is unmounted
+      socket.disconnect();
+    };
+}, [defaultRewardsData]);
+
+
     useEffect(() => {
         setOriginalRewardToggles(rewardsData.map((reward) => reward.rewardActive));
         setCurrentRewardToggles(rewardsData.map((reward) => reward.rewardActive));
@@ -237,14 +270,25 @@ function Rewards({ rewardsData: initialRewardsData, defaultRewardsData }: Reward
 
 
     const handleEditClick = (reward: RewardData) => {
-    setSelectedReward(reward);
-    setIsEditFormOpen(true);
+      setSelectedReward(reward);
+      setIsEditFormOpen(true);
+    };
+
+    const handleEditDefaultClick = (defaultReward: DefaultRewardData) => {
+      setSelectedDefaultReward(defaultReward);
+      setIsEditDefaultFormOpen(true);
     };
 
     const handleEditFormClose = () => {
         setIsOverlayOpen(false);
         setIsEditFormOpen(false);
         setSelectedReward(null);
+      };
+
+      const handleEditDefaultFormClose = () => {
+        setIsOverlayOpen(false);
+        setIsEditDefaultFormOpen(false);
+        setSelectedDefaultReward(null);
       };
 
     const handleOverlayOpen = () => {
@@ -335,7 +379,7 @@ async function handleSaveChanges() {
             )}
             </AnimatePresence>
             <AnimatePresence>
-            { (isOverlayOpen || isEditFormOpen) && <Overlay />}
+            { (isOverlayOpen || isEditFormOpen || isEditDefaultFormOpen) && <Overlay />}
             </AnimatePresence>
             <AnimatePresence>
                 {isOverlayOpen && <RewardForm onClose={handleOverlayClose} />}
@@ -346,6 +390,15 @@ async function handleSaveChanges() {
                     {...selectedReward}
                     rewardCost={selectedReward.rewardCost.toString()}
                     onClose={handleEditFormClose}
+                />
+            )}
+            </AnimatePresence>
+            <AnimatePresence>
+            {isEditDefaultFormOpen && selectedDefaultReward && (
+                <EditDefaultRewardForm
+                    {...selectedDefaultReward}
+                    defaultRewardValue={selectedDefaultReward.rewardValue.toString()}
+                    onClose={handleEditDefaultFormClose}
                 />
             )}
             </AnimatePresence>
@@ -366,7 +419,7 @@ async function handleSaveChanges() {
             </TitlePlusButton>
                 <RewardOfferingsAndSettings>
                     <RewardOfferings rewardsData={rewardsData} onPendingChange={handleRewardsPendingChange} originalRewardToggles={originalRewardToggles} onEditClick={handleEditClick} />
-                    <DefaultRewards defaultRewardsData={defaultRewardsData} onDefaultRewardsPendingChange={handleDefaultRewardsPendingChange} originalDefaultRewardsToggles={originalDefaultRewardsToggles} />
+                    <DefaultRewards defaultRewardsData={defaultRewardsData} onDefaultRewardsPendingChange={handleDefaultRewardsPendingChange} originalDefaultRewardsToggles={originalDefaultRewardsToggles} onEditClick={handleEditDefaultClick} />
                 </RewardOfferingsAndSettings>
         </FlexDiv>
     );
