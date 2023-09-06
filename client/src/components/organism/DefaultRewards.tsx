@@ -5,6 +5,7 @@ import StyledMediaQuery from '@/constants/StyledMediaQuery';
 import { styled } from 'styled-components';
 import Colors from '@/constants/Colors';
 import { DefaultRewardData } from '../../types/DefaultRewardData';
+import { warnOptionHasBeenMovedOutOfExperimental } from 'next/dist/server/config';
 
 interface DefaultRewardsProps {
   defaultRewardsData: DefaultRewardData[]; // An array of RewardData objects
@@ -76,7 +77,7 @@ const RewardSettingsList = styled.div`
     @media ${StyledMediaQuery.S} {
         gap: 32px;
     }
-`
+`		
 
 const DefaultRewards: React.FC<DefaultRewardsProps> = ({ defaultRewardsData, onDefaultRewardsPendingChange, originalDefaultRewardsToggles, }) => {
     console.log(defaultRewardsData)

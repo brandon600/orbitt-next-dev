@@ -114,7 +114,6 @@ const RewardCost = styled.div`
         width: 96px;
         p {
             font-size: 32px;
-            font-style: normal;
             font-weight: 500;
             line-height: 39px;
         }

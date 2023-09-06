@@ -424,8 +424,34 @@ const Toast = () => {
     }
   };
 
+  const {
+    0: shouldRender,
+    1: setShouldRender
+  } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  /*
+    useEffect(() => {
+      if (toast.visible) {
+        setBarWidth('0');  // Reset the width to 0
+        const timerForBar = setTimeout(() => {
+          setBarWidth('100%');  // Set the width to 100% after 10ms
+        }, 10);
+        
+        const timerForToast = setTimeout(() => {
+          hideToast();
+        }, 3200);
+        return () => {
+          clearTimeout(timerForBar);
+          clearTimeout(timerForToast);
+        };
+      }
+    }, [toast, hideToast]);
+    */
+
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    let renderTimeout;
+
     if (toast.visible) {
+      setShouldRender(true);
       setBarWidth('0'); // Reset the width to 0
 
       const timerForBar = setTimeout(() => {
@@ -433,14 +459,20 @@ const Toast = () => {
       }, 10);
       const timerForToast = setTimeout(() => {
         hideToast();
-      }, 3200);
+      }, 3000); // We'll give another 600ms for exit animation to complete
+
+      renderTimeout = setTimeout(() => {
+        setShouldRender(false);
+      }, 3600); // 3200 + 600
+
       return () => {
         clearTimeout(timerForBar);
         clearTimeout(timerForToast);
+        if (renderTimeout) clearTimeout(renderTimeout);
       };
     }
   }, [toast, hideToast]);
-  if (!toast.visible) return null;
+  if (!shouldRender) return null;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)(ToastContainer, {
     role: "alert",
     visible: toast.visible,
@@ -547,6 +579,105 @@ const ToggleSwitch = ({
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ToggleSwitch);
+
+/***/ }),
+
+/***/ 7517:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Z: () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6689);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7518);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _constants_Colors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2287);
+/* harmony import */ var _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(8338);
+/* harmony import */ var _subatomic_Text__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(711);
+/* harmony import */ var _atoms_Button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(6552);
+/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(6197);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(5893);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([framer_motion__WEBPACK_IMPORTED_MODULE_6__]);
+framer_motion__WEBPACK_IMPORTED_MODULE_6__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+
+
+
+
+
+
+
+
+
+const BottomSaveNoticeContainer = (0,framer_motion__WEBPACK_IMPORTED_MODULE_6__.motion)(styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "BottomSaveNotice__BottomSaveNoticeContainer",
+  componentId: "sc-1p1908l-0"
+})(["@media ", "{position:absolute;bottom:0;left:0;display:flex;flex-direction:column;width:100%;box-sizing:border-box;padding:24px;justify-content:center;gap:20px;background:", ";}@media ", "{padding:32px;gap:24px;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral400, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.L));
+const NoticeText = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "BottomSaveNotice__NoticeText",
+  componentId: "sc-1p1908l-1"
+})(["@media ", "{display:flex;align-items:flex-start;align-self:stretch;color:", ";flex:1 0 0;p{font-size:20px;font-weight:800;line-height:24px;}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.shades100);
+const BottomButtons = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "BottomSaveNotice__BottomButtons",
+  componentId: "sc-1p1908l-2"
+})(["@media ", "{display:flex;flex-direction:row;align-items:flex-start;gap:8px;align-self:stretch;}@media ", "{gap:12px;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.S);
+const BottomButton = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "BottomSaveNotice__BottomButton",
+  componentId: "sc-1p1908l-3"
+})(["@media ", "{dislay:flex;flex:1 0 0;}@media ", "{flex:none;width:140px;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.XS, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.S);
+
+const BottomSaveNotice = ({
+  onSave,
+  onCancel
+}) => {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(BottomSaveNoticeContainer, {
+    initial: {
+      bottom: "-200px"
+    } // initial state (hidden to the right)
+    ,
+    animate: {
+      bottom: "0px"
+    } // end state (appears from the right)
+    ,
+    exit: {
+      bottom: "-200px"
+    } // exit state (disappears to the right)
+    ,
+    transition: {
+      duration: 0.4,
+      ease: [0.88, 0, 0.16, 1]
+    } // animation takes 400ms with easeInOut easing
+    ,
+    children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx(NoticeText, {
+      children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx(_subatomic_Text__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
+        text: "You have made changes. Click \u2018Save\u2019 button to apply."
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(BottomButtons, {
+      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx(BottomButton, {
+        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx(_atoms_Button__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z, {
+          buttonTypeVariant: "neutral",
+          sizeVariant: "large",
+          label: "Cancel",
+          buttonWidthVariant: "fill",
+          onClick: onCancel
+        })
+      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx(BottomButton, {
+        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx(_atoms_Button__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z, {
+          buttonTypeVariant: "primary",
+          sizeVariant: "large",
+          label: "Save",
+          buttonWidthVariant: "fill",
+          onClick: onSave
+        })
+      })]
+    })]
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BottomSaveNotice);
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } });
 
 /***/ }),
 
@@ -1249,7 +1380,7 @@ const RewardNameAndValue = external_styled_components_default().div.withConfig({
 const RewardCost = external_styled_components_default().div.withConfig({
   displayName: "RewardItem__RewardCost",
   componentId: "sc-1saas2t-2"
-})(["@media ", "{display:flex;width:50px;align-items:center;gap:12px;flex-shrink:0;p{flex:1 0 0;font-size:24px;font-weight:500;line-height:29px;color:", ";}}@media ", "{width:64px;}@media ", "{width:96px;p{font-size:32px;font-style:normal;font-weight:500;line-height:39px;}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral700, StyledMediaQuery/* default */.Z.S, StyledMediaQuery/* default */.Z.L);
+})(["@media ", "{display:flex;width:50px;align-items:center;gap:12px;flex-shrink:0;p{flex:1 0 0;font-size:24px;font-weight:500;line-height:29px;color:", ";}}@media ", "{width:64px;}@media ", "{width:96px;p{font-size:32px;font-weight:500;line-height:39px;}}"], StyledMediaQuery/* default */.Z.XS, Colors/* default */.Z.neutral700, StyledMediaQuery/* default */.Z.S, StyledMediaQuery/* default */.Z.L);
 const RewardNotes = external_styled_components_default().div.withConfig({
   displayName: "RewardItem__RewardNotes",
   componentId: "sc-1saas2t-3"
@@ -1784,10 +1915,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(8187);
 /* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(6197);
 /* harmony import */ var _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(9418);
-/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(4612);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(5893);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__, _store_store__WEBPACK_IMPORTED_MODULE_12__, framer_motion__WEBPACK_IMPORTED_MODULE_13__, _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__, socket_io_client__WEBPACK_IMPORTED_MODULE_15__]);
-([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__, _store_store__WEBPACK_IMPORTED_MODULE_12__, framer_motion__WEBPACK_IMPORTED_MODULE_13__, _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__, socket_io_client__WEBPACK_IMPORTED_MODULE_15__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+/* harmony import */ var _components_molecules_BottomSaveNotice__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(7517);
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(4612);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(5893);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__, _store_store__WEBPACK_IMPORTED_MODULE_12__, framer_motion__WEBPACK_IMPORTED_MODULE_13__, _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__, _components_molecules_BottomSaveNotice__WEBPACK_IMPORTED_MODULE_15__, socket_io_client__WEBPACK_IMPORTED_MODULE_16__]);
+([_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__, _components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__, _components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__, _store_store__WEBPACK_IMPORTED_MODULE_12__, framer_motion__WEBPACK_IMPORTED_MODULE_13__, _components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__, _components_molecules_BottomSaveNotice__WEBPACK_IMPORTED_MODULE_15__, socket_io_client__WEBPACK_IMPORTED_MODULE_16__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -1807,6 +1939,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
  // Import your store
+
 
 
 
@@ -1948,7 +2081,7 @@ function Rewards({
   } = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)(initialRewardsData);
   (0,react__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {
     console.log("Setting up socket connection.");
-    const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_15__["default"])("http://localhost:5000"); // Listen for 'reward-updated' events
+    const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_16__["default"])("http://localhost:5000"); // Listen for 'reward-updated' events
 
     socket.on("reward-updated", updatedReward => {
       // Update the rewardsData state here
@@ -2010,10 +2143,6 @@ function Rewards({
 
   const handleOverlayClose = () => {
     setIsOverlayOpen(false);
-  };
-
-  const handleClick = () => {
-    console.log('clicked');
   }; // Initialize the store on the client side
 
 
@@ -2060,38 +2189,45 @@ function Rewards({
     }
   }
 
+  const handleCancelChanges = () => {
+    // Step 1: Reset Reward Toggles
+    setCurrentRewardToggles([...originalRewardToggles]); // Step 2: Reset Default Reward Toggles
+
+    setCurrentDefaultRewardsToggles([...originalDefaultRewardsToggles]); // Step 3: Reset the hasPendingChanges flag
+
+    setHasPendingChanges(false);
+  };
+
   const storeData = _store_store__WEBPACK_IMPORTED_MODULE_12__/* .useStore */ .o.getState(); // Get the current state of the store
 
   console.log('Store Data:', storeData); // Log the entire store data
 
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsxs)(FlexDiv, {
-    children: [hasPendingChanges && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsxs)("div", {
-      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx("p", {
-        children: "You have pending changes to save. Click the button to save."
-      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx("button", {
-        onClick: handleSaveChanges,
-        children: "Save Changes"
-      })]
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
-      children: toast.visible && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__/* ["default"] */ .Z, {}, "toast")
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
-      children: (isOverlayOpen || isEditFormOpen) && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__/* ["default"] */ .Z, {})
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
-      children: isOverlayOpen && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__/* ["default"] */ .Z, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)(FlexDiv, {
+    children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
+      children: hasPendingChanges && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(_components_molecules_BottomSaveNotice__WEBPACK_IMPORTED_MODULE_15__/* ["default"] */ .Z, {
+        onSave: handleSaveChanges,
+        onCancel: handleCancelChanges
+      }, "bottom-save-notice")
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
+      children: toast.visible && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(_components_atoms_Toast__WEBPACK_IMPORTED_MODULE_14__/* ["default"] */ .Z, {}, "toast")
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
+      children: (isOverlayOpen || isEditFormOpen) && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(_components_atoms_Overlay__WEBPACK_IMPORTED_MODULE_8__/* ["default"] */ .Z, {})
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
+      children: isOverlayOpen && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(_components_organism_RewardForm__WEBPACK_IMPORTED_MODULE_9__/* ["default"] */ .Z, {
         onClose: handleOverlayClose
       })
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
-      children: isEditFormOpen && selectedReward && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__/* ["default"] */ .Z, _objectSpread(_objectSpread({}, selectedReward), {}, {
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_13__.AnimatePresence, {
+      children: isEditFormOpen && selectedReward && /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(_components_organism_EditRewardForm__WEBPACK_IMPORTED_MODULE_10__/* ["default"] */ .Z, _objectSpread(_objectSpread({}, selectedReward), {}, {
         rewardCost: selectedReward.rewardCost.toString(),
         onClose: handleEditFormClose
       }))
-    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_GlobalStyle__WEBPACK_IMPORTED_MODULE_11__/* ["default"] */ .Z, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsxs)(TitlePlusButton, {
-      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(RewardsPageTitle, {
-        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_subatomic_Text__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z, {
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(_GlobalStyle__WEBPACK_IMPORTED_MODULE_11__/* ["default"] */ .Z, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)(TitlePlusButton, {
+      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(RewardsPageTitle, {
+        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(_components_subatomic_Text__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z, {
           text: "Rewards"
         })
-      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(ButtonWrap, {
-        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_atoms_Button__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(ButtonWrap, {
+        children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(_components_atoms_Button__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
           buttonTypeVariant: "primary",
           sizeVariant: "large",
           label: "Add Reward",
@@ -2099,13 +2235,13 @@ function Rewards({
           onClick: handleOverlayOpen
         })
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsxs)(RewardOfferingsAndSettings, {
-      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_organism_RewardOfferings__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z, {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)(RewardOfferingsAndSettings, {
+      children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(_components_organism_RewardOfferings__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z, {
         rewardsData: rewardsData,
         onPendingChange: handleRewardsPendingChange,
         originalRewardToggles: originalRewardToggles,
         onEditClick: handleEditClick
-      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx(_components_organism_DefaultRewards__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
+      }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx(_components_organism_DefaultRewards__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
         defaultRewardsData: defaultRewardsData,
         onDefaultRewardsPendingChange: handleDefaultRewardsPendingChange,
         originalDefaultRewardsToggles: originalDefaultRewardsToggles

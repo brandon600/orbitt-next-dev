@@ -18,6 +18,7 @@ import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import { RewardData }  from '@/types/RewardData';
 import { DefaultRewardData } from '@/types/DefaultRewardData';
+import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
 import io from "socket.io-client";
 
 interface RewardsProps {
@@ -182,7 +183,6 @@ function Rewards({ rewardsData: initialRewardsData, defaultRewardsData }: Reward
     const [rewardsData, setRewardsData] = useState(initialRewardsData);
 
 
-
     useEffect(() => {
       console.log("Setting up socket connection.");
       const socket = io("http://localhost:5000");
@@ -209,10 +209,6 @@ function Rewards({ rewardsData: initialRewardsData, defaultRewardsData }: Reward
         socket.disconnect();
       };
   }, [rewardsData]);
-
-  
-
-
 
 
     useEffect(() => {
@@ -259,9 +255,7 @@ function Rewards({ rewardsData: initialRewardsData, defaultRewardsData }: Reward
       setIsOverlayOpen(false);
     };
 
-    const handleClick = () => {
-        console.log('clicked')
-    }
+    
    // Initialize the store on the client side
    useEffect(() => {
     fetchData();
@@ -309,19 +303,32 @@ async function handleSaveChanges() {
       showToast('Error updating rewards.', 'error');
     }
   }
+
+  const handleCancelChanges: () => void = () => {
+    // Step 1: Reset Reward Toggles
+    setCurrentRewardToggles([...originalRewardToggles]);
   
+    // Step 2: Reset Default Reward Toggles
+    setCurrentDefaultRewardsToggles([...originalDefaultRewardsToggles]);
+  
+    // Step 3: Reset the hasPendingChanges flag
+    setHasPendingChanges(false);
+  };
   
     const storeData = useStore.getState(); // Get the current state of the store
     console.log('Store Data:', storeData); // Log the entire store data
 
     return (
         <FlexDiv>
-        {hasPendingChanges && (
-            <div>
-                <p>You have pending changes to save. Click the button to save.</p>
-                <button onClick={handleSaveChanges}>Save Changes</button>
-            </div>
-          )}
+          <AnimatePresence>
+            {hasPendingChanges && (
+              <BottomSaveNotice
+                key="bottom-save-notice"
+                onSave={handleSaveChanges}
+                onCancel={handleCancelChanges}
+              />
+            )}
+          </AnimatePresence>
             <AnimatePresence>
             {toast.visible && (
                 <Toast key="toast" />
