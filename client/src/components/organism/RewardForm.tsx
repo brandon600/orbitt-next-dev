@@ -9,7 +9,7 @@ import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Colors from '../../constants/Colors';
 import { CancelIcon } from '../subatomic/Icons/CancelIcon';
 import { motion } from 'framer-motion';
-import { useStore } from '../../store/store'; // Import your store
+import { useStore, AppState } from '../../store/store'; // Import your store
 import { on } from 'events';
 
 interface RewardFormProps {
@@ -115,14 +115,6 @@ const FormAndButton = styled.div`
     }
 `
 
-const FormFieldsAndLabel = styled.div`
-    @media ${StyledMediaQuery.XS} {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-    }
-`
-
 const RequiredLabel = styled.div`
     @media ${StyledMediaQuery.XS} {
       display: flex;
@@ -159,6 +151,8 @@ const RewardForm: React.FC<RewardFormProps> = ({ onClose }) => {
   const [isRewardNameValid, setRewardNameValid] = useState<boolean>(false);
   const [isRewardCostValid, setRewardCostValid] = useState<boolean>(false);
 
+  const { showToast } = useStore((state: AppState) => ({ showToast: state.showToast }));
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -192,12 +186,15 @@ const RewardForm: React.FC<RewardFormProps> = ({ onClose }) => {
       if (response.ok) {
         const data = await response.json();
         console.log('Success:', data);
+        showToast('Reward added successfully!', 'success');
         // Additional logic here (e.g., close the form, refresh rewards list, etc.)
       } else {
         console.log('Failed:', response);
+        showToast('Failed to add reward.', 'error');
       }
     } catch (error) {
       console.error('Error:', error);
+      showToast(`Error: Something wrong happened!`, 'error');
     }
 
     onClose();
