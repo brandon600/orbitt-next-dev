@@ -10,6 +10,7 @@ interface DefaultRewardItemProps extends DefaultRewardData {
     // Define the types for your props here
     originalDefaultValue: boolean;
     onDefaultToggleChange: (index: number, newValue: boolean) => void;
+    onEditClick: (reward: DefaultRewardData) => void;
   }
 
 const TriggeredRewardContainer = styled.div`
@@ -26,13 +27,11 @@ const TriggeredRewardContainer = styled.div`
             font-weight: 500;
             line-height: 24px;
         }
-
-        border-bottom: 1px solid ${Colors.neutral200};
     }
 
     @media ${StyledMediaQuery.S} {
         gap: 16px;
-        width: 440px;
+        width: 640px;
 
         p {
             font-size: 24px;
@@ -40,11 +39,18 @@ const TriggeredRewardContainer = styled.div`
             line-height: 29px;
         }
     }
-
-    @media ${StyledMediaQuery.L} {
-        width: 560px;
-    }
 `;
+
+const InfoToggleCTA = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 24px;
+        flex: 1 0 0;
+        align-self: stretch;
+    }
+`
 
 const RewardInfoPlusToggle = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -55,6 +61,7 @@ const RewardInfoPlusToggle = styled.div`
         align-self: stretch;
         background: ${Colors.neutral200};
         border-radius: 8px;
+        flex: 1 0 0;
     }
 
     @media ${StyledMediaQuery.S} {
@@ -153,14 +160,37 @@ const ActiveDiv = styled.div`
         display: flex;
     }
 `
-  
+
+const EditRewardValue = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: none;
+
+        p {
+            color: ${Colors.shades100};
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 22px;
+        }
+    }
+
+    @media ${StyledMediaQuery.S} {
+        display: flex;
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: ${Colors.neutral500};
+    }
+`
   
   const DefaultRewardItem: React.FC<DefaultRewardItemProps> = ({
     rewardName: defaultRewardName,
     rewardValue: defaultRewardValue,
     rewardActive: defaultRewardActive,
     index,
+    _id,
+    id,
+    rewardNumberId,
     onDefaultToggleChange,
+    onEditClick,
   }) => {
     const handleClick = () => {
       console.log('handle click');
@@ -172,28 +202,50 @@ const ActiveDiv = styled.div`
         onDefaultToggleChange(index, newValue);
     };
 
+    const handleEditDefaultRewardClick = () => {
+        onEditClick({
+            _id,
+            id,
+            rewardName: defaultRewardName,
+            rewardValue: defaultRewardValue,
+            rewardActive: defaultRewardActive,
+            index,
+            rewardNumberId
+        });
+      };
+
+
     return (
       <TriggeredRewardContainer>
         <Text text={defaultRewardName} />
-        <RewardInfoPlusToggle>
-            <RewardInfo>
-                <GiveCustomersDiv>
-                    <Text text='Give customers' />
-                </GiveCustomersDiv>
-                <PointsGivenDiv>
-                    <Text text={defaultRewardValue.toString()} />
-                </PointsGivenDiv>
-                <PointsDiv>
-                    <Text text='point(s)' />
-                </PointsDiv>
-                <ActiveDiv
-                >
-                <ToggleSwitch 
-                    active={isDefaultActive} onChange={handleToggle} 
+        <InfoToggleCTA>
+            <RewardInfoPlusToggle>
+                <RewardInfo>
+                    <GiveCustomersDiv>
+                        <Text text='Give customers' />
+                    </GiveCustomersDiv>
+                    <PointsGivenDiv>
+                        <Text text={defaultRewardValue.toString()} />
+                    </PointsGivenDiv>
+                    <PointsDiv>
+                        <Text text='point(s)' />
+                    </PointsDiv>
+                    <ActiveDiv
+                    >
+                    <ToggleSwitch 
+                        active={isDefaultActive} onChange={handleToggle} 
+                    />
+                    </ActiveDiv>
+                </RewardInfo>
+            </RewardInfoPlusToggle>
+            <EditRewardValue
+                onClick={handleEditDefaultRewardClick}
+            >
+                <Text 
+                    text='Edit Reward Item'
                 />
-                </ActiveDiv>
-            </RewardInfo>
-        </RewardInfoPlusToggle>
+            </EditRewardValue>
+        </InfoToggleCTA>
       </TriggeredRewardContainer>
     );
   };

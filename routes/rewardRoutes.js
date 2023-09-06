@@ -162,4 +162,60 @@ module.exports = (app) => {
         res.status(500).json({ message: 'Something went wrong' });
       }
     });
+
+
+
+
+
+
+
+
+    app.put('/update-default-reward', async (req, res) => {
+      const { rewardDetails, user } = req.body;
+        console.log(req.body)
+      
+      try {
+        const { rewardDetails, user } = req.body;
+        console.log(req.body)
+    
+        // Generate unique ID based on timestamp
+        const uniqid = Date.now();
+    
+        // Define filter and update operations
+        const filter = { rewardNumberId: rewardDetails.id, user: user.userid };
+    
+        // Find the original record before making any updates
+        const originalDefaultReward = await OutboundReward.findOne(filter);
+        console.log(originalDefaultReward)
+        
+        if (!originalDefaultReward) {
+          return res.status(404).json({ message: 'Original reward not found' });
+        }
+    
+        // Define update operation
+        const update = {
+          $set: {
+            rewardValue: rewardDetails.value,
+          },
+        };
+    
+        const updateOutboundOptions = { new: true };  // Return the updated reward object
+        const updatedDefaultReward = await OutboundReward.findOneAndUpdate(filter, update, updateOutboundOptions);
+    
+        // Check if any document was updated
+        if (!updatedDefaultReward) {
+          return res.status(404).json({ message: 'Reward not found' });
+        }
+    
+
+        console.log("Emitting reward-updated event", updatedDefaultReward);
+        req.io.emit('default-reward-updated', updatedDefaultReward);
+
+        res.status(200).json(updatedDefaultReward);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Something went wrong' });
+      }
+    });
+
 }

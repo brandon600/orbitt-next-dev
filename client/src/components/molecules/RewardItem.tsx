@@ -190,11 +190,18 @@ const RewardItem: React.FC<RewardItemProps> = ({
 
     const [isActive, setIsActive] = useState(rewardActive);
 
+    useEffect(() => {
+      setIsActive(rewardActive);
+    }, [rewardActive]);
+
+    console.log("Reward Active in RewardItem:", rewardActive);
+  
+
     const handleClick = () => {
         console.log('clicked');
     }
 
-    const handleEditClick = () => {
+    const handleEditRewardClick = () => {
         onEditClick({
           id,
           _id,
@@ -237,7 +244,7 @@ const handleToggle = (newValue: boolean) => {
             sizeVariant="small"
             label="Edit"
             buttonWidthVariant="content"
-            onClick={handleEditClick}
+            onClick={handleEditRewardClick}
           />
         </RewardEdit>
       </RewardItemContainer>

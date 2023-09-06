@@ -5,5 +5,6 @@ export interface DefaultRewardData {
     rewardValue: number;
     rewardActive: boolean;
     index: number;
+    rewardNumberId: number;
     // Add other properties as needed
 }
