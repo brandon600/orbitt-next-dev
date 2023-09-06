@@ -124,7 +124,9 @@ const Toast: React.FC = () => {
     }
   }
 
+  const [shouldRender, setShouldRender] = useState(false);
 
+/*
   useEffect(() => {
     if (toast.visible) {
       setBarWidth('0');  // Reset the width to 0
@@ -141,8 +143,37 @@ const Toast: React.FC = () => {
       };
     }
   }, [toast, hideToast]);
+  */
 
-  if (!toast.visible) return null;
+ 
+  useEffect(() => {
+    let renderTimeout: NodeJS.Timeout | undefined;
+    if (toast.visible) {
+      setShouldRender(true);
+
+      setBarWidth('0');  // Reset the width to 0
+      const timerForBar = setTimeout(() => {
+        setBarWidth('100%');  // Set the width to 100% after 10ms
+      }, 10);
+
+      const timerForToast = setTimeout(() => {
+        hideToast();
+      }, 3000);
+
+      // We'll give another 600ms for exit animation to complete
+      renderTimeout = setTimeout(() => {
+        setShouldRender(false);
+      }, 3600); // 3200 + 600
+
+      return () => {
+        clearTimeout(timerForBar);
+        clearTimeout(timerForToast);
+        if (renderTimeout) clearTimeout(renderTimeout);
+      };
+    }
+  }, [toast, hideToast]);
+
+  if (!shouldRender) return null;
 
   return (
     <ToastContainer 
