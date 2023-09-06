@@ -10,6 +10,7 @@ import Colors from '@/constants/Colors';
 import React, { useState, useEffect } from 'react';
 import Overlay from '@/components/atoms/Overlay';
 import RewardForm from '@/components/organism/RewardForm';
+import EditRewardForm from '@/components/organism/EditRewardForm';
 import GlobalStyle from '../GlobalStyle';
 import { useStore, AppState } from '../store/store'; // Import your store
 import { getServers } from 'dns';
@@ -21,6 +22,8 @@ import { DefaultRewardData } from '@/types/DefaultRewardData';
 interface RewardsProps {
     rewardsData: RewardData[]; // Replace YourDataTypeHere with the actual type of your rewards data
     defaultRewardsData: DefaultRewardData[]; // Replace YourDataTypeHere with the actual type of your default rewards data
+    onEditClick?: () => void;  // Make it optional by adding '?'
+    originalRewardToggles: boolean[]; 
 }
 
 
@@ -172,6 +175,9 @@ function Rewards({ rewardsData, defaultRewardsData }: RewardsProps) {
     const [isLoading2, setIsLoading2] = useState(true);
     useBodyScrollLock(isOverlayOpen);
 
+    const [isEditFormOpen, setIsEditFormOpen] = useState(false); // New state for form visibility
+    const [selectedReward, setSelectedReward] = useState<RewardData | null>(null);
+
     useEffect(() => {
         setOriginalRewardToggles(rewardsData.map((reward) => reward.rewardActive));
         setCurrentRewardToggles(rewardsData.map((reward) => reward.rewardActive));
@@ -194,6 +200,18 @@ function Rewards({ rewardsData, defaultRewardsData }: RewardsProps) {
         newcurrentDefaultRewardsToggles[index] = newValue;
         setCurrentDefaultRewardsToggles(newcurrentDefaultRewardsToggles);
         setHasPendingChanges(!originalDefaultRewardsToggles.every((val, i) => val === newcurrentDefaultRewardsToggles[i]));
+      };
+
+
+    const handleEditClick = (reward: RewardData) => {
+    setSelectedReward(reward);
+    setIsEditFormOpen(true);
+    };
+
+    const handleEditFormClose = () => {
+        setIsOverlayOpen(false);
+        setIsEditFormOpen(false);
+        setSelectedReward(null);
       };
 
 const handleOverlayOpen = () => {
@@ -273,10 +291,19 @@ async function handleSaveChanges() {
             )}
             </AnimatePresence>
             <AnimatePresence>
-            {isOverlayOpen && <Overlay />}
+            { (isOverlayOpen || isEditFormOpen) && <Overlay />}
             </AnimatePresence>
             <AnimatePresence>
                 {isOverlayOpen && <RewardForm onClose={handleOverlayClose} />}
+            </AnimatePresence>
+            <AnimatePresence>
+            {isEditFormOpen && selectedReward && (
+                <EditRewardForm
+                    {...selectedReward}
+                    rewardCost={selectedReward.rewardCost.toString()}
+                    onClose={handleEditFormClose}
+                />
+            )}
             </AnimatePresence>
             <GlobalStyle />
             <TitlePlusButton>
@@ -294,7 +321,7 @@ async function handleSaveChanges() {
             </ButtonWrap>
             </TitlePlusButton>
                 <RewardOfferingsAndSettings>
-                    <RewardOfferings rewardsData={rewardsData} onPendingChange={handleRewardsPendingChange} originalRewardToggles={originalRewardToggles} />
+                    <RewardOfferings rewardsData={rewardsData} onPendingChange={handleRewardsPendingChange} originalRewardToggles={originalRewardToggles} onEditClick={handleEditClick} />
                     <DefaultRewards defaultRewardsData={defaultRewardsData} onDefaultRewardsPendingChange={handleDefaultRewardsPendingChange} originalDefaultRewardsToggles={originalDefaultRewardsToggles} />
                 </RewardOfferingsAndSettings>
         </FlexDiv>

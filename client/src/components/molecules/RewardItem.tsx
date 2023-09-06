@@ -11,7 +11,7 @@ import { RewardData } from '@/types/RewardData';
 interface RewardItemProps extends RewardData {
     originalRewardValue: boolean;
     onRewardToggleChange: (index: number, newValue: boolean) => void;
-    // Add other props as needed
+    onEditClick: (reward: RewardData) => void;
 }
 
 const RewardItemContainer = styled.div`
@@ -175,6 +175,9 @@ const RewardEdit = styled.div`
 
 // Define the type for the RewardItem component itself
 const RewardItem: React.FC<RewardItemProps> = ({
+    id,
+    _id,
+    rewardid,
     rewardName,
     rewardValue,
     rewardCost,
@@ -182,13 +185,30 @@ const RewardItem: React.FC<RewardItemProps> = ({
     rewardTerms,
     index,
     originalRewardValue,
-    onRewardToggleChange
+    onRewardToggleChange,
+    onEditClick,
   }) => {
-    const handleClick = () => {
-      console.log('handle click');
-    };
 
     const [isActive, setIsActive] = useState(rewardActive);
+
+    const handleClick = () => {
+        console.log('clicked');
+    }
+
+    const handleEditClick = () => {
+        onEditClick({
+          id,
+          _id,
+          rewardName,
+          rewardValue,
+          rewardCost,
+          rewardTerms,
+          rewardActive,
+          rewardid,
+          index
+        });
+      };
+
 
 const handleToggle = (newValue: boolean) => {
     setIsActive(newValue);
@@ -218,7 +238,7 @@ const handleToggle = (newValue: boolean) => {
             sizeVariant="small"
             label="Edit"
             buttonWidthVariant="content"
-            onClick={handleClick}
+            onClick={handleEditClick}
           />
         </RewardEdit>
       </RewardItemContainer>

@@ -44,11 +44,13 @@ require('./models/Customer');
 require('./models/User');
 require('./models/Reward');
 require('./models/OutboundReward');
+require('./models/UpdatedReward');
 
 const Customer = mongoose.model('customers');
 const User = mongoose.model('users');
 const Reward = mongoose.model('rewards');
 const OutboundReward = mongoose.model('outboundRewards');
+const UpdatedReward = mongoose.model('updatedrewards');
 
 app.use(
   cookieSession({

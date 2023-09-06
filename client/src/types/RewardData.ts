@@ -1,6 +1,7 @@
 export interface RewardData {
     _id: string; // Example ID property, adjust as needed
     id: number;
+    rewardid: string;
     rewardName: string;
     rewardValue: string;
     rewardCost: number;

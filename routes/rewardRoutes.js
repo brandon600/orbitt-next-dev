@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('users');
 const Reward = mongoose.model('rewards');
 const OutboundReward = mongoose.model('outboundRewards');
+const UpdatedReward = mongoose.model('updatedrewards');
 
 module.exports = (app) => {
     //Get Reward Offerings
@@ -52,8 +53,6 @@ module.exports = (app) => {
     });
 
 
- 
-    
     app.post('/update-active-rewards/', async (req, res) => {
       const { updatedRewards, updatedDefaultRewards } = req.body;
     
@@ -89,4 +88,75 @@ module.exports = (app) => {
       }
     });    
 
+    app.put('/update-reward', async (req, res) => {
+      try {
+        const { rewardDetails, user } = req.body;
+    
+        // Generate unique ID based on timestamp
+        const uniqid = Date.now();
+    
+        // Define filter and update operations
+        const filter = { rewardid: rewardDetails.id, user: user.userid };
+    
+        // Find the original record before making any updates
+        const originalReward = await Reward.findOne(filter);
+        console.log(originalReward)
+        
+        if (!originalReward) {
+          return res.status(404).json({ message: 'Original reward not found' });
+        }
+    
+        // Define update operation
+        const update = {
+          $set: {
+            rewardName: rewardDetails.name,
+            rewardCost: rewardDetails.cost,
+            rewardTerms: rewardDetails.terms,
+            rewardValue: rewardDetails.value,
+            rewardActive: rewardDetails.active
+          },
+        };
+    
+        const updateOptions = { new: true };  // Return the updated reward object
+        const updatedReward = await Reward.findOneAndUpdate(filter, update, updateOptions);
+    
+        // Check if any document was updated
+        if (!updatedReward) {
+          return res.status(404).json({ message: 'Reward not found' });
+        }
+    
+        // Create a new UpdatedReward document
+        const newUpdatedReward = new UpdatedReward({
+          _id: new mongoose.Types.ObjectId(),
+          rewardid: rewardDetails.id,
+          user: user,
+          userMemberstackId: user.memberstackId,
+          date: uniqid,
+          userClass: user,
+          rewardNameBefore: originalReward.rewardName,
+          rewardNameAfter: updatedReward.rewardName,
+          rewardCostBefore: originalReward.rewardCost,
+          rewardCostAfter: updatedReward.rewardCost,
+          rewardTermsBefore: originalReward.rewardTerms,
+          rewardTermsAfter: updatedReward.rewardTerms,
+          rewardValueBefore: originalReward.rewardValue,
+          rewardValueAfter: updatedReward.rewardValue,
+          rewardActiveBefore: originalReward.rewardActive,
+          rewardActiveAfter: updatedReward.rewardActive,
+          // ... other fields that rely on the updated reward
+        });
+    
+        await newUpdatedReward.save();
+    
+        // Add the UpdatedReward document's ID to the updates field of the Reward document
+        await Reward.updateOne(filter, {
+          $push: { updates: newUpdatedReward._id }
+        });
+
+        res.status(200).json(updatedReward);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Something went wrong' });
+      }
+    });
 }
