@@ -2,12 +2,13 @@
 (() => {
 var exports = {};
 exports.id = 820;
-exports.ids = [820,888,660];
+exports.ids = [820,660];
 exports.modules = {
 
-/***/ 6051:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ 4258:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   config: () => (/* binding */ config),
@@ -29,10 +30,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7182);
 /* harmony import */ var next_dist_pages_document__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(1492);
 /* harmony import */ var next_dist_pages_document__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(next_dist_pages_document__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var next_dist_pages_app__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(1249);
-/* harmony import */ var next_dist_pages_app__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(next_dist_pages_app__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6126);
 /* harmony import */ var next_dist_pages_error__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(6698);
 /* harmony import */ var next_dist_pages_error__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(next_dist_pages_error__WEBPACK_IMPORTED_MODULE_5__);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_4__]);
+private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 // @ts-ignore this need to be imported from next/dist to be external
 
 
@@ -71,13 +73,15 @@ const routeModule = new PagesRouteModule({
         filename: ""
     },
     components: {
-        App: (next_dist_pages_app__WEBPACK_IMPORTED_MODULE_4___default()),
+        App: private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_4__["default"],
         Document: (next_dist_pages_document__WEBPACK_IMPORTED_MODULE_3___default())
     },
     userland: next_dist_pages_error__WEBPACK_IMPORTED_MODULE_5__
 });
 
 //# sourceMappingURL=pages.js.map
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } });
 
 /***/ }),
 
@@ -165,13 +169,6 @@ module.exports = require("next/dist/shared/lib/side-effect.js");
 
 /***/ }),
 
-/***/ 9232:
-/***/ ((module) => {
-
-module.exports = require("next/dist/shared/lib/utils.js");
-
-/***/ }),
-
 /***/ 618:
 /***/ ((module) => {
 
@@ -184,6 +181,13 @@ module.exports = require("next/dist/shared/lib/utils/warn-once.js");
 
 module.exports = require("react");
 
+/***/ }),
+
+/***/ 4612:
+/***/ ((module) => {
+
+module.exports = import("socket.io-client");;
+
 /***/ })
 
 };
@@ -193,7 +197,7 @@ module.exports = require("react");
 var __webpack_require__ = require("../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [492,249,855,597,698], () => (__webpack_exec__(6051)));
+var __webpack_exports__ = __webpack_require__.X(0, [492,815,597,698,126], () => (__webpack_exec__(4258)));
 module.exports = __webpack_exports__;
 
 })();

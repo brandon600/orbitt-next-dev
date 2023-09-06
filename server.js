@@ -1,20 +1,41 @@
-///
 const express = require('express');
 const cookieSession = require('cookie-session');
-const methodOverride = require('method-override')
+const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const {ensureAuthenticated} = require('./helpers/auth');
+const { ensureAuthenticated } = require('./helpers/auth');
 const socketio = require('socket.io');
-
+const http = require('http');
+const cors = require('cors');
 const cron = require('node-cron');
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
 
 const app = express();
-const cors = require('cors');
+const httpServer = createServer(app);
+const io = new Server(httpServer, { cors: {
+  origin: "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "DELETE"]
+} });
+
+
+// Socket.io connection
+io.on('connection', (socket) => {
+    console.log('New user connected');
+
+    socket.on('message', (data) => {
+        // Handle incoming messages here
+        console.log(data);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
 
 const corsOptions = {
   origin: 'http://localhost:3000', // Replace with the actual origin of your frontend
@@ -86,9 +107,7 @@ app.use(flash());
 
 //Global Variables
 app.use((req, res, next) => {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error');
+  req.io = io;
   next();
 })
 
@@ -113,10 +132,11 @@ require('./routes/rewardRoutes')(app);
     });
   }
   
-  //const PORT = process.env.PORT || 5000;
+//const PORT = process.env.PORT || 5000;
   
-  const serverPort = 5000;
-  
-  const PORT = process.env.PORT || serverPort;
-  
-  app.listen(PORT);
+const serverPort = 5000;
+
+const PORT = process.env.PORT || serverPort;
+httpServer.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});

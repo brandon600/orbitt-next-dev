@@ -153,6 +153,9 @@ module.exports = (app) => {
           $push: { updates: newUpdatedReward._id }
         });
 
+        console.log("Emitting reward-updated event", updatedReward);
+        req.io.emit('reward-updated', updatedReward);
+
         res.status(200).json(updatedReward);
       } catch (error) {
         console.error(error);

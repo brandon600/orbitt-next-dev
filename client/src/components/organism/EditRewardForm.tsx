@@ -208,7 +208,7 @@ type EditRewardFormProps = {
         });
   
         if (response.ok) {
-          const data = await response.json();
+          const updatedReward = await response.json();
           showToast('Reward updated successfully!', 'success');
           // Additional logic here (e.g., close the form, refresh rewards list, etc.)
         } else {
