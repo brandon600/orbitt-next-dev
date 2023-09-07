@@ -4,11 +4,12 @@ import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 
 interface TextareaProps {
-  label: string;
+  label?: string;
   value: string;
   onChange: (value: string) => void;
   required?: boolean; // Add a prop to make the input required
   placeholder?: string; // Add the 'placeholder' prop
+  disabled?: boolean;
 }
 
 
@@ -50,8 +51,9 @@ const TextareaTextarea = styled.textarea`
         align-self: stretch;
         border-radius: 8px;
         background: ${Colors.neutral100};
-        color: ${Colors.neutral600};
+        color: ${Colors.neutral400};
         border: none;
+        outline: none;
 
         &:focus {
             border: 1px solid ${Colors.primary400};
@@ -66,27 +68,26 @@ const TextareaTextarea = styled.textarea`
 
 
 
-const Textarea: React.FC<TextareaProps> = ({
-  label,
-  value,
-  onChange,
-  required, // Accept the 'required' prop
-  placeholder, // Accept the 'placeholder' prop
-}) => {
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ label, value, onChange, required, placeholder, disabled }, ref) => {
   return (
     <TextareaContainer>
-        <TextareaLabel>
-        {required && <RequiredAsterisk>*</RequiredAsterisk>} {/* Render asterisk if 'required' prop is true */}
-        {label}
-        </TextareaLabel>
+        {label && (  // Conditionally render label only if it's provided
+            <TextareaLabel>
+                {required && <RequiredAsterisk>*</RequiredAsterisk>}
+                {label}
+            </TextareaLabel>
+        )}
         <TextareaTextarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required} // Add the 'required' attribute conditionally
         placeholder={placeholder} // Pass the 'placeholder' prop
+        disabled={disabled}
+        ref={ref}
         />
     </TextareaContainer>
   );
-};
+});
 
 export default Textarea;

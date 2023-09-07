@@ -45,7 +45,6 @@ const InputFieldInput = styled.input`
         display: flex;
         height: 32px;
         padding: 8px 12px;
-        box-sizing: border-box;
         align-items: center;
         align-self: stretch;
         border-radius: 8px;

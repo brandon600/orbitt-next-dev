@@ -45,6 +45,8 @@ input {
     outline: none; /* Remove the default focus outline */
 
     /* Reset default styles for select */
+
+}
     
   select {
     background-color: pink;
@@ -70,6 +72,33 @@ input {
     cursor: pointer; /* Change cursor style to indicate interaction */
     outline: none; /* Remove default focus outline, consider custom focus styles for accessibility */
 }
+
+/* Reset default textarea styles */
+textarea {
+    /* Remove default border and padding */
+    padding: 0;
+
+    /* Reset font styles */
+    font: inherit;
+    font-size: 16px; /* You can set your desired font size */
+    font-family: inherit; /* Inherit font family from parent element */
+    
+    /* Remove background color */
+    background-color: transparent;
+
+    /* Reset margins and alignment */
+    margin: 0;
+    text-align: left;
+
+    /* Reset other styles */
+    appearance: none;
+    cursor: text;
+    outline: none; /* Remove the default focus outline */
+
+    /* Reset default styles for select */
+
+}
+
 `;
 
 export default GlobalStyle;

@@ -11,7 +11,7 @@ import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
 import io from "socket.io-client";
 import { RewardData } from '@/types/RewardData';
-import Textarea from '@/components/atoms/Textarea';
+import MessageCell from '@/components/molecules/MessageCell';
 
 interface MessagesProps {
     messagesData: RewardData[];
@@ -19,19 +19,15 @@ interface MessagesProps {
 
 const FlexDiv = styled.div`
     display: flex;
+    width: 100vw;
 `
 
 function Messages() {
     return (
         <FlexDiv>
-            <Text
-                text='Hello Messaging Page!'
-            />
-            <Textarea 
-                label="Message Cell Here"
-                value='Message Cell Value here'
-                onChange={(value) => console.log(value)}
-                placeholder='Ex: Need 10 stars for this'
+            <GlobalStyle />
+            <MessageCell 
+                messageName='Message Name'
             />
         </FlexDiv>
     );
