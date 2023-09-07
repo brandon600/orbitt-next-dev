@@ -195,6 +195,11 @@ const RewardItem: React.FC<RewardItemProps> = ({
     }, [rewardActive]);
 
     console.log("Reward Active in RewardItem:", rewardActive);
+
+    useEffect(() => {
+        setIsActive(originalRewardValue);
+        console.log("isActive state reset to:", originalRewardValue);
+    }, [originalRewardValue]);
   
 
     const handleClick = () => {

@@ -12,6 +12,7 @@ interface RewardOfferingsProps {
   rewardsData: RewardData[]; // An array of RewardData objects
   onPendingChange: (index: number, newValue: boolean) => void;
   originalRewardToggles: boolean[];
+  currentRewardToggles: boolean[];
   onEditClick: (reward: RewardData) => void;
 }
 
@@ -78,7 +79,7 @@ const RewardOfferingList = styled.div`
     }
 `
 
-const RewardOfferings: React.FC<RewardOfferingsProps> = ({ rewardsData, onPendingChange, originalRewardToggles, onEditClick }) => {
+const RewardOfferings: React.FC<RewardOfferingsProps> = ({ rewardsData, onPendingChange, originalRewardToggles, currentRewardToggles, onEditClick }) => {
     console.log(rewardsData)
     if (!rewardsData) {
         // Handle the case when rewardsData is not defined (e.g., still loading)
@@ -116,7 +117,7 @@ const RewardOfferings: React.FC<RewardOfferingsProps> = ({ rewardsData, onPendin
                 rewardValue={reward.rewardValue}
                 rewardCost={reward.rewardCost}
                 rewardTerms={reward.rewardTerms}
-                rewardActive={reward.rewardActive}
+                rewardActive={currentRewardToggles[index]}
                 onRewardToggleChange={onPendingChange}
                 onEditClick={onEditClick}
                 // Add other props as needed

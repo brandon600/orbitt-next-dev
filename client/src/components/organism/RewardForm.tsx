@@ -19,7 +19,7 @@ interface RewardFormProps {
 const ModalCloseButton = styled.div`
     @media ${StyledMediaQuery.XS} {
       display: flex;
-      position: absolute;
+      position: fixed;
       top: 20px;
       right: 20px;
       z-index: 1000;

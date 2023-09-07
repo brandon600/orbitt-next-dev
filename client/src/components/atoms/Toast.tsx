@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
 
 const ToastContainer = motion(styled.div<{ visible: boolean, type: string }>`
 @media ${StyledMediaQuery.XS} {
-    position: absolute;
+    position: fixed;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
