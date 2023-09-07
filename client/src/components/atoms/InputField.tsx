@@ -2,7 +2,6 @@ import React, { CSSProperties, ReactNode, PropsWithChildren, useEffect, useState
 import styled, { css } from 'styled-components';
 import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
-import { Input } from 'postcss';
 
 interface InputFieldProps {
   label: string;
@@ -46,6 +45,7 @@ const InputFieldInput = styled.input`
         display: flex;
         height: 32px;
         padding: 8px 12px;
+        box-sizing: border-box;
         align-items: center;
         align-self: stretch;
         border-radius: 8px;
