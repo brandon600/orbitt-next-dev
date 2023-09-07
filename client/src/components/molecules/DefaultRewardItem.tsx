@@ -8,7 +8,7 @@ import { DefaultRewardData } from '@/types/DefaultRewardData';
 
 interface DefaultRewardItemProps extends DefaultRewardData {
     // Define the types for your props here
-    originalDefaultValue: boolean;
+    originalDefaultRewardValue: boolean;
     onDefaultToggleChange: (index: number, newValue: boolean) => void;
     onEditClick: (reward: DefaultRewardData) => void;
   }
@@ -189,6 +189,7 @@ const EditRewardValue = styled.div`
     _id,
     id,
     rewardNumberId,
+    originalDefaultRewardValue,
     onDefaultToggleChange,
     onEditClick,
   }) => {
@@ -196,6 +197,18 @@ const EditRewardValue = styled.div`
       console.log('handle click');
     };
     const [isDefaultActive, setIsDefaultActive] = useState(defaultRewardActive);
+
+    useEffect(() => {
+        setIsDefaultActive(defaultRewardActive);
+      }, [defaultRewardActive]);
+  
+      console.log("Reward Active in RewardItem:", defaultRewardActive);
+  
+      useEffect(() => {
+          setIsDefaultActive(originalDefaultRewardValue);
+          console.log("isActive state reset to:", originalDefaultRewardValue);
+      }, [originalDefaultRewardValue]);
+    
 
     const handleToggle = (newValue: boolean) => {
         setIsDefaultActive(newValue);

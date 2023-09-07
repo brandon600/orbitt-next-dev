@@ -1,5 +1,5 @@
 // components/RewardForm.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InputField from '../atoms/InputField';
 import DropdownField from '../atoms/DropdownField';
 import Text from '../subatomic/Text';
@@ -27,7 +27,7 @@ type EditDefaultRewardFormProps = {
   const ModalCloseButton = styled.div`
       @media ${StyledMediaQuery.XS} {
         display: flex;
-        position: absolute;
+        position: fixed;
         top: 20px;
         right: 20px;
         z-index: 1000;
@@ -160,6 +160,17 @@ type EditDefaultRewardFormProps = {
   }) => {
  
     const [newDefaultRewardValue, setNewDefaultRewardValue] = useState<string>(defaultRewardValue);
+    const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const [fieldValid, setFieldValid] = useState<boolean>(true);
+
+    useEffect(() => {
+      // Check for changes
+      setHasChanged(newDefaultRewardValue !== defaultRewardValue);
+  
+      // Check if the field is valid (not empty)
+      setFieldValid(newDefaultRewardValue.trim() !== "");
+  }, [newDefaultRewardValue, defaultRewardValue]);
+    
   
     const { showToast } = useStore((state: AppState) => ({ showToast: state.showToast }));
   
@@ -233,12 +244,13 @@ return (
             />
             </FormFields>
             <Button
-              buttonTypeVariant='primary'
+              buttonTypeVariant={hasChanged && fieldValid ? 'primary' : 'disabled'}
               sizeVariant='large'
               label='Update'
               buttonWidthVariant='fill'
               onClick={handleUpdate}
               type='submit'
+              disabled={!hasChanged || !fieldValid}
             />
           </form>
         </FormAndButton>

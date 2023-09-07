@@ -1,5 +1,5 @@
 // components/RewardForm.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InputField from '../atoms/InputField';
 import DropdownField from '../atoms/DropdownField';
 import Text from '../subatomic/Text';
@@ -171,8 +171,37 @@ type EditRewardFormProps = {
     const [newRewardValue, setNewRewardValue] = useState<string>(rewardValue);
     const [newRewardCost, setNewRewardCost] = useState<string>(rewardCost); // Change this to string
     const [newRewardTerms, setNewRewardTerms] = useState<string>(rewardTerms);
+    const [hasChanged, setHasChanged] = useState<boolean>(false);
+    const [fieldsValid, setFieldsValid] = useState<boolean>(true);
   
     const { showToast } = useStore((state: AppState) => ({ showToast: state.showToast }));
+
+    useEffect(() => {
+      checkForChanges();
+  }, [newRewardName, newRewardValue, newRewardCost, newRewardTerms]);
+
+  const checkForChanges = () => {
+    if (
+        newRewardName !== rewardName ||
+        newRewardValue !== rewardValue ||
+        newRewardCost !== rewardCost ||
+        newRewardTerms !== rewardTerms
+    ) {
+        setHasChanged(true);
+    } else {
+        setHasChanged(false);
+    }
+
+    if (
+        newRewardName.trim() === "" ||
+        newRewardValue.trim() === "" ||
+        newRewardCost.trim() === "" // Add any other required field checks here
+    ) {
+        setFieldsValid(false);
+    } else {
+        setFieldsValid(true);
+    }
+};
   
     const handleUpdate = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -269,13 +298,14 @@ return (
               />
             </FormFields>
             <Button
-              buttonTypeVariant='primary'
+              buttonTypeVariant={hasChanged && fieldsValid ? 'primary' : 'disabled'}
               sizeVariant='large'
               label='Update'
               buttonWidthVariant='fill'
               onClick={handleUpdate}
               type='submit'
-            />
+              disabled={!hasChanged || !fieldsValid}
+          />
           </form>
         </FormAndButton>
       </RewardFormContent>

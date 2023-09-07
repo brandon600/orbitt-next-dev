@@ -272,11 +272,13 @@ function Rewards({ rewardsData: initialRewardsData, defaultRewardsData: initialD
     const handleEditClick = (reward: RewardData) => {
       setSelectedReward(reward);
       setIsEditFormOpen(true);
+      setIsOverlayOpen(true);
     };
 
     const handleEditDefaultClick = (defaultReward: DefaultRewardData) => {
       setSelectedDefaultReward(defaultReward);
       setIsEditDefaultFormOpen(true);
+      setIsOverlayOpen(true);
     };
 
     const handleEditFormClose = () => {
@@ -418,8 +420,20 @@ async function handleSaveChanges() {
             </ButtonWrap>
             </TitlePlusButton>
                 <RewardOfferingsAndSettings>
-                    <RewardOfferings rewardsData={rewardsData} onPendingChange={handleRewardsPendingChange} originalRewardToggles={originalRewardToggles} onEditClick={handleEditClick} />
-                    <DefaultRewards defaultRewardsData={defaultRewardsData} onDefaultRewardsPendingChange={handleDefaultRewardsPendingChange} originalDefaultRewardsToggles={originalDefaultRewardsToggles} onEditClick={handleEditDefaultClick} />
+                    <RewardOfferings 
+                      rewardsData={rewardsData} 
+                      onPendingChange={handleRewardsPendingChange} 
+                      originalRewardToggles={originalRewardToggles} 
+                      currentRewardToggles={currentRewardToggles}
+                      onEditClick={handleEditClick} 
+                    />
+                    <DefaultRewards 
+                      defaultRewardsData={defaultRewardsData} 
+                      onDefaultRewardsPendingChange={handleDefaultRewardsPendingChange} 
+                      originalDefaultRewardsToggles={originalDefaultRewardsToggles} 
+                      currentDefaultRewardsToggles={currentDefaultRewardsToggles}
+                      onEditClick={handleEditDefaultClick} 
+                    />
                 </RewardOfferingsAndSettings>
         </FlexDiv>
     );
