@@ -10,8 +10,8 @@ import { warnOptionHasBeenMovedOutOfExperimental } from 'next/dist/server/config
 interface DefaultRewardsProps {
   defaultRewardsData: DefaultRewardData[]; // An array of RewardData objects
   onDefaultRewardsPendingChange: (index: number, newValue: boolean) => void;
-  originalDefaultRewardsToggles: boolean[];
-  currentDefaultRewardsToggles: boolean[];
+  originalDefaultRewardToggles: boolean[];
+  currentDefaultRewardToggles: boolean[];
   onEditClick: (reward: DefaultRewardData) => void;
 }
 
@@ -81,7 +81,7 @@ const RewardSettingsList = styled.div`
     }
 `		
 
-const DefaultRewards: React.FC<DefaultRewardsProps> = ({ defaultRewardsData, onDefaultRewardsPendingChange, originalDefaultRewardsToggles, currentDefaultRewardsToggles, onEditClick }) => {
+const DefaultRewards: React.FC<DefaultRewardsProps> = ({ defaultRewardsData, onDefaultRewardsPendingChange, originalDefaultRewardToggles, currentDefaultRewardToggles, onEditClick }) => {
     console.log(defaultRewardsData)
   
     if (!defaultRewardsData) {
@@ -112,10 +112,10 @@ const DefaultRewards: React.FC<DefaultRewardsProps> = ({ defaultRewardsData, onD
                 _id={_id}
                 id={id}
                 index={index}
-                originalDefaultRewardValue={originalDefaultRewardsToggles[index]}
+                originalDefaultRewardValue={originalDefaultRewardToggles[index]}
                 rewardName={defaultRewardName}
                 rewardValue={defaultRewardValue}
-                rewardActive={currentDefaultRewardsToggles[index]}
+                rewardActive={currentDefaultRewardToggles[index]}
 				rewardNumberId={rewardNumberId}
                 onDefaultToggleChange={onDefaultRewardsPendingChange}
 				onEditClick={onEditClick}
