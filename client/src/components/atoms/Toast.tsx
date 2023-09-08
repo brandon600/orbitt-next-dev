@@ -125,26 +125,6 @@ const Toast: React.FC = () => {
   }
 
   const [shouldRender, setShouldRender] = useState(false);
-
-/*
-  useEffect(() => {
-    if (toast.visible) {
-      setBarWidth('0');  // Reset the width to 0
-      const timerForBar = setTimeout(() => {
-        setBarWidth('100%');  // Set the width to 100% after 10ms
-      }, 10);
-      
-      const timerForToast = setTimeout(() => {
-        hideToast();
-      }, 3200);
-      return () => {
-        clearTimeout(timerForBar);
-        clearTimeout(timerForToast);
-      };
-    }
-  }, [toast, hideToast]);
-  */
-
  
   useEffect(() => {
     let renderTimeout: NodeJS.Timeout | undefined;

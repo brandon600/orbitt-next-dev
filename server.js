@@ -116,7 +116,7 @@ app.use((req, res, next) => {
 require('./routes/authRoutes')(app);
 require('./routes/customerInfoRoutes')(app);
 require('./routes/rewardRoutes')(app);
-require('./routes/messagesRoutes')(app);
+require('./routes/messageRoutes')(app);
 
 
 

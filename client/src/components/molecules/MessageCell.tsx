@@ -4,10 +4,14 @@ import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Button from '../atoms/Button';
 import Textarea from '../atoms/Textarea';
+import Text from '../subatomic/Text'
 import ToggleSwitch from '../atoms/ToggleSwitch';
+import { TriggeredMessageData } from '@/types/TriggeredMessageData';
+import { useStore, AppState } from '../../store/store'; // Import your store
 
-interface MessageCellProps {
-    messageName: string;
+interface MessageCellProps extends TriggeredMessageData {
+    onTriggeredMessageToggleChange: (index: number, newValue: boolean) => void;
+    originalTriggeredMessageValue: boolean;
 }
 
 
@@ -77,13 +81,7 @@ const MessageContainer = styled.div`
         border-radius: 16px;
         background: ${Colors.neutral200};
         width: 100%;
-
-        p {
-            color: ${Colors.neutral700};
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 26px;
-        }
+        box-sizing: border-box;
     }
 
     @media ${StyledMediaQuery.L} {
@@ -127,19 +125,74 @@ const ButtonContainer = styled.div`
 }
 `
 
+const TextMessageTop = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        padding: 0;
+        margin: 0;
+
+        p {
+            color: ${Colors.neutral700};
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 26px;
+        }
+    }
+`
+
+const TextMessageBottom = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+
+        p {
+            color: ${Colors.neutral700};
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 26px;
+        }
+    }
+`
+
 
 const handleClicked = () => {
     console.log('Clicked');
 }
 
 const MessageCell: React.FC<MessageCellProps> = ({
-    messageName
+    messageNumberId: triggeredMessageNumberId, 
+    messageTitle: triggeredMessageTitle, 
+    messageSubtitle: triggeredMessageSubtitle,
+    textMessageDefaultTextStart: triggeredMessageDefaultStart,
+    textMessageCustomText: triggeredMessageCustomText,
+    textMessageDefaultTextEnd1: triggeredMessageDefaultEnd1,
+    textMessageDefaultTextEnd2: triggeredMessageDefaultEnd2,
+    active: triggeredMessageActive,
+    onTriggeredMessageToggleChange,
+    originalTriggeredMessageValue,
+    index,
   }) => {
 
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [originalMessage, setOriginalMessage] = useState<string>('Message Cell Value here');
+    const [originalMessage, setOriginalMessage] = useState<string>(triggeredMessageCustomText);
     const [stagedMessage, setStagedMessage] = useState<string>(originalMessage);
+    const [isActive, setIsActive] = useState(triggeredMessageActive);
+
+    const { showToast } = useStore((state: AppState) => ({ showToast: state.showToast }));
+
+    useEffect(() => {
+        setIsActive(triggeredMessageActive);
+      }, [triggeredMessageActive]);
+
+
+      useEffect(() => {
+        setIsActive(originalTriggeredMessageValue);
+        console.log("isActive state reset to:", originalTriggeredMessageValue);
+    }, [originalTriggeredMessageValue]);
+  
 
     useEffect(() => {
         if (isEditing) {
@@ -154,7 +207,46 @@ const MessageCell: React.FC<MessageCellProps> = ({
     const handleSave = () => {
         setOriginalMessage(stagedMessage); // Save staged changes to original message
         setIsEditing(false);
+        handleSaveMessage();
     };
+
+    const handleSaveMessage = async () => {
+        // Use the global state to get user or any other required data
+        const { data } = useStore.getState(); 
+      
+        const payload = {
+          triggeredMessageDetails: {
+            customText: stagedMessage, // This seems to be the custom message you want to update
+            triggeredMessageId: triggeredMessageNumberId, // Assuming `id` is the identifier of the message you're updating
+            // Add any other necessary details here
+          },
+          user: data // If you need user data, otherwise you can omit this
+        };
+      
+        try {
+          const response = await fetch('http://localhost:5000/update-triggered-message-content', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+      
+          if (response.ok) {
+            const updatedMessage = await response.json();
+            showToast('Message updated successfully!', 'success');
+            // Set the original message to the staged message since it's now saved
+            setOriginalMessage(stagedMessage);
+            // You can reset isEditing state here to show the saved message without editing capabilities
+            setIsEditing(false);
+            // Additional logic here (e.g., maybe refresh a list of messages if you have one)
+          } else {
+            showToast('Failed to update message.', 'error');
+          }
+        } catch (error) {
+          showToast('Error: Something went wrong!', 'error');
+        }
+      };
 
     const handleCancel = () => {
         setStagedMessage(originalMessage); // Revert staged changes to original message
@@ -162,20 +254,33 @@ const MessageCell: React.FC<MessageCellProps> = ({
     };
 
 
+const handleToggle = (newValue: boolean) => {
+    setIsActive(newValue);
+    onTriggeredMessageToggleChange(index, newValue);
+  };
+    
+
+
     return (
       <MessageCellContainer>
         <MessageTop>
             <HeadingAndSubhead>
-                <h4>{messageName}</h4>
-                <p>Message</p>
+                <h4>{triggeredMessageTitle}</h4>
+                <Text 
+                    text={triggeredMessageSubtitle} 
+                />
             </HeadingAndSubhead>
             <ToggleSwitch
-                active={true}
-                onChange={handleClicked}
+                active={isActive}
+                onChange={handleToggle}
             />
         </MessageTop>
         <MessageContainer>
-            <p>Message Custom Text</p>
+            <TextMessageTop>
+                <Text 
+                    text={triggeredMessageDefaultStart} 
+                />
+            </TextMessageTop>
             <TextareaAndButtons>
                 <Textarea
                     value={stagedMessage}
@@ -183,6 +288,14 @@ const MessageCell: React.FC<MessageCellProps> = ({
                     disabled={!isEditing}
                     ref={textareaRef}
                 />
+                <TextMessageBottom>
+                    <Text 
+                        text={triggeredMessageDefaultEnd1}
+                    />
+                    <Text 
+                        text={triggeredMessageDefaultEnd2}
+                    />
+                </TextMessageBottom>
                 {isEditing ? (
                     <>
                     <BottomButtons>

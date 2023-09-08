@@ -1,12 +1,12 @@
 export interface TriggeredMessageData {
-    id: number; // Example ID property, adjust as needed
     messageNumberId: number;
     messageTitle: string;
-    messagesubTitle: string;
-    textMessageDefaultStart: string;
+    messageSubtitle: string;
+    textMessageDefaultTextStart: string;
     textMessageCustomText: string;
-    textMessageDefaultEnd1: string;
-    textMessageDefaultEnd2: string;
+    textMessageDefaultTextEnd1: string;
+    textMessageDefaultTextEnd2: string;
     active: boolean;
+    index: number;
     // Add other properties as needed
   }
