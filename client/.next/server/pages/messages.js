@@ -128,7 +128,15 @@ const handleClicked = () => {
 };
 
 const MessageCell = ({
-  messageName
+  messageNumberId: triggeredMessageNumberId,
+  messageTitle: triggeredMessageTitle,
+  messageSubtitle: triggeredMessageSubtitle,
+  textMessageDefaultStart: triggeredMessageDefaultStart,
+  textMessageCustomText: triggeredMessageCustomText,
+  textMessageDefaultEnd1: triggeredMessageDefaultEnd1,
+  textMessageDefaultEnd2: triggeredMessageDefaultEnd2,
+  active: triggeredMessageActive,
+  id
 }) => {
   const textareaRef = (0,external_react_.useRef)(null);
   const {
@@ -169,9 +177,9 @@ const MessageCell = ({
     children: [/*#__PURE__*/(0,jsx_runtime.jsxs)(MessageTop, {
       children: [/*#__PURE__*/(0,jsx_runtime.jsxs)(HeadingAndSubhead, {
         children: [/*#__PURE__*/jsx_runtime.jsx("h4", {
-          children: messageName
+          children: triggeredMessageTitle
         }), /*#__PURE__*/jsx_runtime.jsx("p", {
-          children: "Message"
+          children: triggeredMessageSubtitle
         })]
       }), /*#__PURE__*/jsx_runtime.jsx(ToggleSwitch/* default */.Z, {
         active: true,
@@ -233,16 +241,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   getServerSideProps: () => (/* binding */ getServerSideProps)
 /* harmony export */ });
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7518);
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6689);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _GlobalStyle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7711);
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(8187);
-/* harmony import */ var _components_molecules_MessageCell__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(4485);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(5893);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_store_store__WEBPACK_IMPORTED_MODULE_3__]);
-_store_store__WEBPACK_IMPORTED_MODULE_3__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+/* harmony import */ var _components_subatomic_Text__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(711);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7518);
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(8338);
+/* harmony import */ var _constants_Colors__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(2287);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6689);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _GlobalStyle__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7711);
+/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(8187);
+/* harmony import */ var _components_molecules_MessageCell__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(4485);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(5893);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_store_store__WEBPACK_IMPORTED_MODULE_6__]);
+_store_store__WEBPACK_IMPORTED_MODULE_6__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+
+
+
 
 
 
@@ -251,6 +265,14 @@ _store_store__WEBPACK_IMPORTED_MODULE_3__ = (__webpack_async_dependencies__.then
 
 
 
+const FlexDiv = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "messages__FlexDiv",
+  componentId: "sc-q8sudu-0"
+})(["@media ", "{display:flex;gap:40px;flex-direction:column;padding:24px 16px;width:100vw;box-sizing:border-box;background:", ";}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.primary100);
+const MessagesPageTitle = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "messages__MessagesPageTitle",
+  componentId: "sc-q8sudu-1"
+})(["@media ", "{display:flex;color:", ";p{font-size:32px;line-height:39px;font-weight:800;}}@media ", "{color:", ";p{font-size:40px;line-height:48px;}}@media ", "{color:", ";p{font-size:48px;line-height:58px;}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.neutral700, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.S, _constants_Colors__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.neutral700, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.L, _constants_Colors__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.neutral700);
 async function getServerSideProps() {
   try {
     // Fetch rewards data
@@ -277,10 +299,6 @@ async function getServerSideProps() {
     };
   }
 }
-const FlexDiv = styled_components__WEBPACK_IMPORTED_MODULE_0___default().div.withConfig({
-  displayName: "messages__FlexDiv",
-  componentId: "sc-q8sudu-0"
-})(["display:flex;width:100vw;"]);
 
 function Messages({
   triggeredMessagesData
@@ -288,27 +306,69 @@ function Messages({
   const {
     0: isOverlayOpen,
     1: setIsOverlayOpen
-  } = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(false);
   const {
     data,
     fetchData
-  } = (0,_store_store__WEBPACK_IMPORTED_MODULE_3__/* .useStore */ .o)();
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+  } = (0,_store_store__WEBPACK_IMPORTED_MODULE_6__/* .useStore */ .o)();
+  (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
     fetchData();
   }, []);
-  const storeData = _store_store__WEBPACK_IMPORTED_MODULE_3__/* .useStore */ .o.getState(); // Get the current state of the store
+  const storeData = _store_store__WEBPACK_IMPORTED_MODULE_6__/* .useStore */ .o.getState(); // Get the current state of the store
 
   console.log('Store Data:', storeData); // Log the entire store data
 
   console.log(triggeredMessagesData);
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(FlexDiv, {
-    children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx(_GlobalStyle__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z, {}), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx(_components_molecules_MessageCell__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
-      messageName: "Message Name"
-    })]
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(FlexDiv, {
+    children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx(_GlobalStyle__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z, {}), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx(MessagesPageTitle, {
+      children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx(_components_subatomic_Text__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z, {
+        text: "Messages"
+      })
+    }), triggeredMessagesData.map(({
+      messageNumberId: triggeredMessageNumberId,
+      messageTitle: triggeredMessageTitle,
+      messageSubtitle: triggeredMessageSubtitle,
+      textMessageDefaultStart: triggeredMessageDefaultStart,
+      textMessageCustomText: triggeredMessageCustomText,
+      textMessageDefaultEnd1: triggeredMessageDefaultEnd1,
+      textMessageDefaultEnd2: triggeredMessageDefaultEnd2,
+      active: triggeredMessageActive,
+      id
+    }, index) => /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx(_components_molecules_MessageCell__WEBPACK_IMPORTED_MODULE_7__/* ["default"] */ .Z, {
+      // Make sure to provide a unique key for each item
+      // Pass the data to the RewardItem component as props
+      index: index,
+      id: id,
+      messageNumberId: triggeredMessageNumberId,
+      messageTitle: triggeredMessageTitle,
+      messageSubtitle: triggeredMessageSubtitle,
+      textMessageDefaultStart: triggeredMessageDefaultStart,
+      textMessageCustomText: triggeredMessageCustomText,
+      textMessageDefaultEnd1: triggeredMessageDefaultEnd1,
+      textMessageDefaultEnd2: triggeredMessageDefaultEnd2,
+      active: triggeredMessageActive // Add other props as needed
+
+    }, id))]
   });
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Messages);
+/*
+
+export interface TriggeredMessageData {
+    id: number; // Example ID property, adjust as needed
+    messageNumberId: number;
+    messageTitle: string;
+    messagesubTitle: string;
+    textMessageDefaultStart: string;
+    textMessageCustomText: string;
+    textMessageDefaultEnd1: string;
+    textMessageDefaultEnd2: string;
+    active: boolean;
+    index: number;
+    // Add other properties as needed
+  }
+  */
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } });
 
@@ -484,7 +544,7 @@ module.exports = import("zustand");;
 var __webpack_require__ = require("../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [492,815,126,187,696], () => (__webpack_exec__(7538)));
+var __webpack_exports__ = __webpack_require__.X(0, [492,815,126,187,833], () => (__webpack_exec__(7538)));
 module.exports = __webpack_exports__;
 
 })();

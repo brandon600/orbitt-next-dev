@@ -42,7 +42,6 @@ const RewardsPageTitle = styled.div`
  }
 
  @media ${StyledMediaQuery.S} {
-    display: flex;
     color: ${Colors.neutral700};
     p {
         font-size: 40px;
@@ -51,7 +50,6 @@ const RewardsPageTitle = styled.div`
  }
 
  @media ${StyledMediaQuery.L} {
-    display: flex;
     color: ${Colors.neutral700};
     p {
         font-size: 48px;

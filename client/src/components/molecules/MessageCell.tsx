@@ -5,9 +5,9 @@ import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Button from '../atoms/Button';
 import Textarea from '../atoms/Textarea';
 import ToggleSwitch from '../atoms/ToggleSwitch';
+import { TriggeredMessageData } from '@/types/TriggeredMessageData';
 
-interface MessageCellProps {
-    messageName: string;
+interface MessageCellProps extends TriggeredMessageData {
 }
 
 
@@ -133,7 +133,15 @@ const handleClicked = () => {
 }
 
 const MessageCell: React.FC<MessageCellProps> = ({
-    messageName
+    messageNumberId: triggeredMessageNumberId, 
+    messageTitle: triggeredMessageTitle, 
+    messageSubtitle: triggeredMessageSubtitle,
+    textMessageDefaultStart: triggeredMessageDefaultStart,
+    textMessageCustomText: triggeredMessageCustomText,
+    textMessageDefaultEnd1: triggeredMessageDefaultEnd1,
+    textMessageDefaultEnd2: triggeredMessageDefaultEnd2,
+    active: triggeredMessageActive,
+    id,
   }) => {
 
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -166,8 +174,8 @@ const MessageCell: React.FC<MessageCellProps> = ({
       <MessageCellContainer>
         <MessageTop>
             <HeadingAndSubhead>
-                <h4>{messageName}</h4>
-                <p>Message</p>
+                <h4>{triggeredMessageTitle}</h4>
+                <p>{triggeredMessageSubtitle}</p>
             </HeadingAndSubhead>
             <ToggleSwitch
                 active={true}
