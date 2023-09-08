@@ -4,8 +4,8 @@
   "/page": "pages/page.html",
   "/_error": "pages/_error.js",
   "/layout": "pages/layout.html",
-  "/messages": "pages/messages.js",
   "/rewards": "pages/rewards.js",
+  "/messages": "pages/messages.js",
   "/_document": "pages/_document.js",
   "/404": "pages/404.html"
 }

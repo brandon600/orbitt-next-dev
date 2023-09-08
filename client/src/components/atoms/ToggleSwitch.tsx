@@ -8,6 +8,11 @@ interface ToggleProps {
   active: boolean;
 }
 
+interface ToggleSwitchProps {
+  active: boolean;
+  onChange: (active: boolean) => void;
+}
+
 
 //  padding: ${(props) => (props.isChecked ? '0px 4px 0px 0px' : '0px 0px 0px 4px')};
 const ToggleContainer = styled.label<ToggleProps>`
@@ -40,12 +45,6 @@ const SliderButton = styled.div<ToggleProps>`
   transition: margin-left 0.2s ease-in-out;
 `;
 
-
-
-interface ToggleSwitchProps {
-  active: boolean;
-  onChange: (active: boolean) => void;
-}
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ active, onChange }) => {
   const handleToggle = () => {

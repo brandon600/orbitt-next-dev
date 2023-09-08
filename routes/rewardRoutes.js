@@ -53,7 +53,7 @@ module.exports = (app) => {
     });
 
 
-    app.post('/update-active-rewards/', async (req, res) => {
+    app.put('/update-active-rewards/', async (req, res) => {
       const { updatedRewards, updatedDefaultRewards } = req.body;
     
       const rewardsTrueArray = updatedRewards
@@ -87,6 +87,8 @@ module.exports = (app) => {
         res.status(500).json({ message: 'Internal Server Error' });
       }
     });    
+
+
 
     app.put('/update-reward', async (req, res) => {
       try {
@@ -165,14 +167,7 @@ module.exports = (app) => {
 
 
 
-
-
-
-
-
     app.put('/update-default-reward', async (req, res) => {
-      const { rewardDetails, user } = req.body;
-        console.log(req.body)
       
       try {
         const { rewardDetails, user } = req.body;

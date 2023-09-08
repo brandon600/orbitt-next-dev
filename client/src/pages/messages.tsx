@@ -18,7 +18,7 @@ interface MessagesProps {
     triggeredMessagesData: TriggeredMessageData[];
 }
 
-const FlexDiv = styled.div`
+const FlexDiv2 = styled.div`
 @media ${StyledMediaQuery.XS} {
     display: flex;
     gap: 40px;
@@ -83,20 +83,127 @@ export async function getServerSideProps() {
     }
 }
 
-function Messages( { triggeredMessagesData }: MessagesProps) {
-    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
-    const { data, fetchData } = useStore();
+function Messages( { triggeredMessagesData: initialTriggeredMessagesData }: MessagesProps) {
+    const { data, fetchData, toast, showToast, hideToast } = useStore();
 
-   useEffect(() => {
+
+const [hasPendingMessageChanges, setHasPendingMessageChanges] = useState(false);
+const [originalTriggeredMessageToggles, setOriginalTriggeredMessageToggles] = useState<boolean[]>([]);
+const [currentTriggeredMessageToggles, setCurrentTriggeredMessageToggles] = useState<boolean[]>([]);
+const [triggeredMessagesData, setTriggeredMessagesData] = useState(initialTriggeredMessagesData);
+
+
+
+useEffect(() => {
+    console.log("Setting up socket connection.");
+    const socket = io("http://localhost:5000");
+  
+    // Listen for 'reward-updated' events
+    socket.on("triggered-message-updated", (updatedTriggeredMessage) => {
+      // Update the rewardsData state here
+      console.log(updatedTriggeredMessage)
+      const updatedTriggeredMessagesData = triggeredMessagesData.map((triggeredMessage) => {
+        if (triggeredMessage.messageNumberId === updatedTriggeredMessage.messageNumberId) {
+          return updatedTriggeredMessage;
+        }
+        return triggeredMessage;
+      });
+      setTriggeredMessagesData(updatedTriggeredMessagesData);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from the server");
+    });
+  
+    return () => {
+      // Cleanup: Disconnect socket when component is unmounted
+      socket.disconnect();
+    };
+}, [triggeredMessagesData]);
+
+useEffect(() => {
     fetchData();
 }, []);
+
+useEffect(() => {
+    setOriginalTriggeredMessageToggles(triggeredMessagesData.map((triggeredMessage) => triggeredMessage.active));
+    setCurrentTriggeredMessageToggles(triggeredMessagesData.map((triggeredMessage) => triggeredMessage.active));
+  }, [triggeredMessagesData]);
+
+
+const handleTriggeredMessagePendingChange = (index: number, newValue: boolean) => {
+    const newCurrentTriggeredMessageToggles = [...currentTriggeredMessageToggles];
+    newCurrentTriggeredMessageToggles[index] = newValue;
+    setCurrentTriggeredMessageToggles(newCurrentTriggeredMessageToggles);
+    setHasPendingMessageChanges(!originalTriggeredMessageToggles.every((val, i) => val === newCurrentTriggeredMessageToggles[i]));
+  };
+
+async function handleSaveMessageChanges() {
+        const updatedTriggeredMessagesData = triggeredMessagesData.map((triggeredMessage, index) => ({
+          ...triggeredMessage,
+          active: currentTriggeredMessageToggles[index]
+        }));
+      
+        const payload = {
+          updatedTriggeredMessages: updatedTriggeredMessagesData,
+        };
+      
+        console.log(`Sending updated data: ${JSON.stringify(payload)}`);
+      
+        try {
+          const response = await fetch('http://localhost:5000/update-triggered-messages', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+          });
+      
+          if (response.ok) {
+            console.log('Successfully updated messages!');
+            showToast('Successfully updated messages!', 'success'); // Added toast message
+            setOriginalTriggeredMessageToggles(currentTriggeredMessageToggles);
+            setHasPendingMessageChanges(false);
+          } else {
+            console.log('Failed to update messages.');
+            showToast('Failed to update messages.', 'error');
+          }
+        } catch (error) {
+          console.error('Error updating messages:', error);
+          showToast('Error updating messages.', 'error');
+        }
+  }
+
+
+const handleCancelMessageChanges: () => void = () => {
+    // Step 1: Reset Message Toggles
+    setCurrentTriggeredMessageToggles([...originalTriggeredMessageToggles]);
+    // Step 2: Reset the hasPendingMessageChanges flag
+    setHasPendingMessageChanges(false);
+  };
+  
 
 const storeData = useStore.getState(); // Get the current state of the store
 console.log('Store Data:', storeData); // Log the entire store data
 console.log(triggeredMessagesData);
 
+
     return (
-        <FlexDiv>
+        <FlexDiv2>
+            <AnimatePresence>
+            {hasPendingMessageChanges && (
+              <BottomSaveNotice
+                key="bottom-save-notice"
+                onSave={handleSaveMessageChanges}
+                onCancel={handleCancelMessageChanges}
+              />
+            )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {toast.visible && (
+                    <Toast key="toast" />
+                )}
+            </AnimatePresence>
             <GlobalStyle />
             <MessagesPageTitle>
                 <Text text='Messages' />
@@ -105,50 +212,31 @@ console.log(triggeredMessagesData);
 				{ messageNumberId: triggeredMessageNumberId, 
 				  messageTitle: triggeredMessageTitle, 
                   messageSubtitle: triggeredMessageSubtitle,
-				  textMessageDefaultStart: triggeredMessageDefaultStart,
+				  textMessageDefaultTextStart: triggeredMessageDefaultStart,
                   textMessageCustomText: triggeredMessageCustomText,
-                  textMessageDefaultEnd1: triggeredMessageDefaultEnd1,
-                  textMessageDefaultEnd2: triggeredMessageDefaultEnd2,
+                  textMessageDefaultTextEnd1: triggeredMessageDefaultEnd1,
+                  textMessageDefaultTextEnd2: triggeredMessageDefaultEnd2,
                   active: triggeredMessageActive,
-				  id
 				}, index) => (
                 <MessageCell
-                        key={id} // Make sure to provide a unique key for each item
+                        key={triggeredMessageNumberId} // Make sure to provide a unique key for each item
                         // Pass the data to the RewardItem component as props
                         index={index}
-                        id={id}
                         messageNumberId={triggeredMessageNumberId}
                         messageTitle={triggeredMessageTitle}
                         messageSubtitle={triggeredMessageSubtitle}
-                        textMessageDefaultStart={triggeredMessageDefaultStart}
+                        textMessageDefaultTextStart={triggeredMessageDefaultStart}
                         textMessageCustomText={triggeredMessageCustomText}
-                        textMessageDefaultEnd1={triggeredMessageDefaultEnd1}
-                        textMessageDefaultEnd2={triggeredMessageDefaultEnd2}
-                        active={triggeredMessageActive}
+                        textMessageDefaultTextEnd1={triggeredMessageDefaultEnd1}
+                        textMessageDefaultTextEnd2={triggeredMessageDefaultEnd2}
+                        active={currentTriggeredMessageToggles[index]}
+                        onTriggeredMessageToggleChange={handleTriggeredMessagePendingChange}
+                        originalTriggeredMessageValue={originalTriggeredMessageToggles[index]}
                         // Add other props as needed
                     />
             ))}
-        </FlexDiv>
+        </FlexDiv2>
     );
 }
 
 export default Messages;
-
-
-
-/*
-
-export interface TriggeredMessageData {
-    id: number; // Example ID property, adjust as needed
-    messageNumberId: number;
-    messageTitle: string;
-    messagesubTitle: string;
-    textMessageDefaultStart: string;
-    textMessageCustomText: string;
-    textMessageDefaultEnd1: string;
-    textMessageDefaultEnd2: string;
-    active: boolean;
-    index: number;
-    // Add other properties as needed
-  }
-  */

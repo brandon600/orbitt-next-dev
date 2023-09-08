@@ -106,7 +106,7 @@ export async function handleSaveChanges({
     
       try {
         const response = await fetch('http://localhost:5000/update-active-rewards', {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
