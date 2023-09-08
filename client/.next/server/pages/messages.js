@@ -159,6 +159,9 @@ const MessageCell = ({
   active: triggeredMessageActive,
   onTriggeredMessageToggleChange,
   originalTriggeredMessageValue,
+  hasPendingMessageChanges,
+  editingIndex,
+  setEditingIndex,
   index
 }) => {
   const textareaRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -179,10 +182,23 @@ const MessageCell = ({
     1: setIsActive
   } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(triggeredMessageActive);
   const {
+    0: isDisabled,
+    1: setIsDisabled
+  } = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const {
     showToast
   } = (0,_store_store__WEBPACK_IMPORTED_MODULE_8__/* .useStore */ .o)(state => ({
     showToast: state.showToast
   }));
+  /*
+  useEffect(() => {
+  setIsDisabled(editingIndex !== null && editingIndex !== index);
+  }, [editingIndex, index]);
+  */
+
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    setIsDisabled(editingIndex !== null);
+  }, [editingIndex]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     setIsActive(triggeredMessageActive);
   }, [triggeredMessageActive]);
@@ -196,8 +212,16 @@ const MessageCell = ({
     }
   }, [isEditing]);
 
+  const handleToggle = newValue => {
+    setIsActive(newValue);
+    onTriggeredMessageToggleChange(index, newValue);
+  };
+
   const handleEdit = () => {
-    setIsEditing(true);
+    if (!hasPendingMessageChanges) {
+      setIsEditing(true);
+      setEditingIndex(index);
+    }
   };
 
   const handleSave = () => {
@@ -205,6 +229,14 @@ const MessageCell = ({
 
     setIsEditing(false);
     handleSaveMessage();
+    setEditingIndex(null);
+  };
+
+  const handleCancel = () => {
+    setStagedMessage(originalMessage); // Revert staged changes to original message
+
+    setIsEditing(false);
+    setEditingIndex(null);
   };
 
   const handleSaveMessage = async () => {
@@ -248,17 +280,6 @@ const MessageCell = ({
     }
   };
 
-  const handleCancel = () => {
-    setStagedMessage(originalMessage); // Revert staged changes to original message
-
-    setIsEditing(false);
-  };
-
-  const handleToggle = newValue => {
-    setIsActive(newValue);
-    onTriggeredMessageToggleChange(index, newValue);
-  };
-
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)(MessageCellContainer, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)(MessageTop, {
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)(HeadingAndSubhead, {
@@ -269,7 +290,8 @@ const MessageCell = ({
         })]
       }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx(_atoms_ToggleSwitch__WEBPACK_IMPORTED_MODULE_7__/* ["default"] */ .Z, {
         active: isActive,
-        onChange: handleToggle
+        onChange: handleToggle,
+        disabled: isDisabled
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)(MessageContainer, {
       children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx(TextMessageTop, {
@@ -310,11 +332,12 @@ const MessageCell = ({
           })
         }) : /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx(ButtonContainer, {
           children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx(_atoms_Button__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z, {
-            buttonTypeVariant: "secondary",
+            buttonTypeVariant: isDisabled || hasPendingMessageChanges ? "disabled" : "secondary",
             sizeVariant: "large",
             label: "Edit Custom Text",
             buttonWidthVariant: "fill",
-            onClick: handleEdit
+            onClick: handleEdit,
+            disabled: isDisabled || hasPendingMessageChanges
           })
         })]
       })]
@@ -383,6 +406,10 @@ const MessagesPageTitle = styled_components__WEBPACK_IMPORTED_MODULE_1___default
   displayName: "messages__MessagesPageTitle",
   componentId: "sc-q8sudu-1"
 })(["@media ", "{display:flex;color:", ";p{font-size:32px;line-height:39px;font-weight:800;}}@media ", "{color:", ";p{font-size:40px;line-height:48px;}}@media ", "{color:", ";p{font-size:48px;line-height:58px;}}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.XS, _constants_Colors__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.neutral700, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.S, _constants_Colors__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.neutral700, _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.L, _constants_Colors__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.neutral700);
+const MessageCellsContainer = styled_components__WEBPACK_IMPORTED_MODULE_1___default().div.withConfig({
+  displayName: "messages__MessageCellsContainer",
+  componentId: "sc-q8sudu-2"
+})(["@media ", "{display:flex;flex-direction:column;gap:64px;width:100%;}"], _constants_StyledMediaQuery__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.XS);
 async function getServerSideProps() {
   try {
     // Fetch rewards data
@@ -436,6 +463,10 @@ function Messages({
     0: triggeredMessagesData,
     1: setTriggeredMessagesData
   } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(initialTriggeredMessagesData);
+  const {
+    0: editingIndex,
+    1: setEditingIndex
+  } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
     console.log("Setting up socket connection.");
     const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_10__["default"])("http://localhost:5000"); // Listen for 'reward-updated' events
@@ -533,31 +564,36 @@ function Messages({
       children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(_components_subatomic_Text__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z, {
         text: "Messages"
       })
-    }), triggeredMessagesData.map(({
-      messageNumberId: triggeredMessageNumberId,
-      messageTitle: triggeredMessageTitle,
-      messageSubtitle: triggeredMessageSubtitle,
-      textMessageDefaultTextStart: triggeredMessageDefaultStart,
-      textMessageCustomText: triggeredMessageCustomText,
-      textMessageDefaultTextEnd1: triggeredMessageDefaultEnd1,
-      textMessageDefaultTextEnd2: triggeredMessageDefaultEnd2,
-      active: triggeredMessageActive
-    }, index) => /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(_components_molecules_MessageCell__WEBPACK_IMPORTED_MODULE_11__/* ["default"] */ .Z, {
-      // Make sure to provide a unique key for each item
-      // Pass the data to the RewardItem component as props
-      index: index,
-      messageNumberId: triggeredMessageNumberId,
-      messageTitle: triggeredMessageTitle,
-      messageSubtitle: triggeredMessageSubtitle,
-      textMessageDefaultTextStart: triggeredMessageDefaultStart,
-      textMessageCustomText: triggeredMessageCustomText,
-      textMessageDefaultTextEnd1: triggeredMessageDefaultEnd1,
-      textMessageDefaultTextEnd2: triggeredMessageDefaultEnd2,
-      active: currentTriggeredMessageToggles[index],
-      onTriggeredMessageToggleChange: handleTriggeredMessagePendingChange,
-      originalTriggeredMessageValue: originalTriggeredMessageToggles[index] // Add other props as needed
+    }), /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(MessageCellsContainer, {
+      children: triggeredMessagesData.map(({
+        messageNumberId: triggeredMessageNumberId,
+        messageTitle: triggeredMessageTitle,
+        messageSubtitle: triggeredMessageSubtitle,
+        textMessageDefaultTextStart: triggeredMessageDefaultStart,
+        textMessageCustomText: triggeredMessageCustomText,
+        textMessageDefaultTextEnd1: triggeredMessageDefaultEnd1,
+        textMessageDefaultTextEnd2: triggeredMessageDefaultEnd2,
+        active: triggeredMessageActive
+      }, index) => /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx(_components_molecules_MessageCell__WEBPACK_IMPORTED_MODULE_11__/* ["default"] */ .Z, {
+        // Make sure to provide a unique key for each item
+        // Pass the data to the RewardItem component as props
+        index: index,
+        messageNumberId: triggeredMessageNumberId,
+        messageTitle: triggeredMessageTitle,
+        messageSubtitle: triggeredMessageSubtitle,
+        textMessageDefaultTextStart: triggeredMessageDefaultStart,
+        textMessageCustomText: triggeredMessageCustomText,
+        textMessageDefaultTextEnd1: triggeredMessageDefaultEnd1,
+        textMessageDefaultTextEnd2: triggeredMessageDefaultEnd2,
+        active: currentTriggeredMessageToggles[index],
+        onTriggeredMessageToggleChange: handleTriggeredMessagePendingChange,
+        originalTriggeredMessageValue: originalTriggeredMessageToggles[index],
+        editingIndex: editingIndex,
+        setEditingIndex: setEditingIndex,
+        hasPendingMessageChanges: hasPendingMessageChanges // Add other props as needed
 
-    }, triggeredMessageNumberId))]
+      }, triggeredMessageNumberId))
+    })]
   });
 }
 

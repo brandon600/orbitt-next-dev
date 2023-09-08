@@ -12,6 +12,9 @@ import { useStore, AppState } from '../../store/store'; // Import your store
 interface MessageCellProps extends TriggeredMessageData {
     onTriggeredMessageToggleChange: (index: number, newValue: boolean) => void;
     originalTriggeredMessageValue: boolean;
+    editingIndex: number | null; // Add this property
+    hasPendingMessageChanges: boolean; // And this property
+    setEditingIndex: (index: number | null) => void;
 }
 
 
@@ -172,6 +175,9 @@ const MessageCell: React.FC<MessageCellProps> = ({
     active: triggeredMessageActive,
     onTriggeredMessageToggleChange,
     originalTriggeredMessageValue,
+    hasPendingMessageChanges,
+    editingIndex,
+    setEditingIndex,
     index,
   }) => {
 
@@ -180,8 +186,18 @@ const MessageCell: React.FC<MessageCellProps> = ({
     const [originalMessage, setOriginalMessage] = useState<string>(triggeredMessageCustomText);
     const [stagedMessage, setStagedMessage] = useState<string>(originalMessage);
     const [isActive, setIsActive] = useState(triggeredMessageActive);
-
+    const [isDisabled, setIsDisabled] = useState(false);
     const { showToast } = useStore((state: AppState) => ({ showToast: state.showToast }));
+
+    /*
+useEffect(() => {
+    setIsDisabled(editingIndex !== null && editingIndex !== index);
+}, [editingIndex, index]);
+*/
+
+useEffect(() => {
+    setIsDisabled(editingIndex !== null);
+}, [editingIndex]);
 
     useEffect(() => {
         setIsActive(triggeredMessageActive);
@@ -200,15 +216,32 @@ const MessageCell: React.FC<MessageCellProps> = ({
         }
     }, [isEditing]);
 
+
+    const handleToggle = (newValue: boolean) => {
+        setIsActive(newValue);
+        onTriggeredMessageToggleChange(index, newValue);
+    };
+
     const handleEdit = () => {
-        setIsEditing(true);
+        if (!hasPendingMessageChanges) {
+            setIsEditing(true);
+            setEditingIndex(index);
+        }
     };
 
     const handleSave = () => {
         setOriginalMessage(stagedMessage); // Save staged changes to original message
         setIsEditing(false);
         handleSaveMessage();
+        setEditingIndex(null);
     };
+
+    const handleCancel = () => {
+        setStagedMessage(originalMessage); // Revert staged changes to original message
+        setIsEditing(false);
+        setEditingIndex(null);
+    };
+
 
     const handleSaveMessage = async () => {
         // Use the global state to get user or any other required data
@@ -247,17 +280,6 @@ const MessageCell: React.FC<MessageCellProps> = ({
           showToast('Error: Something went wrong!', 'error');
         }
       };
-
-    const handleCancel = () => {
-        setStagedMessage(originalMessage); // Revert staged changes to original message
-        setIsEditing(false);
-    };
-
-
-const handleToggle = (newValue: boolean) => {
-    setIsActive(newValue);
-    onTriggeredMessageToggleChange(index, newValue);
-  };
     
 
 
@@ -273,6 +295,7 @@ const handleToggle = (newValue: boolean) => {
             <ToggleSwitch
                 active={isActive}
                 onChange={handleToggle}
+                disabled={isDisabled}
             />
         </MessageTop>
         <MessageContainer>
@@ -322,11 +345,12 @@ const handleToggle = (newValue: boolean) => {
                 ) : (
                     <ButtonContainer>
                         <Button
-                            buttonTypeVariant="secondary"
+                            buttonTypeVariant={isDisabled || hasPendingMessageChanges ? "disabled" : "secondary"}
                             sizeVariant="large"
                             label="Edit Custom Text"
                             buttonWidthVariant="fill"
                             onClick={handleEdit}
+                            disabled={isDisabled || hasPendingMessageChanges}
                         />
                     </ButtonContainer>
                 )}
