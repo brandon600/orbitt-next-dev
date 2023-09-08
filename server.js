@@ -66,12 +66,14 @@ require('./models/User');
 require('./models/Reward');
 require('./models/OutboundReward');
 require('./models/UpdatedReward');
+require('./models/TriggeredMessage');
 
 const Customer = mongoose.model('customers');
 const User = mongoose.model('users');
 const Reward = mongoose.model('rewards');
 const OutboundReward = mongoose.model('outboundRewards');
 const UpdatedReward = mongoose.model('updatedrewards');
+const TriggeredMessage = mongoose.model('triggeredmessages');
 
 app.use(
   cookieSession({
@@ -114,6 +116,7 @@ app.use((req, res, next) => {
 require('./routes/authRoutes')(app);
 require('./routes/customerInfoRoutes')(app);
 require('./routes/rewardRoutes')(app);
+require('./routes/messagesRoutes')(app);
 
 
 
