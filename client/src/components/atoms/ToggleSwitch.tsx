@@ -11,18 +11,19 @@ interface ToggleProps {
 interface ToggleSwitchProps {
   active: boolean;
   onChange: (active: boolean) => void;
+  disabled?: boolean;
 }
 
 
-//  padding: ${(props) => (props.isChecked ? '0px 4px 0px 0px' : '0px 0px 0px 4px')};
-const ToggleContainer = styled.label<ToggleProps>`
+const ToggleContainer = styled.label<ToggleProps & { disabled?: boolean }>`
   display: flex;
   width: 64px;
   height: 32px;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   border-radius: 20px;
   background-color: ${(props) => (props.active ? Colors.success600 : Colors.neutral300)};
   transition: background-color 0.4s;
+  opacity: ${(props) => (props.disabled ? '0.5' : '1')}; // optional, to give a "faded" look when disabled
 `;
 
 const SwitchInput = styled.input`
@@ -46,20 +47,18 @@ const SliderButton = styled.div<ToggleProps>`
 `;
 
 
-const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ active, onChange }) => {
+const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ active, onChange, disabled }) => {
   const handleToggle = () => {
-    onChange(!active); // Notify parent component of the change
+    if (disabled) return; // Don't toggle if it's disabled
+    onChange(!active);
   };
 
   return (
-    <ToggleContainer active={active}>
+    <ToggleContainer active={active} disabled={disabled}>
       <SwitchInput type="checkbox" checked={active} onChange={handleToggle} />
-        <Slider 
-        >
-          <SliderButton 
-            active={active}
-          />
-        </Slider>
+      <Slider>
+        <SliderButton active={active} />
+      </Slider>
     </ToggleContainer>
   );
 };

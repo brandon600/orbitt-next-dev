@@ -57,6 +57,15 @@ const MessagesPageTitle = styled.div`
  }
  `
 
+ const MessageCellsContainer = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        gap: 64px;
+        width: 100%;
+    }
+ `
+
 export async function getServerSideProps() {
     try {
         // Fetch rewards data
@@ -91,6 +100,7 @@ const [hasPendingMessageChanges, setHasPendingMessageChanges] = useState(false);
 const [originalTriggeredMessageToggles, setOriginalTriggeredMessageToggles] = useState<boolean[]>([]);
 const [currentTriggeredMessageToggles, setCurrentTriggeredMessageToggles] = useState<boolean[]>([]);
 const [triggeredMessagesData, setTriggeredMessagesData] = useState(initialTriggeredMessagesData);
+const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
 
 
@@ -208,6 +218,7 @@ console.log(triggeredMessagesData);
             <MessagesPageTitle>
                 <Text text='Messages' />
             </MessagesPageTitle>
+            <MessageCellsContainer>
                 {triggeredMessagesData.map((
 				{ messageNumberId: triggeredMessageNumberId, 
 				  messageTitle: triggeredMessageTitle, 
@@ -232,9 +243,13 @@ console.log(triggeredMessagesData);
                         active={currentTriggeredMessageToggles[index]}
                         onTriggeredMessageToggleChange={handleTriggeredMessagePendingChange}
                         originalTriggeredMessageValue={originalTriggeredMessageToggles[index]}
+                        editingIndex={editingIndex}
+                        setEditingIndex={setEditingIndex}
+                        hasPendingMessageChanges={hasPendingMessageChanges}
                         // Add other props as needed
                     />
             ))}
+            </MessageCellsContainer>
         </FlexDiv2>
     );
 }

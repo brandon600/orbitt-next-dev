@@ -281,11 +281,10 @@ __webpack_async_result__();
 
 
 
-//  padding: ${(props) => (props.isChecked ? '0px 4px 0px 0px' : '0px 0px 0px 4px')};
 const ToggleContainer = styled_components__WEBPACK_IMPORTED_MODULE_1___default().label.withConfig({
   displayName: "ToggleSwitch__ToggleContainer",
   componentId: "sc-1e3v1ch-0"
-})(["display:flex;width:64px;height:32px;cursor:pointer;border-radius:20px;background-color:", ";transition:background-color 0.4s;"], props => props.active ? _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.success600 : _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral300);
+})(["display:flex;width:64px;height:32px;cursor:", ";border-radius:20px;background-color:", ";transition:background-color 0.4s;opacity:", ";"], props => props.disabled ? 'not-allowed' : 'pointer', props => props.active ? _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.success600 : _constants_Colors__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z.neutral300, props => props.disabled ? '0.5' : '1');
 const SwitchInput = styled_components__WEBPACK_IMPORTED_MODULE_1___default().input.withConfig({
   displayName: "ToggleSwitch__SwitchInput",
   componentId: "sc-1e3v1ch-1"
@@ -301,14 +300,18 @@ const SliderButton = styled_components__WEBPACK_IMPORTED_MODULE_1___default().di
 
 const ToggleSwitch = ({
   active,
-  onChange
+  onChange,
+  disabled
 }) => {
   const handleToggle = () => {
-    onChange(!active); // Notify parent component of the change
+    if (disabled) return; // Don't toggle if it's disabled
+
+    onChange(!active);
   };
 
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(ToggleContainer, {
     active: active,
+    disabled: disabled,
     children: [/*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx(SwitchInput, {
       type: "checkbox",
       checked: active,
