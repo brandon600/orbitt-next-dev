@@ -2,6 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/api/data": "pages/api/data.js",
+  "/customers": "pages/customers.html",
   "/page": "pages/page.html",
   "/layout": "pages/layout.html",
   "/rewards": "pages/rewards.js",
