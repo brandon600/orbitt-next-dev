@@ -67,6 +67,9 @@ require('./models/Reward');
 require('./models/OutboundReward');
 require('./models/UpdatedReward');
 require('./models/TriggeredMessage');
+require('./models/BlastMessage');
+require('./models/SentMessage');
+require('./models/Visit');
 
 const Customer = mongoose.model('customers');
 const User = mongoose.model('users');
@@ -74,6 +77,9 @@ const Reward = mongoose.model('rewards');
 const OutboundReward = mongoose.model('outboundRewards');
 const UpdatedReward = mongoose.model('updatedrewards');
 const TriggeredMessage = mongoose.model('triggeredmessages');
+const BlastMessage = mongoose.model('blastmessages');
+const SentMessage = mongoose.model('sentmessages');
+const Visit = mongoose.model('visits');
 
 app.use(
   cookieSession({
@@ -117,6 +123,7 @@ require('./routes/authRoutes')(app);
 require('./routes/customerInfoRoutes')(app);
 require('./routes/rewardRoutes')(app);
 require('./routes/messageRoutes')(app);
+require('./routes/visitRoutes')(app);
 
 
 

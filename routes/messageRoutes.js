@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 
 const User = mongoose.model('users');
 const TriggeredMessage = mongoose.model('triggeredmessages');
+const BlastMessage = mongoose.model('blastmessages');
+const SentMessage = mongoose.model('sentmessages');
 
 module.exports = (app) => {
       app.get('/triggered-messages/', async (req, res) => {
@@ -10,6 +12,20 @@ module.exports = (app) => {
         .catch(err => console.log(err));;
         const currentTriggeredMessages = Array.from(rcs);
         res.json(currentTriggeredMessages);
+      });
+
+      app.get('/blast-messages/', async (req, res) => {
+        const rcs = await BlastMessage.find({user: '1680735892067'})
+        .catch(err => console.log(err));;
+        const currentBlastMessages = Array.from(rcs);
+        res.json(currentBlastMessages);
+      });
+
+      app.get('/sent-messages/', async (req, res) => {
+        const rcs = await SentMessage.find({user: '1680735892067'})
+        .catch(err => console.log(err));;
+        const currentSentMessages = Array.from(rcs);
+        res.json(currentSentMessages);
       });
 
 

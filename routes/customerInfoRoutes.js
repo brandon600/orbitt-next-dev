@@ -14,9 +14,9 @@ module.exports = (app) => {
         res.json(customers);
       });
       
-    app.get('/all-customers/customers', async (req, res) => {
-        const rcs = await Customer.find({user: req.user.userid})
-   //         .populate('visits');
+    app.get('/customers', async (req, res) => {
+        const rcs = await Customer.find({user: '1680735892067'})
+            .populate('visits');
         const realCustomers = Array.from(rcs);
         res.json(realCustomers);
         });

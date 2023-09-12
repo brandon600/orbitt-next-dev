@@ -1,10 +1,10 @@
 import { VisitData } from "./VisitData";
+import { BlastMessageData } from "./BlastMessageData";
 
 export interface CustomerData {
     _id: string;
     visits: VisitData[];
- //   receivedBlasts: BlastMessageData[];
- //   updates: UpdateData[];
+    receivedBlasts: BlastMessageData[];
     customerid: string;
     date: string;
     signUpDate: string;
