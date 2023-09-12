@@ -11,14 +11,20 @@ import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
 import io from "socket.io-client";
 import { CustomerData } from '@/types/CustomerData';
+import { BlastMessageData } from '@/types/BlastMessageData';
+import { SentMessageData } from '@/types/SentMessageData';
+import { VisitData } from '@/types/VisitData';
 import MessageCell from '@/components/molecules/MessageCell';
 
 
 interface CustomerProps {
     customersData: CustomerData[];
+    receivedBlastsData: BlastMessageData[];
+    visitsData: VisitData[];
+    sentMessagesData: SentMessageData[];
 }
 
-const FlexDiv2 = styled.div`
+const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
     display: flex;
     gap: 40px;
@@ -30,50 +36,64 @@ const FlexDiv2 = styled.div`
 }
 `
 
-const MessagesPageTitle = styled.div`
- @media ${StyledMediaQuery.XS} {
-    display: flex;
-    color: ${Colors.neutral700};
-    p {
-        font-size: 32px;
-        line-height: 39px;
-        font-weight: 800;
-    }
- }
- @media ${StyledMediaQuery.S} {
-    color: ${Colors.neutral700};
-    p {
-        font-size: 40px;
-        line-height: 48px;
-    }
- }
+ export async function getServerSideProps() {
+    try {
+        // Fetch rewards data
+        const fetchCustomers = await fetch('http://localhost:5000/customers');
+        const fetchBlastMessages = await fetch('http://localhost:5000/blast-messages');
+        const fetchSentMessages = await fetch('http://localhost:5000/sent-messages');
+        const fetchVisits = await fetch('http://localhost:5000/customer-visits');
 
- @media ${StyledMediaQuery.L} {
-    color: ${Colors.neutral700};
-    p {
-        font-size: 48px;
-        line-height: 58px;
-    }
- }
- `
-
- const MessageCellsContainer = styled.div`
-    @media ${StyledMediaQuery.XS} {
-        display: flex;
-        flex-direction: column;
-        gap: 64px;
-        width: 100%;
-    }
- `
+        const [customersResponse, blastMessagesResponse, sentMessagesResponse, visitsResponse] = 
+            await Promise.all([fetchCustomers, fetchBlastMessages, fetchSentMessages, fetchVisits]);
 
 
-function Customers( { customersData }: CustomerProps) {
-   // const { data, fetchData, toast, showToast, hideToast } = useStore();
+        if (!customersResponse.ok || !blastMessagesResponse.ok || !sentMessagesResponse.ok || !visitsResponse.ok) {
+            throw new Error('One or more network responses were not ok');
+        }
+
+        const customersData = await customersResponse.json();
+        const receivedBlastsData = await blastMessagesResponse.json();
+        const sentMessagesData = await sentMessagesResponse.json();
+        const visitsData = await visitsResponse.json();
+
+        console.log(customersData, receivedBlastsData, sentMessagesData, visitsData);
+
+
+            // Return the fetched data as props
+            return {
+                props: {
+                    customersData,
+                    receivedBlastsData,
+                    sentMessagesData,
+                    visitsData
+                }
+            };
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            return {
+                props: {
+                    customersData: [],
+                    receivedBlasts: [],
+                    sentMessagesData: [],
+                    visitsData: []
+                }
+            };
+        }
+    }
+
+
+function Customers( { customersData, receivedBlastsData, visitsData, sentMessagesData }: CustomerProps) {
+    const { data, fetchData, toast, showToast, hideToast } = useStore();
+    console.log(customersData)
+    console.log(receivedBlastsData)
+    console.log(visitsData)
+    console.log(sentMessagesData)
 
     return (
-        <FlexDiv2>
+        <FlexDiv>
             <p>Customers data is going here!!!</p>
-        </FlexDiv2>
+        </FlexDiv>
     );
 }
 
