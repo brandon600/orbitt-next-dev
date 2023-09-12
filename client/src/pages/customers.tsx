@@ -15,6 +15,7 @@ import { BlastMessageData } from '@/types/BlastMessageData';
 import { SentMessageData } from '@/types/SentMessageData';
 import { VisitData } from '@/types/VisitData';
 import CustomerCell from '@/components/molecules/CustomerCell';
+import SearchBar from '@/components/atoms/SearchBar';
 
 
 interface CustomerProps {
@@ -47,7 +48,6 @@ const FlexDiv = styled.div`
         const [customersResponse, blastMessagesResponse, sentMessagesResponse, visitsResponse] = 
             await Promise.all([fetchCustomers, fetchBlastMessages, fetchSentMessages, fetchVisits]);
 
-
         if (!customersResponse.ok || !blastMessagesResponse.ok || !sentMessagesResponse.ok || !visitsResponse.ok) {
             throw new Error('One or more network responses were not ok');
         }
@@ -56,9 +56,6 @@ const FlexDiv = styled.div`
         const receivedBlastsData = await blastMessagesResponse.json();
         const sentMessagesData = await sentMessagesResponse.json();
         const visitsData = await visitsResponse.json();
-
-        console.log(customersData, receivedBlastsData, sentMessagesData, visitsData);
-
 
             // Return the fetched data as props
             return {
@@ -85,16 +82,25 @@ const FlexDiv = styled.div`
 
 function Customers( { customersData, receivedBlastsData, visitsData, sentMessagesData }: CustomerProps) {
     const { data, fetchData, toast, showToast, hideToast } = useStore();
-    console.log(customersData)
-    console.log(receivedBlastsData)
-    console.log(visitsData)
-    console.log(sentMessagesData)
+
+    const [newCustomerSearch, setNewCustomerSearch] = useState<string>("");
+
+      // Filter the customersData based on the search input
+      const filteredCustomers = customersData.filter(customer =>
+        customer.fullName.toLowerCase().includes(newCustomerSearch.toLowerCase())
+    );
 
     return (
         <FlexDiv>
             <GlobalStyle />
             <p>Customers data is going here!!!</p>
-            {customersData.map((customer, index) => (
+            <SearchBar
+                 label="Search"
+                 placeholder='Search for customers by name...'
+                 onChange={(value) => setNewCustomerSearch(value)}
+                 value={newCustomerSearch}
+            />
+            {filteredCustomers.map((customer, index) => (
             <CustomerCell
                 _id={customer._id}
                 key={index}

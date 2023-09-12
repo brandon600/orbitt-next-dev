@@ -3,16 +3,15 @@ import styled, { css } from 'styled-components';
 import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 
-interface InputFieldProps {
+interface SearchProps {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  required?: boolean; // Add a prop to make the input required
   placeholder?: string; // Add the 'placeholder' prop
 }
 
 
-const InputFieldContainer = styled.div`
+const SearchContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
         width: 100%;
@@ -22,45 +21,38 @@ const InputFieldContainer = styled.div`
     }
 `
 
-const InputFieldLabel = styled.label`
+const SearchLabel = styled.label`
     @media ${StyledMediaQuery.XS} {
         display: flex; 
-        flex-direction: row;
-        gap: 4px;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 19px;
-        color: ${Colors.neutral700};
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 24px;
+        color: ${Colors.neutral400};
     }
 `
 
-const RequiredAsterisk = styled.span`
-  @media ${StyledMediaQuery.XS} {
-    color: ${Colors.error500}; // Style the asterisk with your desired color
-  }
-`;
-
-const InputFieldInput = styled.input`
+const SearchInput = styled.input`
     @media ${StyledMediaQuery.XS} {
         display: flex;
         height: 32px;
         padding: 8px 12px;
         align-items: center;
         align-self: stretch;
-        border-radius: 8px;
-        background: ${Colors.neutral100};
+        border-radius: 200px;
+        background: ${Colors.neutral200};
         color: ${Colors.neutral600};
         border: none;
 
         p {
-          font-size: 16px;
-          font-weight: 400;
-          line-height: 19px;
-      }
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 19px;
+        }
 
         &:focus {
             border: 1px solid ${Colors.primary400};
             color: ${Colors.primary400};
+            background: ${Colors.neutral100};
         }
 
         &::placeholder {
@@ -70,28 +62,26 @@ const InputFieldInput = styled.input`
 `
 
 
-const InputField: React.FC<InputFieldProps> = ({
+
+const SearchBar: React.FC<SearchProps> = ({
   label,
   value,
   onChange,
-  required, // Accept the 'required' prop
   placeholder, // Accept the 'placeholder' prop
 }) => {
   return (
-    <InputFieldContainer>
-        <InputFieldLabel>
-        {required && <RequiredAsterisk>*</RequiredAsterisk>} {/* Render asterisk if 'required' prop is true */}
+    <SearchContainer>
+        <SearchLabel>
         {label}
-        </InputFieldLabel>
-        <InputFieldInput
+        </SearchLabel>
+        <SearchInput
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        required={required} // Add the 'required' attribute conditionally
         placeholder={placeholder} // Pass the 'placeholder' prop
         />
-    </InputFieldContainer>
+    </SearchContainer>
   );
 };
 
-export default InputField;
+export default SearchBar;
