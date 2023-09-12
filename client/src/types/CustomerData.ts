@@ -6,6 +6,7 @@ export interface CustomerData {
     visits: VisitData[];
     receivedBlasts: BlastMessageData[];
     customerid: string;
+    userClass: string;
     date: string;
     signUpDate: string;
     lastTransactionDate: string;
@@ -13,6 +14,7 @@ export interface CustomerData {
     userMemberstackId: string;
     firstName: string;
     lastName: string;
+    fullName: string;
     areaCodeNumber: string;
     phoneNumber1: string;
     fullPhoneNumber: string;

@@ -18,7 +18,7 @@ interface MessagesProps {
     triggeredMessagesData: TriggeredMessageData[];
 }
 
-const FlexDiv2 = styled.div`
+const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
     display: flex;
     gap: 40px;
@@ -199,7 +199,7 @@ console.log(triggeredMessagesData);
 
 
     return (
-        <FlexDiv2>
+        <FlexDiv>
             <AnimatePresence>
             {hasPendingMessageChanges && (
               <BottomSaveNotice
@@ -220,15 +220,15 @@ console.log(triggeredMessagesData);
             </MessagesPageTitle>
             <MessageCellsContainer>
                 {triggeredMessagesData.map((
-				{ messageNumberId: triggeredMessageNumberId, 
-				  messageTitle: triggeredMessageTitle, 
+				        { messageNumberId: triggeredMessageNumberId, 
+				          messageTitle: triggeredMessageTitle, 
                   messageSubtitle: triggeredMessageSubtitle,
-				  textMessageDefaultTextStart: triggeredMessageDefaultStart,
+				          textMessageDefaultTextStart: triggeredMessageDefaultStart,
                   textMessageCustomText: triggeredMessageCustomText,
                   textMessageDefaultTextEnd1: triggeredMessageDefaultEnd1,
                   textMessageDefaultTextEnd2: triggeredMessageDefaultEnd2,
                   active: triggeredMessageActive,
-				}, index) => (
+				        }, index) => (
                 <MessageCell
                         key={triggeredMessageNumberId} // Make sure to provide a unique key for each item
                         // Pass the data to the RewardItem component as props
@@ -250,7 +250,7 @@ console.log(triggeredMessagesData);
                     />
             ))}
             </MessageCellsContainer>
-        </FlexDiv2>
+        </FlexDiv>
     );
 }
 

@@ -14,7 +14,7 @@ import { CustomerData } from '@/types/CustomerData';
 import { BlastMessageData } from '@/types/BlastMessageData';
 import { SentMessageData } from '@/types/SentMessageData';
 import { VisitData } from '@/types/VisitData';
-import MessageCell from '@/components/molecules/MessageCell';
+import CustomerCell from '@/components/molecules/CustomerCell';
 
 
 interface CustomerProps {
@@ -27,7 +27,7 @@ interface CustomerProps {
 const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
     display: flex;
-    gap: 40px;
+    gap: 0px;
     flex-direction: column;
     padding: 24px 16px;
     width: 100vw;
@@ -92,7 +92,41 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
 
     return (
         <FlexDiv>
+            <GlobalStyle />
             <p>Customers data is going here!!!</p>
+            {customersData.map((customer, index) => (
+            <CustomerCell
+                _id={customer._id}
+                key={index}
+                index={index}
+                visits={customer.visits}
+                receivedBlasts={customer.receivedBlasts}
+                customerid={customer.customerid}
+                userClass={customer.userClass}
+                date={customer.date}
+                signUpDate={customer.signUpDate}
+                lastTransactionDate={customer.lastTransactionDate}
+                user={customer.user}
+                userMemberstackId={customer.userMemberstackId}
+                firstName={customer.firstName}
+                lastName={customer.lastName}
+                fullName={customer.fullName}
+                areaCodeNumber={customer.areaCodeNumber}
+                phoneNumber1={customer.phoneNumber1}
+                fullPhoneNumber={customer.fullPhoneNumber}
+                rewardNumber={customer.rewardNumber}
+                active={customer.active}
+                atRisk={customer.atRisk}
+                totalVisits={customer.totalVisits}
+                starsEarned={customer.starsEarned}
+                rewardsRedeemed={customer.rewardsRedeemed}
+                birthdayMonth={customer.birthdayMonth}
+                birthdayDay={customer.birthdayDay}
+                birthdayYear={customer.birthdayYear}
+                fullBirthday={customer.fullBirthday}
+                // Add other props as needed
+            />
+        ))}
         </FlexDiv>
     );
 }
