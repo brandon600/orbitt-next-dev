@@ -17,8 +17,16 @@ const CustomerCellContainer = styled.div`
         width: 100%;
         padding: 20px 0px;
         align-items: center;
-        gap: 16px;
+        gap: 12px;
         border-bottom: 1px solid ${Colors.neutral200};
+    }
+
+    @media ${StyledMediaQuery.S} {
+        gap: 16px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        gap: 24px;
     }
 `
 
@@ -150,7 +158,15 @@ const RemainingContent = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
         align-items: center;
+        gap: 12px;
+    }
+
+    @media ${StyledMediaQuery.S} {
         gap: 16px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        gap: 24px;
     }
 `
 

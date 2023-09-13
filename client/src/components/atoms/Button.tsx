@@ -57,9 +57,8 @@ const buttonTypeSheet = {
 
 const buttonSizeSheet = {
   small: css`
-      height: 45px;
-      padding: 12px 20px;
-      font-size: 14px;
+      height: 48px;
+      padding: 0px 8px;
 
       font-size: 16px;
       font-weight: 800;
