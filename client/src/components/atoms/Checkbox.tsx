@@ -35,25 +35,25 @@ const Icon = styled.svg`
   fill: white;
 `;
 
-const StyledCheckbox: React.FC<StyledCheckboxProps> = ({ checked, onChange, disabled }) => {
-  const handleCheckboxChange = () => {
-    if (disabled) return;
-    onChange(!checked);
+const Checkbox: React.FC<StyledCheckboxProps> = ({ checked, onChange, disabled }) => {
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (disabled) return;
+      onChange(e.target.checked);  // Use the event to get the checkbox's state
+    };
+  
+    return (
+      <CheckboxContainer checked={checked} disabled={disabled}>
+        <HiddenCheckbox checked={checked} onChange={handleCheckboxChange} />
+        {checked ? (
+          <Icon viewBox="0 0 24 24">
+            <path d="M20.285 2l-11.285 11.567-5.286-5.011l-3.714 3.716l9 8.728l15-15.285z" />
+          </Icon>
+        ) : null}
+      </CheckboxContainer>
+    );
   };
 
-  return (
-    <CheckboxContainer checked={checked} disabled={disabled} onClick={handleCheckboxChange}>
-      <HiddenCheckbox checked={checked} onChange={handleCheckboxChange} />
-      {checked ? (
-        <Icon viewBox="0 0 24 24">
-          <path d="M20.285 2l-11.285 11.567-5.286-5.011l-3.714 3.716l9 8.728l15-15.285z" />
-        </Icon>
-      ) : null}
-    </CheckboxContainer>
-  );
-};
-
-export default StyledCheckbox;
+  export default Checkbox;
 
 
 

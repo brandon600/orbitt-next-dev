@@ -9,7 +9,8 @@ import { CustomerData } from '@/types/CustomerData';
 
 // Define the props interface for RewardItem
 interface CustomerCellProps extends CustomerData {
-  //  onEditClick: (reward: CustomerData) => void;
+    onCustomerSelection: (customerId: string, isSelected: boolean) => void;
+    isSelected: boolean;
 }
 
 const CustomerCellContainer = styled.div`
@@ -280,12 +281,17 @@ const CustomerCell: React.FC<CustomerCellProps> = ({
     birthdayDay,
     birthdayYear,
     fullBirthday,
+    isSelected,
+    onCustomerSelection
   }) => {
 
-    const [isChecked, setIsChecked] = useState(false);
+
+    const [isChecked, setIsChecked] = useState(isSelected);
 
     const handleCheckboxToggle = () => {
-        setIsChecked(prevState => !prevState);
+        const newState = !isChecked;
+        setIsChecked(newState);
+        onCustomerSelection(customerid, newState);
     }
 
     const handleClick = () => {

@@ -11,6 +11,8 @@ import CustomerCell from '@/components/molecules/CustomerCell';
 
 interface CustomerCellsProps {
   customersData: CustomerData[]; // An array of RewardData objects
+  onCustomerSelection: (customerId: string, isSelected: boolean) => void;
+  selectedCustomers: string[];
  // onEditClick: (reward: CustomerData) => void;
 }
 
@@ -31,7 +33,7 @@ const CustomerCellsList = styled.div`
     }
 `
 
-const CustomerCells: React.FC<CustomerCellsProps> = ({ customersData }) => {
+const CustomerCells: React.FC<CustomerCellsProps> = ({ customersData, onCustomerSelection, selectedCustomers }) => {
     console.log(customersData)
     if (!customersData) {
         // Handle the case when rewardsData is not defined (e.g., still loading)
@@ -80,6 +82,8 @@ const CustomerCells: React.FC<CustomerCellsProps> = ({ customersData }) => {
                 birthdayDay={customer.birthdayDay}
                 birthdayYear={customer.birthdayYear}
                 fullBirthday={customer.fullBirthday}
+                onCustomerSelection={onCustomerSelection}
+                isSelected={selectedCustomers.includes(customer._id)}
             />
         ))}
         </CustomerCellsList>
