@@ -4,6 +4,7 @@ import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Text from '../subatomic/Text'
 import Button from '../atoms/Button';
+import Checkbox from '../atoms/Checkbox';
 import { CustomerData } from '@/types/CustomerData';
 
 // Define the props interface for RewardItem
@@ -280,10 +281,15 @@ const CustomerCell: React.FC<CustomerCellProps> = ({
     birthdayYear,
     fullBirthday,
   }) => {
-  
+
+    const [isChecked, setIsChecked] = useState(false);
+
+    const handleCheckboxToggle = () => {
+        setIsChecked(prevState => !prevState);
+    }
 
     const handleClick = () => {
-        console.log('clicked');
+        console.log('handled clicked.')
     }
 
     // FORMATTING VALUES
@@ -311,7 +317,11 @@ const CustomerCell: React.FC<CustomerCellProps> = ({
       <CustomerCellContainer>
         <CustomerCellCheckboxNameNumber>
             <CustomerCellCheckbox>
-                <input type="checkbox" />
+            <Checkbox 
+                checked={isChecked} 
+                onChange={handleCheckboxToggle} 
+                // disabled={someConditionIfAny}
+            />
             </CustomerCellCheckbox>
             <MobileNameNumber>
                 <h4>{fullName}</h4>

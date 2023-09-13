@@ -4,7 +4,7 @@ import Text from '../subatomic/Text';
 import StyledMediaQuery from '@/constants/StyledMediaQuery';
 import { styled } from 'styled-components';
 import Colors from '@/constants/Colors';
-import RewardTableHead from '@/components/atoms/RewardTableHead';
+import CustomerTableHead from '@/components/atoms/CustomerTableHead';
 import { CustomerData } from '@/types/CustomerData';
 import CustomerCell from '@/components/molecules/CustomerCell';
 
@@ -40,13 +40,16 @@ const CustomerCells: React.FC<CustomerCellsProps> = ({ customersData }) => {
   return (
     <CustomerCellsContainer>
         <CustomerCellsList>
-        <RewardTableHead 
-            label1='Rewards'
-            label2='Cost'
-            label3='Terms'
-            label4='Active'
-            label5='Edit'
-        />
+            <CustomerTableHead
+                label1='Name'
+                label2='Phone Number'
+                label3='Date of Birth'
+                label4='Points'
+                label5='Visits'
+                label6='Sign-Up'
+                label7='Last Visit'
+                label8='View'
+            />
             {customersData.map((customer, index) => (
             <CustomerCell
                 _id={customer._id}
