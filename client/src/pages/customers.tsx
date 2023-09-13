@@ -86,6 +86,21 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     const { data, fetchData, toast, showToast, hideToast } = useStore();
 
     const [newCustomerSearch, setNewCustomerSearch] = useState<string>("");
+    const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);  // Array of customer IDs
+
+
+    useEffect(() => {
+        console.log('Updated selectedCustomers:', selectedCustomers);
+    }, [selectedCustomers]);
+
+    const handleCustomerSelection = (customerId: string, isSelected: boolean) => {
+        setSelectedCustomers(prevState => 
+            isSelected 
+                ? [...prevState, customerId] 
+                : prevState.filter(id => id !== customerId)
+        );
+    }
+    
 
       // Filter the customersData based on the search input
       const filteredCustomers = customersData.filter(customer =>
@@ -104,49 +119,9 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
             />
             <CustomerCells
                 customersData={filteredCustomers}
+                onCustomerSelection={handleCustomerSelection}
+                selectedCustomers={selectedCustomers}
             />
-            <CustomerTableHead
-                label1='Name'
-                label2='Phone Number'
-                label3='Date of Birth'
-                label4='Points'
-                label5='Visits'
-                label6='Sign-Up'
-                label7='Last Visit'
-                label8='View'
-            />
-            {filteredCustomers.map((customer, index) => (
-            <CustomerCell
-                _id={customer._id}
-                key={index}
-                index={index}
-                visits={customer.visits}
-                receivedBlasts={customer.receivedBlasts}
-                customerid={customer.customerid}
-                userClass={customer.userClass}
-                date={customer.date}
-                signUpDate={customer.signUpDate}
-                lastTransactionDate={customer.lastTransactionDate}
-                user={customer.user}
-                userMemberstackId={customer.userMemberstackId}
-                firstName={customer.firstName}
-                lastName={customer.lastName}
-                fullName={customer.fullName}
-                areaCodeNumber={customer.areaCodeNumber}
-                phoneNumber1={customer.phoneNumber1}
-                fullPhoneNumber={customer.fullPhoneNumber}
-                rewardNumber={customer.rewardNumber}
-                active={customer.active}
-                atRisk={customer.atRisk}
-                totalVisits={customer.totalVisits}
-                starsEarned={customer.starsEarned}
-                rewardsRedeemed={customer.rewardsRedeemed}
-                birthdayMonth={customer.birthdayMonth}
-                birthdayDay={customer.birthdayDay}
-                birthdayYear={customer.birthdayYear}
-                fullBirthday={customer.fullBirthday}
-            />
-        ))}
         </FlexDiv>
     );
 }
