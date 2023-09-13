@@ -39,6 +39,7 @@ const RewardTableHeadContainer = styled.div<RewardTableHeadComponentProps>`
 
 @media ${StyledMediaQuery.S} {
     gap: 16px;
+    padding-bottom: 12px;
 }
 
 @media ${StyledMediaQuery.L} {

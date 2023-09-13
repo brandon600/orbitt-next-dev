@@ -16,6 +16,7 @@ import { SentMessageData } from '@/types/SentMessageData';
 import { VisitData } from '@/types/VisitData';
 import CustomerCell from '@/components/molecules/CustomerCell';
 import SearchBar from '@/components/atoms/SearchBar';
+import CustomerTableHead from '@/components/atoms/CustomerTableHead';
 
 
 interface CustomerProps {
@@ -99,6 +100,16 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                  placeholder='Search for customers by name...'
                  onChange={(value) => setNewCustomerSearch(value)}
                  value={newCustomerSearch}
+            />
+            <CustomerTableHead
+                label1='Name'
+                label2='Phone Number'
+                label3='Date of Birth'
+                label4='Points'
+                label5='Visits'
+                label6='Sign-Up'
+                label7='Last Visit'
+                label8='View'
             />
             {filteredCustomers.map((customer, index) => (
             <CustomerCell
