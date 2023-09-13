@@ -15,6 +15,7 @@ import { BlastMessageData } from '@/types/BlastMessageData';
 import { SentMessageData } from '@/types/SentMessageData';
 import { VisitData } from '@/types/VisitData';
 import CustomerCell from '@/components/molecules/CustomerCell';
+import CustomerCells from '@/components/organism/CustomerCells';
 import SearchBar from '@/components/atoms/SearchBar';
 import CustomerTableHead from '@/components/atoms/CustomerTableHead';
 
@@ -101,6 +102,9 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                  onChange={(value) => setNewCustomerSearch(value)}
                  value={newCustomerSearch}
             />
+            <CustomerCells
+                customersData={filteredCustomers}
+            />
             <CustomerTableHead
                 label1='Name'
                 label2='Phone Number'
@@ -141,7 +145,6 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                 birthdayDay={customer.birthdayDay}
                 birthdayYear={customer.birthdayYear}
                 fullBirthday={customer.fullBirthday}
-                // Add other props as needed
             />
         ))}
         </FlexDiv>
