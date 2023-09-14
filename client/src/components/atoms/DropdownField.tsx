@@ -78,7 +78,7 @@ const DropdownFieldSelect = styled.select`
       color: ${Colors.neutral300};
 
       &:focus {
-        border 1px solid ${Colors.neutral600};
+        border: 1px solid ${Colors.neutral600};
         color: ${Colors.neutral600};
     }
         

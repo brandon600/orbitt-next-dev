@@ -326,7 +326,6 @@ const CustomerCell: React.FC<CustomerCellProps> = ({
             <Checkbox 
                 checked={isChecked} 
                 onChange={handleCheckboxToggle} 
-                // disabled={someConditionIfAny}
             />
             </CustomerCellCheckbox>
             <MobileNameNumber>

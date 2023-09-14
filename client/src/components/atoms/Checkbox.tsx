@@ -2,25 +2,25 @@ import React from 'react';
 import styled from 'styled-components';
 import Colors from '../../constants/Colors';
 
-interface CheckboxProps {
+interface CheckboxContainerProps {
   checked: boolean;
-}
-
-interface StyledCheckboxProps {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
   disabled?: boolean;
 }
 
-const CheckboxContainer = styled.label<CheckboxProps & { disabled?: boolean }>`
-  display: inline-flex;
+interface CheckboxProps extends CheckboxContainerProps {
+  onChange: (checked: boolean) => void; 
+}
+
+const CheckboxContainer = styled.label<CheckboxContainerProps>`
+  display: flex;
+  flex-shrink: 0;
   width: 24px;
   height: 24px;
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   border-radius: 4px;
   background-color: ${(props) => (props.checked ? Colors.primary500 : Colors.neutral200)};
   transition: background-color 0.1s;
-  opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+  opacity: 1;
   align-items: center;
   justify-content: center;
 `;
@@ -35,11 +35,13 @@ const Icon = styled.svg`
   fill: white;
 `;
 
-const Checkbox: React.FC<StyledCheckboxProps> = ({ checked, onChange, disabled }) => {
+const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, disabled }) => {
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (disabled) return;
       onChange(e.target.checked);  // Use the event to get the checkbox's state
     };
+
+    console.log("Checkbox rendered with checked: ", checked);
   
     return (
       <CheckboxContainer checked={checked} disabled={disabled}>
