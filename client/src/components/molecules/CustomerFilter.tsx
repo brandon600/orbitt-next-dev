@@ -12,7 +12,8 @@ import { CustomerData } from '@/types/CustomerData';
 export enum FilterType {
     POINTS = 'POINTS',
     VISITS = 'VISITS',
-    LAST_TRANSACTION_DATE = 'LAST_TRANSACTION_DATE'
+    LAST_TRANSACTION_DATE = 'LAST_TRANSACTION_DATE',
+    AREA_CODE = 'AREA_CODE'
 }
 
 export enum LastTransactionOptions {
@@ -24,7 +25,14 @@ export enum LastTransactionOptions {
     LAST_YEAR = 'Last Year'
 }
 
-export const FILTER_CONFIGS = {
+interface FilterConfig {
+    options: string[];
+    headingText: string;
+    filterFunction: (customer: any, value: string) => boolean;
+}
+
+
+export const FILTER_CONFIGS: Record<FilterType, FilterConfig> = {
     [FilterType.POINTS]: {
         options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
         headingText: "Filter by Points",
@@ -60,6 +68,11 @@ export const FILTER_CONFIGS = {
             }
         },
     },
+    [FilterType.AREA_CODE]: {
+        options: [],  // We'll populate this dynamically if necessary
+        headingText: "Filter by Area Code",
+        filterFunction: (customer: any, value: string) => customer.areaCodeNumber === value
+    },
     // ... add other filters with their respective configs
 };
 
@@ -72,6 +85,7 @@ interface CustomerFilterProps {
   isCheckboxChecked: boolean; 
   onCheckboxChange: (isActive: boolean) => void;
   filterType: FilterType;
+  options?: string[];
 }
 
 
@@ -144,9 +158,14 @@ export const CustomerFilter: React.FC<CustomerFilterProps> = ({
   isCheckboxChecked,
   onFilterChange,
   onCheckboxChange,
-  filterType
+  filterType,
+  options
 }) => {
 
+    
+    const { headingText } = FILTER_CONFIGS[filterType];
+    const finalOptions = options || FILTER_CONFIGS[filterType].options;
+    console.log('Options inside CustomerFilter:', options);
 
     // Default value for the dropdown
     const DEFAULT_DROPDOWN_VALUE = '1';
@@ -169,7 +188,7 @@ export const CustomerFilter: React.FC<CustomerFilterProps> = ({
         onFilterChange(newValue);
     };
 
-    const { options, headingText } = FILTER_CONFIGS[filterType];
+
 
     return (
         <CustomerFilterContainer>
@@ -189,7 +208,7 @@ export const CustomerFilter: React.FC<CustomerFilterProps> = ({
                     disabled={!isCheckboxChecked}
                 >
                     <option value="default" disabled>Select a filter</option>
-                        {options.map(optionValue => (
+                        {finalOptions.map(optionValue => (
                     <option key={optionValue} value={optionValue}>{optionValue}</option>
                 ))}
                 </DropdownFieldSelect>

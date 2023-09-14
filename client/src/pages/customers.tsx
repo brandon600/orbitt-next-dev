@@ -19,6 +19,7 @@ import CustomerCells from '@/components/organism/CustomerCells';
 import SearchBar from '@/components/atoms/SearchBar';
 import CustomerTableHead from '@/components/atoms/CustomerTableHead';
 import { CustomerFilter, FilterType, FILTER_CONFIGS } from '@/components/molecules/CustomerFilter';
+import { useUniqueAreaCodes } from '@/util/pages/customers/customersHooks';
 
 interface CustomerProps {
     customersData: CustomerData[];
@@ -82,22 +83,50 @@ const FlexDiv = styled.div`
     }
     
 
+    function getMostCommonAreaCode(customers: CustomerData[]): string {
+        const areaCodeCount = new Map<string, number>();
+    
+        for (const customer of customers) {
+            const count = areaCodeCount.get(customer.areaCodeNumber) || 0;
+            areaCodeCount.set(customer.areaCodeNumber, count + 1);
+        }
+    
+        let mostCommonAreaCode = '';
+        let maxCount = 0;
+        
+        for (const [areaCode, count] of areaCodeCount.entries()) {
+            if (count > maxCount) {
+                maxCount = count;
+                mostCommonAreaCode = areaCode;
+            }
+        }
+    
+        return mostCommonAreaCode;
+    }
+
 
 function Customers( { customersData, receivedBlastsData, visitsData, sentMessagesData }: CustomerProps) {
     const { data, fetchData, toast, showToast, hideToast } = useStore();
 
+
+    const areaCodeOptions = useUniqueAreaCodes(customersData);
+    console.log("Area Code Options at declaration:", areaCodeOptions);
+
+
     const [newCustomerSearch, setNewCustomerSearch] = useState<string>("");
     const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
+
+    const mostCommonAreaCode = getMostCommonAreaCode(customersData);
 
     const [filters, setFilters] = useState<Record<FilterType, { value: string; active: boolean; }>>({
         [FilterType.POINTS]: { value: '1', active: false },
         [FilterType.VISITS]: { value: '1', active: false },
         [FilterType.LAST_TRANSACTION_DATE]: { value: '24 Hours', active: false },
+        [FilterType.AREA_CODE]: { value: mostCommonAreaCode, active: false },
         // initialize other filters here if needed
     });
 
-
-
+  
     useEffect(() => {
         console.log('Updated selectedCustomers:', selectedCustomers);
     }, [selectedCustomers]);
@@ -136,6 +165,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
             {Object.entries(FILTER_CONFIGS).map(([key, config]) => (
                 <CustomerFilter
                     key={key}
+                    options={key === FilterType.AREA_CODE ? areaCodeOptions : config.options}
                     value={filters[key as FilterType].value}
                     onChange={(type, filterConfig) => {
                         setFilters(prev => ({ ...prev, [type]: filterConfig }));
