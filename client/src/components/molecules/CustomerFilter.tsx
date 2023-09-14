@@ -1,5 +1,6 @@
 import React, { CSSProperties, ReactNode, PropsWithChildren, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
+import dayjs from 'dayjs';
 import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Text from '../subatomic/Text'
@@ -11,6 +12,16 @@ import { CustomerData } from '@/types/CustomerData';
 export enum FilterType {
     POINTS = 'POINTS',
     VISITS = 'VISITS',
+    LAST_TRANSACTION_DATE = 'LAST_TRANSACTION_DATE'
+}
+
+export enum LastTransactionOptions {
+    LAST_24_HOURS = '24 Hours',
+    LAST_WEEK = 'Last Week',
+    LAST_2_WEEKS = 'Last 2 Weeks',
+    LAST_MONTH = 'Last Month',
+    LAST_3_MONTHS = 'Last 3 Months',
+    LAST_YEAR = 'Last Year'
 }
 
 export const FILTER_CONFIGS = {
@@ -23,7 +34,32 @@ export const FILTER_CONFIGS = {
         options: ['1', '2', '3', '4', '5', '10', '15', '20', '25', '30'],
         headingText: "Filter by Visits",
         filterFunction: (customer: any, value: string) => customer.totalVisits >= Number(value),
-    }
+    },
+    [FilterType.LAST_TRANSACTION_DATE]: {
+        options: Object.values(LastTransactionOptions),
+        headingText: "Filter by Last Transaction Date",
+        filterFunction: (customer: any, value: string): boolean => {
+            const now = dayjs();
+            const lastTransactionDate = dayjs(Number(customer.lastTransactionDate));
+
+            switch (value) {
+                case LastTransactionOptions.LAST_24_HOURS:
+                    return now.diff(lastTransactionDate, 'hour') <= 24;
+                case LastTransactionOptions.LAST_WEEK:
+                    return now.diff(lastTransactionDate, 'week') <= 1;
+                case LastTransactionOptions.LAST_2_WEEKS:
+                    return now.diff(lastTransactionDate, 'week') <= 2;
+                case LastTransactionOptions.LAST_MONTH:
+                    return now.diff(lastTransactionDate, 'month') <= 1;
+                case LastTransactionOptions.LAST_3_MONTHS:
+                    return now.diff(lastTransactionDate, 'month') <= 3;
+                case LastTransactionOptions.LAST_YEAR:
+                    return now.diff(lastTransactionDate, 'year') <= 1;
+                default:
+                    return true;
+            }
+        },
+    },
     // ... add other filters with their respective configs
 };
 
@@ -31,7 +67,7 @@ export const FILTER_CONFIGS = {
 interface CustomerFilterProps {
   value: string;
   onChange: (type: FilterType, config: { value: string, active: boolean }) => void;
-  onFilterChange: (value: number | null) => void;
+  onFilterChange: (value: string | null) => void;
   disabled?: boolean;
   isCheckboxChecked: boolean; 
   onCheckboxChange: (isActive: boolean) => void;
@@ -127,10 +163,10 @@ export const CustomerFilter: React.FC<CustomerFilterProps> = ({
         onCheckboxChange(newCheckboxState);
     };
 
-    const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newValue = e.target.value;
-    onChange(filterType, { value: newValue, active: isCheckboxChecked });
-    onFilterChange(Number(newValue));
+    const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+        const newValue = e.target.value;
+        onChange(filterType, { value: newValue, active: isCheckboxChecked });
+        onFilterChange(newValue);
     };
 
     const { options, headingText } = FILTER_CONFIGS[filterType];

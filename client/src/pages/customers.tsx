@@ -87,11 +87,12 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     const { data, fetchData, toast, showToast, hideToast } = useStore();
 
     const [newCustomerSearch, setNewCustomerSearch] = useState<string>("");
-    const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);  // Array of customer IDs
+    const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
 
     const [filters, setFilters] = useState<Record<FilterType, { value: string; active: boolean; }>>({
         [FilterType.POINTS]: { value: '1', active: false },
         [FilterType.VISITS]: { value: '1', active: false },
+        [FilterType.LAST_TRANSACTION_DATE]: { value: '24 Hours', active: false },
         // initialize other filters here if needed
     });
 
