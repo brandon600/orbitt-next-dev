@@ -7,16 +7,36 @@ import Button from '../atoms/Button';
 import Checkbox from '../atoms/Checkbox';
 import { CustomerData } from '@/types/CustomerData';
 
+//type FilterType = 'star' | 'visit';
+export enum FilterType {
+    POINTS = 'POINTS',
+    VISITS = 'VISITS',
+}
+
+export const FILTER_CONFIGS = {
+    [FilterType.POINTS]: {
+        options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        headingText: "Filter by Points",
+        filterFunction: (customer: any, value: string) => customer.starsEarned >= Number(value),
+    },
+    [FilterType.VISITS]: {
+        options: ['1', '2', '3', '4', '5', '10', '15', '20', '25', '30'],
+        headingText: "Filter by Visits",
+        filterFunction: (customer: any, value: string) => customer.totalVisits >= Number(value),
+    }
+    // ... add other filters with their respective configs
+};
+
 
 interface CustomerFilterProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (type: FilterType, config: { value: string, active: boolean }) => void;
   onFilterChange: (value: number | null) => void;
   disabled?: boolean;
   isCheckboxChecked: boolean; 
   onCheckboxChange: (isActive: boolean) => void;
+  filterType: FilterType;
 }
-
 
 
 const CustomerFilterContainer = styled.div`
@@ -82,41 +102,44 @@ const DropdownFieldSelect = styled.select`
 `
 
 
-const CustomerFilter: React.FC<CustomerFilterProps> = ({
+export const CustomerFilter: React.FC<CustomerFilterProps> = ({
   value,
   onChange,
   isCheckboxChecked,
   onFilterChange,
-  onCheckboxChange
+  onCheckboxChange,
+  filterType
 }) => {
 
 
     // Default value for the dropdown
     const DEFAULT_DROPDOWN_VALUE = '1';
 
-       const handleCheckboxToggle = () => {
+    const handleCheckboxToggle = () => {
         const newCheckboxState = !isCheckboxChecked;
-
+    
         if (!newCheckboxState) {
             // Reset dropdown value and filter if checkbox is deselected
-            onChange(DEFAULT_DROPDOWN_VALUE);
-            onFilterChange(null);
+            onChange(filterType, { value: DEFAULT_DROPDOWN_VALUE, active: false });
+        } else {
+            onChange(filterType, { value, active: true });
         }
-
         onCheckboxChange(newCheckboxState);
     };
 
     const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newValue = e.target.value;
-        onChange(newValue);
-        onFilterChange(Number(newValue));
-    }
+    const newValue = e.target.value;
+    onChange(filterType, { value: newValue, active: isCheckboxChecked });
+    onFilterChange(Number(newValue));
+    };
+
+    const { options, headingText } = FILTER_CONFIGS[filterType];
 
     return (
         <CustomerFilterContainer>
             <CustomerFilterHeading>
                 <Text
-                    text='Customer Filter'
+                    text={headingText}
                 />
             </CustomerFilterHeading>
             <FilterCheckField>
@@ -130,21 +153,11 @@ const CustomerFilter: React.FC<CustomerFilterProps> = ({
                     disabled={!isCheckboxChecked}
                 >
                     <option value="default" disabled>Select a filter</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
+                        {options.map(optionValue => (
+                    <option key={optionValue} value={optionValue}>{optionValue}</option>
+                ))}
                 </DropdownFieldSelect>
             </FilterCheckField>
         </CustomerFilterContainer>
     )
-
 };
-
-export default CustomerFilter

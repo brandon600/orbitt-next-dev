@@ -18,7 +18,7 @@ import CustomerCell from '@/components/molecules/CustomerCell';
 import CustomerCells from '@/components/organism/CustomerCells';
 import SearchBar from '@/components/atoms/SearchBar';
 import CustomerTableHead from '@/components/atoms/CustomerTableHead';
-import CustomerFilter from '@/components/molecules/CustomerFilter';
+import { CustomerFilter, FilterType, FILTER_CONFIGS } from '@/components/molecules/CustomerFilter';
 
 interface CustomerProps {
     customersData: CustomerData[];
@@ -80,6 +80,7 @@ const FlexDiv = styled.div`
             };
         }
     }
+    
 
 
 function Customers( { customersData, receivedBlastsData, visitsData, sentMessagesData }: CustomerProps) {
@@ -88,10 +89,12 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     const [newCustomerSearch, setNewCustomerSearch] = useState<string>("");
     const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);  // Array of customer IDs
 
-    //FILTERS
-    const [starFilter, setStarFilter] = useState<number | null>(null);
-    const [isCheckboxChecked, setisCheckboxChecked] = useState<boolean>(false);
-    const [dropdownValue, setDropdownValue] = useState<string>('1');
+    const [filters, setFilters] = useState<Record<FilterType, { value: string; active: boolean; }>>({
+        [FilterType.POINTS]: { value: '1', active: false },
+        [FilterType.VISITS]: { value: '1', active: false },
+        // initialize other filters here if needed
+    });
+
 
 
     useEffect(() => {
@@ -107,11 +110,17 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     }
     
 
-      // Filter the customersData based on the search input and star filter
-      const filteredCustomers = customersData.filter(customer =>
-        (!starFilter || customer.starsEarned >= starFilter) && 
-        customer.fullName.toLowerCase().includes(newCustomerSearch.toLowerCase())
-    );
+    const filteredCustomers = customersData.filter(customer => {
+        if (!customer.fullName.toLowerCase().includes(newCustomerSearch.toLowerCase())) {
+          return false;
+        }
+      
+        return Object.entries(filters).every(([key, filterConfig]) => {
+          if (!filterConfig.active) return true;
+          const filterFunction = FILTER_CONFIGS[key as FilterType].filterFunction;
+          return filterFunction(customer, filterConfig.value);
+        });
+    });
 
     return (
         <FlexDiv>
@@ -123,13 +132,32 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                  onChange={(value) => setNewCustomerSearch(value)}
                  value={newCustomerSearch}
             />
-            <CustomerFilter
-                value={dropdownValue}
-                onChange={setDropdownValue}
-                onFilterChange={setStarFilter} // Set the starFilter value when dropdown value changes
-                isCheckboxChecked={isCheckboxChecked}
-                onCheckboxChange={setisCheckboxChecked}
-            />
+            {Object.entries(FILTER_CONFIGS).map(([key, config]) => (
+                <CustomerFilter
+                    key={key}
+                    value={filters[key as FilterType].value}
+                    onChange={(type, filterConfig) => {
+                        setFilters(prev => ({ ...prev, [type]: filterConfig }));
+                    }}
+                    onFilterChange={(value) => setFilters(prev => ({
+                        ...prev,
+                        [key as FilterType]: {
+                            ...prev[key as FilterType],
+                            active: value !== null,
+                            value: value?.toString() || prev[key as FilterType].value
+                        }
+                    }))}
+                    isCheckboxChecked={filters[key as FilterType].active}
+                    onCheckboxChange={(active) => setFilters(prev => ({
+                        ...prev,
+                        [key as FilterType]: {
+                            ...prev[key as FilterType],
+                            active
+                        }
+                    }))}
+                    filterType={key as FilterType}
+                />
+            ))}
             <CustomerCells
                 customersData={filteredCustomers}
                 onCustomerSelection={handleCustomerSelection}
