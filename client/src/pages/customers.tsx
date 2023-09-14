@@ -18,7 +18,7 @@ import CustomerCell from '@/components/molecules/CustomerCell';
 import CustomerCells from '@/components/organism/CustomerCells';
 import SearchBar from '@/components/atoms/SearchBar';
 import CustomerTableHead from '@/components/atoms/CustomerTableHead';
-
+import CustomerFilter from '@/components/molecules/CustomerFilter';
 
 interface CustomerProps {
     customersData: CustomerData[];
@@ -73,7 +73,7 @@ const FlexDiv = styled.div`
             return {
                 props: {
                     customersData: [],
-                    receivedBlasts: [],
+                    receivedBlastsData: [],
                     sentMessagesData: [],
                     visitsData: []
                 }
@@ -87,6 +87,11 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
 
     const [newCustomerSearch, setNewCustomerSearch] = useState<string>("");
     const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);  // Array of customer IDs
+
+    //FILTERS
+    const [starFilter, setStarFilter] = useState<number | null>(null);
+    const [isCheckboxChecked, setisCheckboxChecked] = useState<boolean>(false);
+    const [dropdownValue, setDropdownValue] = useState<string>('1');
 
 
     useEffect(() => {
@@ -102,8 +107,9 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     }
     
 
-      // Filter the customersData based on the search input
+      // Filter the customersData based on the search input and star filter
       const filteredCustomers = customersData.filter(customer =>
+        (!starFilter || customer.starsEarned >= starFilter) && 
         customer.fullName.toLowerCase().includes(newCustomerSearch.toLowerCase())
     );
 
@@ -116,6 +122,13 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                  placeholder='Search for customers by name...'
                  onChange={(value) => setNewCustomerSearch(value)}
                  value={newCustomerSearch}
+            />
+            <CustomerFilter
+                value={dropdownValue}
+                onChange={setDropdownValue}
+                onFilterChange={setStarFilter} // Set the starFilter value when dropdown value changes
+                isCheckboxChecked={isCheckboxChecked}
+                onCheckboxChange={setisCheckboxChecked}
             />
             <CustomerCells
                 customersData={filteredCustomers}
