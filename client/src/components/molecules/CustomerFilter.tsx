@@ -13,8 +13,14 @@ export enum FilterType {
     POINTS = 'POINTS',
     VISITS = 'VISITS',
     LAST_TRANSACTION_DATE = 'LAST_TRANSACTION_DATE',
-    AREA_CODE = 'AREA_CODE'
+    AREA_CODE = 'AREA_CODE',
+    BIRTHDAY = 'BIRTHDAY'
 }
+
+export type FilterValue = { 
+    value: string | { startDate?: string; endDate?: string };
+    active: boolean;
+};
 
 export enum LastTransactionOptions {
     LAST_24_HOURS = '24 Hours',
@@ -28,7 +34,8 @@ export enum LastTransactionOptions {
 interface FilterConfig {
     options: string[];
     headingText: string;
-    filterFunction: (customer: any, value: string) => boolean;
+    filterFunction: (customer: any, filterConfig: FilterValue) => boolean;
+    dateRange?: { startDate: string, endDate: string };
 }
 
 
@@ -36,17 +43,25 @@ export const FILTER_CONFIGS: Record<FilterType, FilterConfig> = {
     [FilterType.POINTS]: {
         options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
         headingText: "Filter by Points",
-        filterFunction: (customer: any, value: string) => customer.starsEarned >= Number(value),
+        filterFunction: (customer: any, filterConfig: FilterValue) => {
+            const value = filterConfig.value as string;
+            return customer.starsEarned >= Number(value);
+        }
     },
     [FilterType.VISITS]: {
         options: ['1', '2', '3', '4', '5', '10', '15', '20', '25', '30'],
         headingText: "Filter by Visits",
-        filterFunction: (customer: any, value: string) => customer.totalVisits >= Number(value),
+        filterFunction: (customer: any, filterConfig: FilterValue) => {
+            const value = filterConfig.value as string;
+            return customer.totalVisits >= Number(value);
+        }
     },
     [FilterType.LAST_TRANSACTION_DATE]: {
         options: Object.values(LastTransactionOptions),
         headingText: "Filter by Last Transaction Date",
-        filterFunction: (customer: any, value: string): boolean => {
+        filterFunction: (customer: any, filterConfig: FilterValue): boolean => {
+            const value = filterConfig.value as string;
+            
             const now = dayjs();
             const lastTransactionDate = dayjs(Number(customer.lastTransactionDate));
 
@@ -71,21 +86,38 @@ export const FILTER_CONFIGS: Record<FilterType, FilterConfig> = {
     [FilterType.AREA_CODE]: {
         options: [],  // We'll populate this dynamically if necessary
         headingText: "Filter by Area Code",
-        filterFunction: (customer: any, value: string) => customer.areaCodeNumber === value
+        filterFunction: (customer: any, filterConfig: FilterValue) => {
+            const value = filterConfig.value as string;
+            return customer.areaCodeNumber === value;
+        }
     },
+    [FilterType.BIRTHDAY]: {
+        headingText: "Birthday",
+        options: [],  // You might not use this, but the type expects it.
+        filterFunction: (customer, filterConfig: FilterValue) => {
+            const dateRange = filterConfig.value as { startDate?: string; endDate?: string };
+            if(dateRange.startDate && dateRange.endDate) {
+                const customerBirthDate = new Date(customer.birthday); 
+                return customerBirthDate >= new Date(dateRange.startDate) && customerBirthDate <= new Date(dateRange.endDate);
+            }
+            return true;
+        }
+    }
     // ... add other filters with their respective configs
 };
 
 
 interface CustomerFilterProps {
-  value: string;
-  onChange: (type: FilterType, config: { value: string, active: boolean }) => void;
+  value: string | { startDate?: string; endDate?: string };
+  onChange: (type: FilterType, filterConfig: FilterValue) => void;
   onFilterChange: (value: string | null) => void;
   disabled?: boolean;
   isCheckboxChecked: boolean; 
   onCheckboxChange: (isActive: boolean) => void;
   filterType: FilterType;
   options?: string[];
+  startDate?: string;
+endDate?: string;
 }
 
 
@@ -159,7 +191,9 @@ export const CustomerFilter: React.FC<CustomerFilterProps> = ({
   onFilterChange,
   onCheckboxChange,
   filterType,
-  options
+  options,
+  startDate,
+  endDate
 }) => {
 
     
@@ -189,30 +223,61 @@ export const CustomerFilter: React.FC<CustomerFilterProps> = ({
     };
 
 
+    const handleBirthdayChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        const newDate = e.target.value;
+        onChange(filterType, { value: newDate, active: isCheckboxChecked });
+        onFilterChange(newDate);
+    };
+
+    const handleBirthdayStartChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        const newDate = e.target.value;
+        const currentBirthdayFilter = { startDate: startDate || '', endDate: endDate || '' };
+        onChange(filterType, { value: { ...currentBirthdayFilter, startDate: newDate }, active: isCheckboxChecked });
+      };
+      
+      const handleBirthdayEndChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        const newDate = e.target.value;
+        const currentBirthdayFilter = { startDate: startDate || '', endDate: endDate || '' };
+        onChange(filterType, { value: { ...currentBirthdayFilter, endDate: newDate }, active: isCheckboxChecked });
+      };
 
     return (
         <CustomerFilterContainer>
             <CustomerFilterHeading>
-                <Text
-                    text={headingText}
-                />
+                <Text text={headingText} />
             </CustomerFilterHeading>
             <FilterCheckField>
-                <Checkbox
-                    checked={isCheckboxChecked}
-                    onChange={handleCheckboxToggle}
-                />
-                <DropdownFieldSelect
-                    value={value || 'default'}
-                    onChange={handleDropdownChange}
-                    disabled={!isCheckboxChecked}
-                >
-                    <option value="default" disabled>Select a filter</option>
+                <Checkbox checked={isCheckboxChecked} onChange={handleCheckboxToggle} />
+                {filterType === FilterType.BIRTHDAY ? (
+                   <>
+                   <input 
+                       type="date"
+                       value={startDate || ''}
+                       onChange={handleBirthdayStartChange}
+                       disabled={!isCheckboxChecked}
+                       placeholder="Start Date"
+                   />
+                   <input 
+                       type="date"
+                       value={endDate || ''}
+                       onChange={handleBirthdayEndChange}
+                       disabled={!isCheckboxChecked}
+                       placeholder="End Date"
+                   />
+               </>
+                ) : (
+                    <DropdownFieldSelect
+                        value={typeof value === "string" ? value : JSON.stringify(value) || 'default'}
+                        onChange={handleDropdownChange}
+                        disabled={!isCheckboxChecked}
+                    >
+                        <option value="default" disabled>Select a filter</option>
                         {finalOptions.map(optionValue => (
-                    <option key={optionValue} value={optionValue}>{optionValue}</option>
-                ))}
-                </DropdownFieldSelect>
+                            <option key={optionValue} value={optionValue}>{optionValue}</option>
+                        ))}
+                    </DropdownFieldSelect>
+                )}
             </FilterCheckField>
         </CustomerFilterContainer>
-    )
+    );
 };
