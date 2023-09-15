@@ -38,6 +38,9 @@ interface FilterConfig {
     dateRange?: { startDate: string, endDate: string };
 }
 
+function constructDateFromFields(month: string, day: string, year: string): Date {
+    return new Date(`${month}/${day}/${year}`);
+}
 
 export const FILTER_CONFIGS: Record<FilterType, FilterConfig> = {
     [FilterType.POINTS]: {
@@ -93,11 +96,11 @@ export const FILTER_CONFIGS: Record<FilterType, FilterConfig> = {
     },
     [FilterType.BIRTHDAY]: {
         headingText: "Birthday",
-        options: [],  // You might not use this, but the type expects it.
+        options: [],
         filterFunction: (customer, filterConfig: FilterValue) => {
             const dateRange = filterConfig.value as { startDate?: string; endDate?: string };
             if(dateRange.startDate && dateRange.endDate) {
-                const customerBirthDate = new Date(customer.birthday); 
+                const customerBirthDate = constructDateFromFields(customer.birthdayMonth, customer.birthdayDay, customer.birthdayYear);
                 return customerBirthDate >= new Date(dateRange.startDate) && customerBirthDate <= new Date(dateRange.endDate);
             }
             return true;
@@ -223,23 +226,19 @@ export const CustomerFilter: React.FC<CustomerFilterProps> = ({
     };
 
 
-    const handleBirthdayChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        const newDate = e.target.value;
-        onChange(filterType, { value: newDate, active: isCheckboxChecked });
-        onFilterChange(newDate);
-    };
-
     const handleBirthdayStartChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const newDate = e.target.value;
         const currentBirthdayFilter = { startDate: startDate || '', endDate: endDate || '' };
-        onChange(filterType, { value: { ...currentBirthdayFilter, startDate: newDate }, active: isCheckboxChecked });
-      };
+        const newFilterConfig = { value: { ...currentBirthdayFilter, startDate: newDate }, active: !!newDate || !!currentBirthdayFilter.endDate };
+        onChange(filterType, newFilterConfig);
+    };
       
-      const handleBirthdayEndChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleBirthdayEndChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const newDate = e.target.value;
         const currentBirthdayFilter = { startDate: startDate || '', endDate: endDate || '' };
-        onChange(filterType, { value: { ...currentBirthdayFilter, endDate: newDate }, active: isCheckboxChecked });
-      };
+        const newFilterConfig = { value: { ...currentBirthdayFilter, endDate: newDate }, active: !!newDate || !!currentBirthdayFilter.startDate };
+        onChange(filterType, newFilterConfig);
+    };
 
     return (
         <CustomerFilterContainer>
