@@ -18,7 +18,7 @@ import CustomerCell from '@/components/molecules/CustomerCell';
 import CustomerCells from '@/components/organism/CustomerCells';
 import SearchBar from '@/components/atoms/SearchBar';
 import CustomerTableHead from '@/components/atoms/CustomerTableHead';
-import { CustomerFilter, FilterType, FILTER_CONFIGS } from '@/components/molecules/CustomerFilter';
+import { CustomerFilter, FilterType, FILTER_CONFIGS, FilterValue } from '@/components/molecules/CustomerFilter';
 import { useUniqueAreaCodes } from '@/util/pages/customers/customersHooks';
 
 interface CustomerProps {
@@ -100,7 +100,6 @@ const FlexDiv = styled.div`
                 mostCommonAreaCode = areaCode;
             }
         }
-    
         return mostCommonAreaCode;
     }
 
@@ -118,11 +117,12 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
 
     const mostCommonAreaCode = getMostCommonAreaCode(customersData);
 
-    const [filters, setFilters] = useState<Record<FilterType, { value: string; active: boolean; }>>({
+    const [filters, setFilters] = useState<Record<FilterType, FilterValue>>({
         [FilterType.POINTS]: { value: '1', active: false },
         [FilterType.VISITS]: { value: '1', active: false },
         [FilterType.LAST_TRANSACTION_DATE]: { value: '24 Hours', active: false },
         [FilterType.AREA_CODE]: { value: mostCommonAreaCode, active: false },
+        [FilterType.BIRTHDAY]: { value: { startDate: '', endDate: '' }, active: false }
         // initialize other filters here if needed
     });
 
@@ -142,16 +142,15 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
 
     const filteredCustomers = customersData.filter(customer => {
         if (!customer.fullName.toLowerCase().includes(newCustomerSearch.toLowerCase())) {
-          return false;
+            return false;
         }
-      
+    
         return Object.entries(filters).every(([key, filterConfig]) => {
-          if (!filterConfig.active) return true;
-          const filterFunction = FILTER_CONFIGS[key as FilterType].filterFunction;
-          return filterFunction(customer, filterConfig.value);
+            if (!filterConfig.active) return true;
+            const filterFunction = FILTER_CONFIGS[key as FilterType].filterFunction;
+            return filterFunction(customer, filterConfig); // <-- Change here, pass the entire filterConfig
         });
     });
-
     return (
         <FlexDiv>
             <GlobalStyle />
@@ -166,6 +165,8 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                 <CustomerFilter
                     key={key}
                     options={key === FilterType.AREA_CODE ? areaCodeOptions : config.options}
+                    startDate={(filters[FilterType.BIRTHDAY].value as any).startDate}
+                    endDate={(filters[FilterType.BIRTHDAY].value as any).endDate}
                     value={filters[key as FilterType].value}
                     onChange={(type, filterConfig) => {
                         setFilters(prev => ({ ...prev, [type]: filterConfig }));
