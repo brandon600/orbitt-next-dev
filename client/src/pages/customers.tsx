@@ -122,7 +122,8 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         [FilterType.VISITS]: { value: '1', active: false },
         [FilterType.LAST_TRANSACTION_DATE]: { value: '24 Hours', active: false },
         [FilterType.AREA_CODE]: { value: mostCommonAreaCode, active: false },
-        [FilterType.BIRTHDAY]: { value: { startDate: '', endDate: '' }, active: false }
+        [FilterType.BIRTHDAY]: { value: { startDate: '', endDate: '' }, active: false },
+        [FilterType.SIGN_UP_DATE]: { value: '24 Hours', active: false },
         // initialize other filters here if needed
     });
 

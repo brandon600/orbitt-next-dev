@@ -13,6 +13,7 @@ export enum FilterType {
     POINTS = 'POINTS',
     VISITS = 'VISITS',
     LAST_TRANSACTION_DATE = 'LAST_TRANSACTION_DATE',
+    SIGN_UP_DATE = 'SIGN_UP_DATE',
     AREA_CODE = 'AREA_CODE',
     BIRTHDAY = 'BIRTHDAY'
 }
@@ -105,7 +106,34 @@ export const FILTER_CONFIGS: Record<FilterType, FilterConfig> = {
             }
             return true;
         }
-    }
+    },
+    [FilterType.SIGN_UP_DATE]: {
+        options: Object.values(LastTransactionOptions),
+        headingText: "Filter by Sign Up Date",
+        filterFunction: (customer: any, filterConfig: FilterValue): boolean => {
+            const value = filterConfig.value as string;
+            
+            const now = dayjs();
+            const signUpDate = dayjs(customer.signUpDate);
+    
+            switch (value) {
+                case LastTransactionOptions.LAST_24_HOURS:
+                    return now.diff(signUpDate, 'hour') <= 24;
+                case LastTransactionOptions.LAST_WEEK:
+                    return now.diff(signUpDate, 'week') <= 1;
+                case LastTransactionOptions.LAST_2_WEEKS:
+                    return now.diff(signUpDate, 'week') <= 2;
+                case LastTransactionOptions.LAST_MONTH:
+                    return now.diff(signUpDate, 'month') <= 1;
+                case LastTransactionOptions.LAST_3_MONTHS:
+                    return now.diff(signUpDate, 'month') <= 3;
+                case LastTransactionOptions.LAST_YEAR:
+                    return now.diff(signUpDate, 'year') <= 1;
+                default:
+                    return true;
+            }
+        },
+    },
     // ... add other filters with their respective configs
 };
 
@@ -120,7 +148,7 @@ interface CustomerFilterProps {
   filterType: FilterType;
   options?: string[];
   startDate?: string;
-endDate?: string;
+  endDate?: string;
 }
 
 
