@@ -20,6 +20,7 @@ import SearchBar from '@/components/atoms/SearchBar';
 import CustomerTableHead from '@/components/atoms/CustomerTableHead';
 import { CustomerFilter, FilterType, FILTER_CONFIGS, FilterValue } from '@/components/molecules/CustomerFilter';
 import { useUniqueAreaCodes } from '@/util/pages/customers/customersHooks';
+import { CustomerFilters }  from '@/components/organism/CustomerFilters';
 
 interface CustomerProps {
     customersData: CustomerData[];
@@ -162,35 +163,11 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                  onChange={(value) => setNewCustomerSearch(value)}
                  value={newCustomerSearch}
             />
-            {Object.entries(FILTER_CONFIGS).map(([key, config]) => (
-                <CustomerFilter
-                    key={key}
-                    options={key === FilterType.AREA_CODE ? areaCodeOptions : config.options}
-                    startDate={(filters[FilterType.BIRTHDAY].value as any).startDate}
-                    endDate={(filters[FilterType.BIRTHDAY].value as any).endDate}
-                    value={filters[key as FilterType].value}
-                    onChange={(type, filterConfig) => {
-                        setFilters(prev => ({ ...prev, [type]: filterConfig }));
-                    }}
-                    onFilterChange={(value) => setFilters(prev => ({
-                        ...prev,
-                        [key as FilterType]: {
-                            ...prev[key as FilterType],
-                            active: value !== null,
-                            value: value?.toString() || prev[key as FilterType].value
-                        }
-                    }))}
-                    isCheckboxChecked={filters[key as FilterType].active}
-                    onCheckboxChange={(active) => setFilters(prev => ({
-                        ...prev,
-                        [key as FilterType]: {
-                            ...prev[key as FilterType],
-                            active
-                        }
-                    }))}
-                    filterType={key as FilterType}
-                />
-            ))}
+            <CustomerFilters
+                areaCodeOptions={areaCodeOptions}
+                filters={filters}
+                setFilters={setFilters}
+            />
             <CustomerCells
                 customersData={filteredCustomers}
                 onCustomerSelection={handleCustomerSelection}
