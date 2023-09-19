@@ -21,6 +21,8 @@ import CustomerTableHead from '@/components/atoms/CustomerTableHead';
 import { CustomerFilter, FilterType, FILTER_CONFIGS, FilterValue } from '@/components/molecules/CustomerFilter';
 import { useUniqueAreaCodes } from '@/util/pages/customers/customersHooks';
 import { CustomerFilters }  from '@/components/organism/CustomerFilters';
+import Overlay from '@/components/atoms/Overlay';
+import SMSBlastModal from '@/components/organism/SMSBlastModal';
 
 interface CustomerProps {
     customersData: CustomerData[];
@@ -40,6 +42,10 @@ const FlexDiv = styled.div`
     background: ${Colors.primary100};
 }
 `
+
+const ButtonWrapper = styled.div`
+    align-self: flex-start;  // This will prevent the button from stretching out in a flex container.
+`;
 
  export async function getServerSideProps() {
     try {
@@ -83,7 +89,6 @@ const FlexDiv = styled.div`
         }
     }
     
-
     function getMostCommonAreaCode(customers: CustomerData[]): string {
         const areaCodeCount = new Map<string, number>();
     
@@ -116,6 +121,8 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     const [newCustomerSearch, setNewCustomerSearch] = useState<string>("");
     const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
 
+    const [isBlastModalOpen, setIsBlastModalOpen] = useState(false);
+
     const mostCommonAreaCode = getMostCommonAreaCode(customersData);
 
     const [filters, setFilters] = useState<Record<FilterType, FilterValue>>({
@@ -128,6 +135,9 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         // initialize other filters here if needed
     });
 
+    useEffect(() => {
+        fetchData();
+      }, []);
   
     useEffect(() => {
         console.log('Updated selectedCustomers:', selectedCustomers);
@@ -140,7 +150,11 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                 : prevState.filter(id => id !== customerId)
         );
     }
-    
+
+    const toggleBlastModal = () => {
+        setIsBlastModalOpen(prevState => !prevState);
+    }
+
 
     const filteredCustomers = customersData.filter(customer => {
         if (!customer.fullName.toLowerCase().includes(newCustomerSearch.toLowerCase())) {
@@ -155,8 +169,21 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     });
     return (
         <FlexDiv>
+            { (isBlastModalOpen ) && <SMSBlastModal onClose={toggleBlastModal} selectedCustomers={selectedCustomers} />}
+            { (isBlastModalOpen ) && <Overlay />}
             <GlobalStyle />
             <p>Customers data is going here!!!</p>
+            {selectedCustomers.length > 0 && (
+                <ButtonWrapper>
+                    <Button
+                        label='Send SMS Blast'
+                        buttonTypeVariant="smsBlast"
+                        sizeVariant="large"
+                        buttonWidthVariant="content"
+                        onClick={toggleBlastModal}
+                    />
+                </ButtonWrapper>
+            )}
             <SearchBar
                  label="Search"
                  placeholder='Search for customers by name...'

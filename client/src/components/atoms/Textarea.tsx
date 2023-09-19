@@ -3,7 +3,13 @@ import styled, { css } from 'styled-components';
 import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 
-interface TextareaProps {
+interface TextareaStyleProps {
+  height?: string;
+}
+
+type TextareaFunctionalProps = Omit<TextareaProps, 'height'>;
+
+interface TextareaProps extends TextareaStyleProps {
   label?: string;
   value: string;
   onChange: (value: string) => void;
@@ -13,10 +19,11 @@ interface TextareaProps {
 }
 
 
-const TextareaContainer = styled.div`
+const TextareaContainer = styled.div<TextareaStyleProps>`
     @media ${StyledMediaQuery.XS} {
         display: flex;
         width: 100%;
+        height: ${(props) => props.height || "100px"};
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
@@ -44,7 +51,7 @@ const RequiredAsterisk = styled.span`
 const TextareaTextarea = styled.textarea`
     @media ${StyledMediaQuery.XS} {
         display: flex;
-        height: 100px;
+        height: 100%;
         padding: 12px;
         box-sizing: border-box;
         align-items: flex-start;
@@ -69,26 +76,24 @@ const TextareaTextarea = styled.textarea`
 
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, value, onChange, required, placeholder, disabled }, ref) => {
-  return (
-    <TextareaContainer>
-        {label && (  // Conditionally render label only if it's provided
-            <TextareaLabel>
-                {required && <RequiredAsterisk>*</RequiredAsterisk>}
-                {label}
-            </TextareaLabel>
-        )}
-        <TextareaTextarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required={required} // Add the 'required' attribute conditionally
-        placeholder={placeholder} // Pass the 'placeholder' prop
-        disabled={disabled}
-        ref={ref}
-        />
-    </TextareaContainer>
-  );
-});
+  ({ label, value, onChange, required, placeholder, disabled, height }, ref) => {
+    return (
+      <TextareaContainer
+        height={height}
+      >
+          {/* ... */}
+          <TextareaTextarea
+            value={value}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onChange(e.target.value)}
+            required={required}
+            placeholder={placeholder}
+            disabled={disabled}
+            ref={ref}
+          />
+      </TextareaContainer>
+    );
+  }
+);
 
 Textarea.displayName = 'Textarea';
 
