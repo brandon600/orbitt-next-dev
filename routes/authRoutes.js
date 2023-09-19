@@ -18,7 +18,7 @@ module.exports = (app) => {
   });
 
   app.get('/api/users/', (req, res) => {
-    const userId = req.params.userId;
+ //   const userId = req.params.userId;
     User.findOne({userid: '1680735892067'})
       .then(user => {
         if (!user) {

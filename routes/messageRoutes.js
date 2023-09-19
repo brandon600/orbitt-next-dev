@@ -2,9 +2,14 @@ const {ensureAuthenticated} = require('../helpers/auth');
 const mongoose = require('mongoose');
 
 const User = mongoose.model('users');
+const Customer = mongoose.model('customers');
 const TriggeredMessage = mongoose.model('triggeredmessages');
 const BlastMessage = mongoose.model('blastmessages');
 const SentMessage = mongoose.model('sentmessages');
+
+const db = require('../config/keys');
+const { object } = require('prop-types');
+const client = require('twilio')(db.accountSid, db.authToken)
 
 module.exports = (app) => {
       app.get('/triggered-messages/', async (req, res) => {
@@ -78,4 +83,103 @@ module.exports = (app) => {
             res.status(500).json({ message: 'Something went wrong' });
         }
     });
+
+
+
+
+
+
+
+
+
+
+
+
+    app.post('/send-blast-message', async (req, res) => {
+      const uniqid = Date.now();
+  
+      const { messageContent, customerIds, user } = req.body;
+      console.log(req.body);
+      console.log(messageContent);
+      console.log(customerIds);
+      console.log(user);
+
+  
+      try {
+          // Fetch customers based on their IDs to get phone numbers.
+          const customersToSend = await Customer.find({
+              customerid: { $in: customerIds }
+          });
+
+          const objectIdArray = customersToSend.map(customer => customer._id);
+  
+          // Generate phone numbers from the customers
+          const cusNumberArray = customersToSend.map(customer => `${customer.fullPhoneNumber}`);
+  
+          cusNumberArray.forEach(thisNumber => {
+              client.messages.create({
+                  body: messageContent,
+                  from: `+${user.messagingPhoneNumber}`,
+                  to: thisNumber
+              }).catch(err => console.log(err));
+          });
+  
+          const newBlastMessage = new BlastMessage({
+              _id: new mongoose.Types.ObjectId(),
+              blastid: uniqid,
+              date: uniqid,
+              messageNumberId: 99,
+              textMessage: messageContent,
+              customerList: customersToSend,
+              user: user,
+              userMemberstackId: user.memberstackId,
+              userClass: user,
+              customersReceived: objectIdArray,
+              active: true
+          });
+  
+          await newBlastMessage.save();
+  
+          const newSentMessage = new SentMessage({
+              _id: new mongoose.Types.ObjectId(),
+              messageNumberId: 99,
+              user: user,
+              userMemberstackId: user.memberstackId,
+              date: uniqid,
+              messageTitle: 'Blast Message',
+              messageContent: messageContent,
+              messageDelay: 0,
+              userClass: user,
+              customersReceived: objectIdArray,
+          });
+  
+          await newSentMessage.save();
+  
+          // Update user stats
+          await User.updateOne({ userid: user.userid }, {
+              $inc: {
+                  totalMessagesSent: cusNumberArray.length,
+                  monthlyMessagesLeft: -cusNumberArray.length
+              }
+          });
+  
+          // Append the blast message to the customer's record
+          await Customer.updateMany({ customerid: { $in: customerIds } }, {
+              $push: { receivedBlasts: newBlastMessage }
+          });
+  
+          res.status(200).send({ message: 'SMS Blast sent successfully.' });
+  
+      } catch (error) {
+          console.error(error);
+          res.status(500).send({ message: 'Error sending SMS blast.' });
+      }
+  });
+
+
+
+
+
+
+
 }
