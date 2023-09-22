@@ -24,6 +24,7 @@ import { CustomerFilters }  from '@/components/organism/CustomerFilters';
 import Overlay from '@/components/atoms/Overlay';
 import SMSBlastModal from '@/components/organism/SMSBlastModal';
 import DataCard from '@/components/atoms/DataCard';
+import CustomerVisit from '@/components/molecules/CustomerVisit';
 
 interface CustomerProps {
     customersData: CustomerData[];
@@ -189,6 +190,10 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                 label='Customers'
                 number1='48/'
                 number2='300'
+            />
+            <CustomerVisit
+                visitInfoText='Visit Info Text'
+                visitTypeVariant='new user'
             />
             <SearchBar
                  label="Search"
