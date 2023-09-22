@@ -14,17 +14,14 @@ import { CustomerData } from '@/types/CustomerData';
 import { BlastMessageData } from '@/types/BlastMessageData';
 import { SentMessageData } from '@/types/SentMessageData';
 import { VisitData } from '@/types/VisitData';
-import CustomerCell from '@/components/molecules/CustomerCell';
 import CustomerCells from '@/components/organism/CustomerCells';
 import SearchBar from '@/components/atoms/SearchBar';
-import CustomerTableHead from '@/components/atoms/CustomerTableHead';
 import { CustomerFilter, FilterType, FILTER_CONFIGS, FilterValue } from '@/components/molecules/CustomerFilter';
 import { useUniqueAreaCodes } from '@/util/pages/customers/customersHooks';
 import { CustomerFilters }  from '@/components/organism/CustomerFilters';
 import Overlay from '@/components/atoms/Overlay';
 import SMSBlastModal from '@/components/organism/SMSBlastModal';
-import DataCard from '@/components/atoms/DataCard';
-import CustomerVisit from '@/components/molecules/CustomerVisit';
+import AddCustomerForm from '@/components/organism/AddCustomerForm';
 
 interface CustomerProps {
     customersData: CustomerData[];
@@ -140,7 +137,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     const [isBlastModalOpen, setIsBlastModalOpen] = useState(false);
     const mostCommonAreaCode = getMostCommonAreaCode(customersData);
 
-    console.log("Area Code Options at declaration:", areaCodeOptions);
+    const [isAddCustomerFormOpen, setIsAddCustomerFormOpen] = useState(false);
 
     const [filters, setFilters] = useState<Record<FilterType, FilterValue>>({
         [FilterType.POINTS]: { value: '1', active: false },
@@ -160,6 +157,10 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         console.log('Updated selectedCustomers:', selectedCustomers);
     }, [selectedCustomers]);
 
+    const handleAddCustomerFormClose = () => {
+        setIsAddCustomerFormOpen(false);
+      };
+
     const handleCustomerSelection = (customerId: string, isSelected: boolean) => {
         setSelectedCustomers(prevState => 
             isSelected 
@@ -170,6 +171,10 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
 
     const toggleBlastModal = () => {
         setIsBlastModalOpen(prevState => !prevState);
+    }
+
+    const toggleAddNewCustomerModal = () => {
+        setIsAddCustomerFormOpen(prevState => !prevState);
     }
 
     const filteredCustomers = customersData.filter(customer => {
@@ -187,7 +192,12 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     return (
         <FlexDiv>
             { (isBlastModalOpen ) && <SMSBlastModal onClose={toggleBlastModal} selectedCustomers={selectedCustomers} />}
-            { (isBlastModalOpen ) && <Overlay />}
+            <AnimatePresence>
+                {isAddCustomerFormOpen && <AddCustomerForm onClose={handleAddCustomerFormClose} />}
+            </AnimatePresence>
+            <AnimatePresence>
+            { (isBlastModalOpen || isAddCustomerFormOpen ) && <Overlay />}
+            </AnimatePresence>
             <GlobalStyle />
             {selectedCustomers.length > 0 && (
                 <ButtonWrapper>
@@ -200,6 +210,15 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                     />
                 </ButtonWrapper>
             )}
+            <ButtonWrapper>
+                <Button
+                    label='Add New Customer'
+                    buttonTypeVariant="primary"
+                    sizeVariant="large"
+                    buttonWidthVariant="content"
+                    onClick={toggleAddNewCustomerModal}
+                />
+            </ButtonWrapper>
             <TableAndSearch>
                 <SearchAndFilters>
                     <SearchBar

@@ -11,6 +11,7 @@ import { CancelIcon } from '../subatomic/Icons/CancelIcon';
 import { motion } from 'framer-motion';
 import { useStore, AppState } from '../../store/store'; // Import your store
 import { on } from 'events';
+import { DropdownOption } from '../atoms/DropdownField';
 
 
 type EditRewardFormProps = {
@@ -155,6 +156,16 @@ type EditRewardFormProps = {
       }
   `
   
+  const rewardOptions: DropdownOption[] = [
+    { label: "Free Item", value: "Free Item" },
+    { label: "5% Off", value: "5% Off" },
+    { label: "10% Off", value: "10% Off" },
+    { label: "15% Off", value: "15% Off" },
+    { label: "25% Off", value: "25% Off" },
+    { label: "50% Off", value: "50% Off" },
+  ];
+
+
   const EditRewardForm: React.FC<EditRewardFormProps> = ({
     onClose,
     _id,
@@ -289,6 +300,7 @@ return (
                 label="Reward Value" 
                 useDefaultDropdown={false} 
                 required={true}
+                options={rewardOptions}
               />
               <InputField
                 label="Reward Terms"
