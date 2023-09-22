@@ -23,7 +23,7 @@ interface DataCardComponentProps {
 const DataCardContainer = styled.div<DataCardComponentProps>`
 @media ${StyledMediaQuery.XS} {
   display: flex;
-  width: 140px;
+  flex: 1;
   height: 160px;
   padding: 16px;
   flex-direction: column;

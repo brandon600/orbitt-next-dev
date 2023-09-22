@@ -70,6 +70,7 @@ require('./models/TriggeredMessage');
 require('./models/BlastMessage');
 require('./models/SentMessage');
 require('./models/Visit');
+require('./models/UpdatedCustomer');
 
 const Customer = mongoose.model('customers');
 const User = mongoose.model('users');
@@ -80,6 +81,7 @@ const TriggeredMessage = mongoose.model('triggeredmessages');
 const BlastMessage = mongoose.model('blastmessages');
 const SentMessage = mongoose.model('sentmessages');
 const Visit = mongoose.model('visits');
+const UpdatedCustomer = mongoose.model('updatedcustomers');
 
 app.use(
   cookieSession({

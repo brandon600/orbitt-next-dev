@@ -44,4 +44,42 @@ module.exports = (app) => {
             res.status(500).json({ message: 'Internal server error' });
           }
           });
+
+
+          app.get('/customers/:customerid', async (req, res) => {
+            try {
+                const customer = await Customer.findOne({ user: '1680735892067', customerid: req.params.customerid })
+                .populate('visits')
+                .populate('receivedBlasts')
+                .populate('updates');
+                if (!customer) {
+                    return res.status(404).send({ message: 'Customer not found' });
+                }
+                res.send(customer);
+            } catch (error) {
+                console.error('Error fetching customer:', error);
+                res.status(500).send({ message: 'Internal Server Error' });
+            }
+        });
+
+
+        app.get('/customers/:customerid/ranking', async (req, res) => {
+          try {
+              const allCustomers = await Customer.find({ user: '1680735892067' }).sort({ totalVisits: -1 });
+              const totalCustomers = allCustomers.length;
+      
+              const specificCustomerIndex = allCustomers.findIndex(c => c.customerid == req.params.customerid);
+              if (specificCustomerIndex === -1) {
+                  return res.status(404).send({ message: 'Customer not found' });
+              }
+              const rank = specificCustomerIndex + 1;
+              res.json({
+                  rank: rank,
+                  totalCustomers: totalCustomers
+              });
+          } catch (error) {
+              console.error('Error fetching customer ranking:', error);
+              res.status(500).send({ message: 'Internal Server Error' });
+          }
+      });
 };
