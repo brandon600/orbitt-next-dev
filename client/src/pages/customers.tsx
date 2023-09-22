@@ -23,6 +23,7 @@ import { useUniqueAreaCodes } from '@/util/pages/customers/customersHooks';
 import { CustomerFilters }  from '@/components/organism/CustomerFilters';
 import Overlay from '@/components/atoms/Overlay';
 import SMSBlastModal from '@/components/organism/SMSBlastModal';
+import DataCard from '@/components/atoms/DataCard';
 
 interface CustomerProps {
     customersData: CustomerData[];
@@ -184,6 +185,11 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                     />
                 </ButtonWrapper>
             )}
+            <DataCard
+                label='Customers'
+                number1='48/'
+                number2='300'
+            />
             <SearchBar
                  label="Search"
                  placeholder='Search for customers by name...'
