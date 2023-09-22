@@ -85,16 +85,6 @@ module.exports = (app) => {
     });
 
 
-
-
-
-
-
-
-
-
-
-
     app.post('/send-blast-message', async (req, res) => {
       const uniqid = Date.now();
   
@@ -175,11 +165,6 @@ module.exports = (app) => {
           res.status(500).send({ message: 'Error sending SMS blast.' });
       }
   });
-
-
-
-
-
 
 
 }
