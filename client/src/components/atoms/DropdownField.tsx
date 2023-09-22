@@ -3,12 +3,18 @@ import styled, { css } from 'styled-components';
 import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 
+export interface DropdownOption {
+  label: string;
+  value: string;
+}
+
 interface DropdownFieldProps {
   value: string;
   onChange: (value: string) => void;
   label?: string; // Make the label optional
   required?: boolean; // Make it possible to mark the field as required
   useDefaultDropdown: boolean;
+  options?: DropdownOption[];
 }
 
 const DropdownFieldContainer = styled.div`
@@ -126,7 +132,8 @@ const DropdownField: React.FC<DropdownFieldProps & { useDefaultDropdown: boolean
   onChange,
   label,
   required,
-  useDefaultDropdown
+  useDefaultDropdown,
+  options = []
 }) => {
 
   const DefaultDropdown = () => {
@@ -147,6 +154,14 @@ const DropdownField: React.FC<DropdownFieldProps & { useDefaultDropdown: boolean
     );
   }
 
+  const renderOptions = (optionList: DropdownOption[]) => {
+    return optionList.map((option, index) => (
+      <option key={index} value={option.value} disabled={option.value === ""}>
+        {option.label}
+      </option>
+    ));
+};
+
   const FormDropdown = () => {
     return (
       <DropdownFieldContainer>
@@ -159,12 +174,7 @@ const DropdownField: React.FC<DropdownFieldProps & { useDefaultDropdown: boolean
           onChange={(e) => onChange(e.target.value)}
           required={required} // Add the 'required' attribute conditionally
         >
-          <option value="Free Item">Free Item</option>
-          <option value="5% Off">5% Off</option>
-          <option value="10% Off">10% Off</option>
-          <option value="15% Off">15% Off</option>
-          <option value="25% Off">25% Off</option>
-          <option value="50% Off">50% Off</option>
+          {renderOptions(options)}
         </DropdownFieldSelect2>
       </DropdownFieldContainer>
     );
