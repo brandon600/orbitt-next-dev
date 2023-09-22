@@ -9,7 +9,12 @@ import { NewCustomerIcon } from '../subatomic/Icons/NewCustomerIcon';
 import { RewardIcon } from '../subatomic/Icons/RewardIcon';
 import { SellIcon } from '../subatomic/Icons/SellIcon';
 
-type VisitType = 'new user' | 'reward redeemed' | 'purchase' | 'birthday';
+export type VisitType = 'New User' | 'Reward' | 'Purchase' | 'Birthday';
+
+type Visit = {
+  type: VisitType;
+  infoText: string;
+};
 
 interface CustomerVisitProps {
     visitInfoText: string;
@@ -22,19 +27,19 @@ interface CustomerVisitProps {
   }
 
   const visitTypeConfigs: Record<VisitType, VisitTypeConfig> = {
-    'new user': {
+    'New User': {
       icon: (color) => <NewCustomerIcon fill={color} />,
       text: 'New User'
     },
-    'reward redeemed': {
+    'Reward': {
       icon: (color) => <RewardIcon fill={color} />,
       text: 'Reward Redeemed'
     },
-    'purchase': {
+    'Purchase': {
       icon: (color) => <SellIcon fill={color} />,
       text: 'Purchase'
     },
-    'birthday': {
+    'Birthday': {
       icon: (color) => <CakeIcon fill={color} />,
       text: 'Birthday Reward'
     }
@@ -148,7 +153,7 @@ const VisitTypeText = styled.div`
     }
 `
 
-const CustomerVisit: React.FC<CustomerVisitProps> = ({ visitTypeVariant = 'new user', visitInfoText }) => {
+const CustomerVisit: React.FC<CustomerVisitProps> = ({ visitTypeVariant = 'New User', visitInfoText }) => {
     const config = visitTypeConfigs[visitTypeVariant];
     return (
       <CustomerVisitContainer>

@@ -46,7 +46,7 @@ const FlexDiv = styled.div`
 `
 
 const ButtonWrapper = styled.div`
-    align-self: flex-start;  // This will prevent the button from stretching out in a flex container.
+    align-self: flex-start; 
 `;
 
  export async function getServerSideProps() {
@@ -111,21 +111,16 @@ const ButtonWrapper = styled.div`
         return mostCommonAreaCode;
     }
 
-
 function Customers( { customersData, receivedBlastsData, visitsData, sentMessagesData }: CustomerProps) {
     const { data, fetchData, toast, showToast, hideToast } = useStore();
 
-
     const areaCodeOptions = useUniqueAreaCodes(customersData);
-    console.log("Area Code Options at declaration:", areaCodeOptions);
-
-
     const [newCustomerSearch, setNewCustomerSearch] = useState<string>("");
     const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
-
     const [isBlastModalOpen, setIsBlastModalOpen] = useState(false);
-
     const mostCommonAreaCode = getMostCommonAreaCode(customersData);
+
+    console.log("Area Code Options at declaration:", areaCodeOptions);
 
     const [filters, setFilters] = useState<Record<FilterType, FilterValue>>({
         [FilterType.POINTS]: { value: '1', active: false },
@@ -157,7 +152,6 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         setIsBlastModalOpen(prevState => !prevState);
     }
 
-
     const filteredCustomers = customersData.filter(customer => {
         if (!customer.fullName.toLowerCase().includes(newCustomerSearch.toLowerCase())) {
             return false;
@@ -169,6 +163,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
             return filterFunction(customer, filterConfig); // <-- Change here, pass the entire filterConfig
         });
     });
+    
     return (
         <FlexDiv>
             { (isBlastModalOpen ) && <SMSBlastModal onClose={toggleBlastModal} selectedCustomers={selectedCustomers} />}
@@ -193,7 +188,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
             />
             <CustomerVisit
                 visitInfoText='Visit Info Text'
-                visitTypeVariant='new user'
+                visitTypeVariant='New User'
             />
             <SearchBar
                  label="Search"
