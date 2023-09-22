@@ -49,6 +49,26 @@ const ButtonWrapper = styled.div`
     align-self: flex-start; 
 `;
 
+const TableAndSearch = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 40px;
+        align-self: stretch;
+    }
+`
+
+const SearchAndFilters = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 32px;
+        align-self: stretch;
+    }
+`
+
  export async function getServerSideProps() {
     try {
         // Fetch rewards data
@@ -169,7 +189,6 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
             { (isBlastModalOpen ) && <SMSBlastModal onClose={toggleBlastModal} selectedCustomers={selectedCustomers} />}
             { (isBlastModalOpen ) && <Overlay />}
             <GlobalStyle />
-            <p>Customers data is going here!!!</p>
             {selectedCustomers.length > 0 && (
                 <ButtonWrapper>
                     <Button
@@ -181,31 +200,26 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                     />
                 </ButtonWrapper>
             )}
-            <DataCard
-                label='Customers'
-                number1='48/'
-                number2='300'
-            />
-            <CustomerVisit
-                visitInfoText='Visit Info Text'
-                visitTypeVariant='New User'
-            />
-            <SearchBar
-                 label="Search"
-                 placeholder='Search for customers by name...'
-                 onChange={(value) => setNewCustomerSearch(value)}
-                 value={newCustomerSearch}
-            />
-            <CustomerFilters
-                areaCodeOptions={areaCodeOptions}
-                filters={filters}
-                setFilters={setFilters}
-            />
-            <CustomerCells
-                customersData={filteredCustomers}
-                onCustomerSelection={handleCustomerSelection}
-                selectedCustomers={selectedCustomers}
-            />
+            <TableAndSearch>
+                <SearchAndFilters>
+                    <SearchBar
+                        label="Search"
+                        placeholder='Search for customers by name...'
+                        onChange={(value) => setNewCustomerSearch(value)}
+                        value={newCustomerSearch}
+                    />
+                    <CustomerFilters
+                        areaCodeOptions={areaCodeOptions}
+                        filters={filters}
+                        setFilters={setFilters}
+                    />
+                </SearchAndFilters>
+                <CustomerCells
+                    customersData={filteredCustomers}
+                    onCustomerSelection={handleCustomerSelection}
+                    selectedCustomers={selectedCustomers}
+                />
+            </TableAndSearch>
         </FlexDiv>
     );
 }
