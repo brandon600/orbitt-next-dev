@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('users');
 const Reward = mongoose.model('rewards');
-const OutboundReward = mongoose.model('outboundRewards');
+const OutboundReward = mongoose.model('outboundrewards');
 const UpdatedReward = mongoose.model('updatedrewards');
 
 module.exports = (app) => {

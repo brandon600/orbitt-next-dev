@@ -353,6 +353,34 @@ const birthdayMonthOptions: DropdownOption[] = [
     { label: "1900", value: "1900" },
   ]
 
+
+/**
+ * Formats a phone number to the format: (XXX) XXX-XXXX.
+ * @param value - The string to format.
+ * @returns {string} - Formatted phone number.
+ */
+export const formatPhoneNumber = (value: string): string => {
+    const numericValue = value.replace(/\D/g, '');  // Remove non-digit characters
+    
+    if (numericValue.length < 4) {
+      return numericValue;
+    } else if (numericValue.length < 7) {
+      return `(${numericValue.substring(0, 3)}) ${numericValue.substring(3)}`;
+    } else {
+      return `(${numericValue.substring(0, 3)}) ${numericValue.substring(3, 6)}-${numericValue.substring(6, 10)}`;
+    }
+  };
+  
+  /**
+   * Validates that a phone number contains exactly 10 digits.
+   * @param phoneNumber - The phone number to validate.
+   * @returns {boolean} - True if the phone number is valid, otherwise false.
+   */
+  export const isValidPhoneNumber = (phoneNumber: string): boolean => {
+    const numericPhoneNumber = phoneNumber.replace(/\D/g, '');
+    return numericPhoneNumber.length === 10;
+  };
+
 const AddCustomerForm: React.FC<AddCustomerFormProps> = ({ onClose }) => {
   const [customerFirstName, setCustomerFirstName] = useState<string>('');
   const [customerLastName, setCustomerLastName] = useState<string>('');
@@ -368,6 +396,11 @@ const AddCustomerForm: React.FC<AddCustomerFormProps> = ({ onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isValidPhoneNumber(customerPhoneNumber)) {
+        showToast('Please enter a valid 10 digit phone number.', 'error');
+        return;
+      }
     
     // Get global state data
     const { data } = useStore.getState(); // Directly access Zustand state
@@ -467,8 +500,9 @@ const AddCustomerForm: React.FC<AddCustomerFormProps> = ({ onClose }) => {
                     label="Phone Number"
                     value={customerPhoneNumber}
                     onChange={(value) => {
-                    setCustomerPhoneNumber(value);
-                    setCustomerPhoneNumberValid(!!value); // Validate based on whether the input is not empty
+                    const formattedNumber = formatPhoneNumber(value);
+                    setCustomerPhoneNumber(formattedNumber);
+                    setCustomerPhoneNumberValid(isValidPhoneNumber(formattedNumber));
                     }}
                     required={true}
                     placeholder='Ex: (555) 555-5555'

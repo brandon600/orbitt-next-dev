@@ -44,4 +44,4 @@ const OutboundRewardSchema = new Schema ({
     }
 });
 
-mongoose.model('outboundRewards', OutboundRewardSchema)
+mongoose.model('outboundrewards', OutboundRewardSchema)

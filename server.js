@@ -75,7 +75,7 @@ require('./models/UpdatedCustomer');
 const Customer = mongoose.model('customers');
 const User = mongoose.model('users');
 const Reward = mongoose.model('rewards');
-const OutboundReward = mongoose.model('outboundRewards');
+const OutboundReward = mongoose.model('outboundrewards');
 const UpdatedReward = mongoose.model('updatedrewards');
 const TriggeredMessage = mongoose.model('triggeredmessages');
 const BlastMessage = mongoose.model('blastmessages');
