@@ -158,7 +158,6 @@ const CustomerFilterContainer = styled.div`
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
-        width: 300px;
     }
 `
 
@@ -170,7 +169,7 @@ const CustomerFilterHeading = styled.div`
             font-size: 16px;
             font-weight: 500;
             line-height: 19px;
-            color: ${Colors.neutral500};
+            color: ${Colors.neutral400};
         }
     }
 `
@@ -205,10 +204,11 @@ const DropdownFieldSelect = styled.select`
       align-self: stretch;
       border-radius: 8px;
       color: ${Colors.neutral300};
+      border: 1px solid ${Colors.neutral300};
 
       &:focus {
-        border: 1px solid ${Colors.neutral600};
-        color: ${Colors.neutral600};
+        border: 1px solid ${Colors.primary400};
+        color: ${Colors.primary400};
     }
         
     }
