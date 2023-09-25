@@ -214,6 +214,37 @@ const DropdownFieldSelect = styled.select`
     }
 `
 
+const FilterInput = styled.input`
+    @media ${StyledMediaQuery.XS} {
+        font: inherit;
+        font-size: 16px;
+        font-family: inherit;
+        background-color: ${Colors.shades100};
+        border-radius: 8px;
+        color: ${Colors.neutral300};
+        border: 1px solid ${Colors.neutral300};
+        padding: 0rem;
+        margin: 0;
+        box-sizing: border-box;
+        cursor: pointer;
+        outline: none;
+        display: flex;
+        height: 48px;
+        padding: 0px 4px 0px 12px;
+        justify-content: space-between;
+        align-items: center;
+        align-self: stretch;
+        color: ${Colors.neutral300};
+        border: 1px solid ${Colors.neutral300};
+        width: 50%;
+
+        &:focus {
+            border: 1px solid ${Colors.primary400};
+            color: ${Colors.primary400};
+        }
+    }
+`
+
 
 export const CustomerFilter: React.FC<CustomerFilterProps> = ({
   value,
@@ -277,14 +308,14 @@ export const CustomerFilter: React.FC<CustomerFilterProps> = ({
                 <Checkbox checked={isCheckboxChecked} onChange={handleCheckboxToggle} />
                 {filterType === FilterType.BIRTHDAY ? (
                    <>
-                   <input 
+                   <FilterInput
                        type="date"
                        value={startDate || ''}
                        onChange={handleBirthdayStartChange}
                        disabled={!isCheckboxChecked}
                        placeholder="Start Date"
                    />
-                   <input 
+                   <FilterInput
                        type="date"
                        value={endDate || ''}
                        onChange={handleBirthdayEndChange}
