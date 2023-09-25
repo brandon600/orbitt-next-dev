@@ -10,6 +10,7 @@ import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
 import io from "socket.io-client";
+import { motion } from 'framer-motion';
 import { CustomerData } from '@/types/CustomerData';
 import { BlastMessageData } from '@/types/BlastMessageData';
 import { SentMessageData } from '@/types/SentMessageData';
@@ -22,6 +23,7 @@ import { CustomerFilters }  from '@/components/organism/CustomerFilters';
 import Overlay from '@/components/atoms/Overlay';
 import SMSBlastModal from '@/components/organism/SMSBlastModal';
 import AddCustomerForm from '@/components/organism/AddCustomerForm';
+import { SMSIcon } from '@/components/subatomic/Icons/SMSIcon';
 
 interface CustomerProps {
     customersData: CustomerData[];
@@ -30,10 +32,52 @@ interface CustomerProps {
     sentMessagesData: SentMessageData[];
 }
 
+const TitlePlusButton = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        width: 100%;
+        gap: 32px;
+        flex-direction: column;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start
+    }
+`
+
+const PageTitle = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        
+        p {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 39px;
+            color: ${Colors.neutral700};
+        }
+    }
+
+    @media ${StyledMediaQuery.S} {
+        p {
+            font-size: 40px;
+            line-height: 48px;
+        }
+    }
+
+    @media ${StyledMediaQuery.L} {
+        p {
+            font-size: 48px;
+            line-height: 58px;
+        }
+    }
+`
+
 const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
     display: flex;
-    gap: 0px;
+    gap: 32px;
     flex-direction: column;
     padding: 24px 16px;
     width: 100vw;
@@ -42,8 +86,29 @@ const FlexDiv = styled.div`
 }
 `
 
-const ButtonWrapper = styled.div`
-    align-self: flex-start; 
+const ButtonWrapper = motion(styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: none;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        display: flex;
+        align-self: flex-start; 
+        position: fixed;
+        right: 24px;
+        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.32);
+    }
+`);
+
+const AddCusButtonWrapper = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        width: 100%;
+        align-self: flex-start; 
+    }
+
+    @media ${StyledMediaQuery.S} {
+        width: auto;
+    }
 `;
 
 const TableAndSearch = styled.div`
@@ -51,8 +116,12 @@ const TableAndSearch = styled.div`
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: 40px;
+        gap: 24px;
         align-self: stretch;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        gap: 40px;
     }
 `
 
@@ -63,6 +132,76 @@ const SearchAndFilters = styled.div`
         align-items: flex-start;
         gap: 32px;
         align-self: stretch;
+    }
+`
+
+const SelectedCustomersLabel = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        p {
+            font-size: 16px;
+            line-height: 19px;
+            font-weight: 800;
+            color: ${Colors.neutral600};
+        }
+    }
+
+    @media ${StyledMediaQuery.XS} {
+        p {
+            font-size: 20px;
+            line-height: 24px;
+        }
+    }
+`
+
+const LabelPlusCells = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+    }
+`
+
+const BlastIconButton = motion(styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        position: fixed;
+        z-index: 101;
+        bottom: 16px;
+        left: 16px;
+        width: 72px;
+        height: 72px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 40px;
+        background: ${Colors.success700};
+        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.32);
+
+        svg {
+            width: 48px;
+            height: 48px;
+        }
+    }
+
+    @media ${StyledMediaQuery.L} {
+        display: none;
+    }
+`)
+
+const HideShowFilters = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        padding-bottom: 0px;
+        align-items: flex-start;
+        gap: 10px;
+        border-bottom: 1px solid ${Colors.neutral600};
+        p {
+            font-size: 20px;
+            line-height: 24px;
+            font-weight: 500;
+            color: ${Colors.neutral600};
+        }
     }
 `
 
@@ -139,8 +278,8 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
     const [isBlastModalOpen, setIsBlastModalOpen] = useState(false);
     const mostCommonAreaCode = getMostCommonAreaCode(customersData);
-
     const [isAddCustomerFormOpen, setIsAddCustomerFormOpen] = useState(false);
+    const [showFilters, setShowFilters] = useState(false);
 
     const [filters, setFilters] = useState<Record<FilterType, FilterValue>>({
         [FilterType.POINTS]: { value: '1', active: false },
@@ -151,6 +290,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         [FilterType.SIGN_UP_DATE]: { value: '24 Hours', active: false },
         // initialize other filters here if needed
     });
+
 
     useEffect(() => {
         fetchData();
@@ -180,6 +320,10 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         setIsAddCustomerFormOpen(prevState => !prevState);
     }
 
+    const toggleFilters = () => {
+        setShowFilters(prevState => !prevState);
+    }
+
     const filteredCustomers = customersData.filter(customer => {
         if (!customer.fullName.toLowerCase().includes(newCustomerSearch.toLowerCase())) {
             return false;
@@ -206,27 +350,52 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                 <Toast key="toast" />
             )}
             </AnimatePresence>
-            <GlobalStyle />
-            {selectedCustomers.length > 0 && (
-                <ButtonWrapper>
-                    <Button
-                        label='Send SMS Blast'
-                        buttonTypeVariant="smsBlast"
-                        sizeVariant="large"
-                        buttonWidthVariant="content"
+            <AnimatePresence>
+                {selectedCustomers.length > 0 && (
+                    <ButtonWrapper
+                        initial={{ bottom: "0px", opacity: 0 }}  // initial state (hidden to the right)
+                        animate={{ bottom: "24px", opacity: 1 }}  // end state (appears from the right)
+                        exit={{ bottom: "0px", opacity: 0 }}  // exit state (disappears to the right)
+                        transition={{ duration: 0.4, ease: [0.88, 0, 0.16, 1] }} // animation takes 400ms with easeInOut easing
+                    >
+                        <Button
+                            label='Send SMS Blast'
+                            buttonTypeVariant="smsBlast"
+                            sizeVariant="large"
+                            buttonWidthVariant="content"
+                            onClick={toggleBlastModal}
+                        />
+                    </ButtonWrapper>
+                )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {selectedCustomers.length > 0 && (
+                    <BlastIconButton
                         onClick={toggleBlastModal}
+                        initial={{ bottom: "0px", opacity: 0 }}  // initial state (hidden to the right)
+                        animate={{ bottom: "16px", opacity: 1 }}  // end state (appears from the right)
+                        exit={{ bottom: "0px", opacity: 0 }}  // exit state (disappears to the right)
+                        transition={{ duration: 0.4, ease: [0.88, 0, 0.16, 1] }} // animation takes 400ms with easeInOut easing
+                    >
+                       <SMSIcon fill={Colors.shades100} />
+                   </BlastIconButton>
+                )}
+            </AnimatePresence>
+            <GlobalStyle />
+            <TitlePlusButton>
+                <PageTitle>
+                    <Text text='Customers' />
+                </PageTitle>
+                <AddCusButtonWrapper>
+                    <Button
+                        label='Add New Customer'
+                        buttonTypeVariant="primary"
+                        sizeVariant="large"
+                        buttonWidthVariant="fill"
+                        onClick={toggleAddNewCustomerModal}
                     />
-                </ButtonWrapper>
-            )}
-            <ButtonWrapper>
-                <Button
-                    label='Add New Customer'
-                    buttonTypeVariant="primary"
-                    sizeVariant="large"
-                    buttonWidthVariant="content"
-                    onClick={toggleAddNewCustomerModal}
-                />
-            </ButtonWrapper>
+                </AddCusButtonWrapper>
+            </TitlePlusButton>
             <TableAndSearch>
                 <SearchAndFilters>
                     <SearchBar
@@ -235,17 +404,29 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                         onChange={(value) => setNewCustomerSearch(value)}
                         value={newCustomerSearch}
                     />
-                    <CustomerFilters
-                        areaCodeOptions={areaCodeOptions}
-                        filters={filters}
-                        setFilters={setFilters}
-                    />
+                    {showFilters && (
+                        <CustomerFilters
+                            areaCodeOptions={areaCodeOptions}
+                            filters={filters}
+                            setFilters={setFilters}
+                        />
+                    )}
+                <HideShowFilters onClick={toggleFilters}>
+                    <Text text={showFilters ? 'Hide Filters' : 'Show Filters'} />
+                </HideShowFilters>
                 </SearchAndFilters>
-                <CustomerCells
-                    customersData={filteredCustomers}
-                    onCustomerSelection={handleCustomerSelection}
-                    selectedCustomers={selectedCustomers}
-                />
+                <LabelPlusCells>
+                    {selectedCustomers.length > 0 && (
+                        <SelectedCustomersLabel>
+                            <Text text={`${selectedCustomers.length} customer(s) selected`} />
+                        </SelectedCustomersLabel>
+                    )}
+                    <CustomerCells
+                        customersData={filteredCustomers}
+                        onCustomerSelection={handleCustomerSelection}
+                        selectedCustomers={selectedCustomers}
+                    />
+                </LabelPlusCells>
             </TableAndSearch>
         </FlexDiv>
     );

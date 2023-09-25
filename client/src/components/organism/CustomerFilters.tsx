@@ -11,17 +11,20 @@ interface CustomerFiltersProps {
   }
 
   const FiltersContainer = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 32px;
+    @media ${StyledMediaQuery.XS} {
+        display: none;
+    }
 
-    @media (min-width: 768px) { /* Tablet breakpoint */
+    @media ${StyledMediaQuery.S} {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
         > div {
             flex: 1 1 calc(50% - 32px);  /* 2 in a row */
         }
     }
 
-    @media (min-width: 1024px) { /* Desktop breakpoint */
+    @media ${StyledMediaQuery.L} {
         > div {
             flex: 1 1 calc(33.333% - 32px); /* 3 in a row */
         }
