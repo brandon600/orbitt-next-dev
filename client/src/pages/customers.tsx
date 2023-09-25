@@ -129,7 +129,10 @@ const SearchAndFilters = styled.div`
     }
 
 function Customers( { customersData, receivedBlastsData, visitsData, sentMessagesData }: CustomerProps) {
-    const { data, fetchData, toast, showToast, hideToast } = useStore();
+    const { 
+        data, fetchData, toast, 
+        hideToast, showToast 
+      } = useStore((state: AppState) => state);
 
     const areaCodeOptions = useUniqueAreaCodes(customersData);
     const [newCustomerSearch, setNewCustomerSearch] = useState<string>("");
@@ -197,6 +200,11 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
             </AnimatePresence>
             <AnimatePresence>
             { (isBlastModalOpen || isAddCustomerFormOpen ) && <Overlay />}
+            </AnimatePresence>
+            <AnimatePresence>
+            {toast.visible && (
+                <Toast key="toast" />
+            )}
             </AnimatePresence>
             <GlobalStyle />
             {selectedCustomers.length > 0 && (
