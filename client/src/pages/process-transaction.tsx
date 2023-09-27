@@ -6,8 +6,11 @@ import StyledMediaQuery from '../constants/StyledMediaQuery';
 import Button from '../components/atoms/Button';
 import Colors from '@/constants/Colors';
 import GlobalStyle from '../GlobalStyle';
+import Toast from '@/components/atoms/Toast';
 import { useStore, AppState } from '../store/store'; // Import your store
 import { AnimatePresence } from 'framer-motion';
+import FoundCustomerModal from '@/components/molecules/FoundCustomerModal';
+import Overlay from '@/components/atoms/Overlay';
 
 const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
@@ -120,20 +123,44 @@ const ProcessTransaction = () => {
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [customer, setCustomer] = useState<any>(null);
     const [isPhoneNumberValid, setPhoneNumberValid] = useState<boolean>(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { 
+        data, fetchData, toast, 
+        hideToast, showToast 
+      } = useStore((state: AppState) => state);
 
-    const handleSearchCustomer = async () => {
+
+      const handleSearchCustomer = async () => {
         try {
             const customerData = await fetchCustomer(phoneNumber);
             setCustomer(customerData);
-            console.log(customerData);
+            setIsModalOpen(true); // Show modal when customer is found
         } catch (error) {
-            // Handle error like showing an error message to the user
+            const err = error as Error; // Type assertion
+    
+            if (err.message === 'Customer not found') {
+                console.error('Error:', err);
+                showToast(`Error: No Customer found.`, 'error');
+            } else {
+                // Handle other errors as needed
+                showToast(`Error: Something wrong happened!`, 'error');
+            }
         }
     };
-    
 
     return (
         <FlexDiv>
+            <AnimatePresence>
+                {toast.visible && (
+                    <Toast key="toast" />
+                )}
+            </AnimatePresence>
+            <FoundCustomerModal
+                isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} customer={customer}
+            />
+            <AnimatePresence>
+            { (isModalOpen) && <Overlay />}
+            </AnimatePresence>
             <GlobalStyle />
             <ProcessTransactionContainer>
                 <TitlePlusSubhead>
