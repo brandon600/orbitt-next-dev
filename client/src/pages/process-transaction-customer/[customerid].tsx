@@ -16,7 +16,7 @@ import DataCard from '@/components/atoms/DataCard';
 import CustomerVisit from '@/components/molecules/CustomerVisit';
 import { VisitType } from '@/components/molecules/CustomerVisit';
 import { VisitData } from '@/types/VisitData';
-import Pill from '@/components/atoms/Pill';
+import PillBar from '@/components/molecules/PillBar';
 
 interface ProcessTransactionCustomerProps {
     customer: CustomerData | null;
@@ -162,6 +162,12 @@ const PTCFields = styled.div`
     }
 `;
 
+const PTCOption = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+    }
+`;
+
 
 
 export async function getServerSideProps(context: any) {
@@ -205,7 +211,14 @@ function formatPhoneNumber(number: string) {
     return `(${areaCode}) ${centralOfficeCode}-${stationCode}`;
 }
 
+
 const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({ customer }) => {
+    const [activeOption, setActiveOption] = useState<string>('Give Points');
+
+    const handleActivePillChange = (activeLabel: string) => {
+        setActiveOption(activeLabel);
+    };
+
     if (!customer) {
         return <p>Loading...</p>;
     }
@@ -253,8 +266,19 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                 </PTCAllCustomerInfo>
             </PTCTopContent>
             <PTCBottomContent>
-                <PTCPillBar>
-                </PTCPillBar>
+                <PillBar
+                        options={['Give Points', 'Redeem Rewards', /* ... other labels ... */]}
+                        onActiveChange={handleActivePillChange}
+                    />
+              <PTCOption>
+                    {
+                        activeOption === 'Give Points' ? 
+                        <p>Give Points</p> : 
+                        activeOption === 'Redeem Rewards' ?
+                        <p>Redeem Rewards</p> :
+                        null
+                    }
+                </PTCOption>
                 <PTCFieldsAndButton>
                     <PTCFields>
                     </PTCFields>
