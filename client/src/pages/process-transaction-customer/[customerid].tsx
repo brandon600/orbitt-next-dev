@@ -11,15 +11,18 @@ import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
 import io from "socket.io-client";
 import { CustomerData } from '@/types/CustomerData';
+import { RewardData } from '@/types/RewardData';
 import { IOSBackIcon } from '@/components/subatomic/Icons/IOSBackIcon';
 import DataCard from '@/components/atoms/DataCard';
 import CustomerVisit from '@/components/molecules/CustomerVisit';
 import { VisitType } from '@/components/molecules/CustomerVisit';
 import { VisitData } from '@/types/VisitData';
 import PillBar from '@/components/molecules/PillBar';
+import RedeemRewardCard from '@/components/molecules/RedeemRewardCard';
 
 interface ProcessTransactionCustomerProps {
     customer: CustomerData | null;
+    rewardsData: RewardData[];
 }
 
 
@@ -139,13 +142,6 @@ const PTCBottomContent = styled.div`
     }
 `;
 
-const PTCPillBar = styled.div`
-    @media ${StyledMediaQuery.XS} {
-        display: flex;
-        gap: 8px;
-    }
-`;
-
 const PTCFieldsAndButton = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
@@ -165,6 +161,7 @@ const PTCFields = styled.div`
 const PTCOption = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
+        flex-direction: column;
     }
 `;
 
@@ -174,16 +171,22 @@ export async function getServerSideProps(context: any) {
     const { customerid } = context.params;
     try {
         const customerResponse = await fetch(`http://localhost:5000/customers/${customerid}`);
-
         if (!customerResponse.ok) {
             throw new Error('Failed to fetch data');
         }
-
         const customer: CustomerData = await customerResponse.json();
+
+        const rewardsResponse = await fetch('http://localhost:5000/current-active-rewards');
+
+        if (!rewardsResponse.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const rewardsData = await rewardsResponse.json();
 
         return {
             props: {
                 customer,
+                rewardsData,
             },
         };
     } catch (error) {
@@ -191,6 +194,7 @@ export async function getServerSideProps(context: any) {
         return {
             props: {
                 customer: null,
+                rewardsData: [],
             },
         };
     }
@@ -212,7 +216,7 @@ function formatPhoneNumber(number: string) {
 }
 
 
-const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({ customer }) => {
+const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({ customer, rewardsData }) => {
     const [activeOption, setActiveOption] = useState<string>('Give Points');
 
     const handleActivePillChange = (activeLabel: string) => {
@@ -235,6 +239,9 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
     } else {
         formattedBirthday = 'N/A';
     }
+
+    console.log(rewardsData);
+    const sortedRewardsData = [...rewardsData].sort((a, b) => a.rewardCost - b.rewardCost);
 
     return (
         <FlexDiv>
@@ -271,22 +278,29 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                         onActiveChange={handleActivePillChange}
                     />
               <PTCOption>
-                    {
-                        activeOption === 'Give Points' ? 
-                        <p>Give Points</p> : 
-                        activeOption === 'Redeem Rewards' ?
-                        <p>Redeem Rewards</p> :
-                        null
-                    }
-                </PTCOption>
-                <PTCFieldsAndButton>
+              {
+                    activeOption === 'Give Points' ? 
+                    <PTCFieldsAndButton>
                     <PTCFields>
                     </PTCFields>
                     <Button
                         label="Process Transaction"
                         onClick={() => console.log('clicked')}
                     />
-                </PTCFieldsAndButton>
+                </PTCFieldsAndButton> 
+                : 
+                    activeOption === 'Redeem Rewards' ?
+                    sortedRewardsData.map(reward => 
+                        <RedeemRewardCard 
+                            key={reward.id}
+                            reward={reward} 
+                            customerPoints={customer.rewardNumber}
+                            onClick={() => console.log(`Clicked on reward: ${reward.rewardName}`)} 
+                        />
+                    ) :
+                    null
+                }
+                </PTCOption>
                 </PTCBottomContent>
         </FlexDiv>
     );
