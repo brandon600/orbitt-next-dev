@@ -324,6 +324,10 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         setShowFilters(prevState => !prevState);
     }
 
+    const deleteIt = () => {
+        console.log('delete it');
+    }
+
     const filteredCustomers = customersData.filter(customer => {
         if (!customer.fullName.toLowerCase().includes(newCustomerSearch.toLowerCase())) {
             return false;
@@ -338,6 +342,15 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     
     return (
         <FlexDiv>
+            <AddCusButtonWrapper>
+            <Button
+                buttonTypeVariant="error"
+                sizeVariant="large"
+                label="Delete"
+                buttonWidthVariant="fill"
+                onClick={deleteIt}
+            />
+            </AddCusButtonWrapper>
             { (isBlastModalOpen ) && <SMSBlastModal onClose={toggleBlastModal} selectedCustomers={selectedCustomers} />}
             <AnimatePresence>
                 {isAddCustomerFormOpen && <AddCustomerForm onClose={handleAddCustomerFormClose} />}

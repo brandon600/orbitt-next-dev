@@ -208,6 +208,7 @@ const RCVisits = styled.div`
         p {
             font-size: 16px;
             line-height: 19px;
+            font-weight: 500;
             color: ${Colors.neutral700};
         }
     }
@@ -228,6 +229,7 @@ const RCSUDate = styled.div`
         p {
             font-size: 16px;
             line-height: 19px;
+            font-weight: 500;
             color: ${Colors.neutral700};
         }
     }
@@ -244,6 +246,7 @@ const RCLTDate = styled.div`
         p {
             font-size: 16px;
             line-height: 19px;
+            font-weight: 500;
             color: ${Colors.neutral700};
         }
     }
