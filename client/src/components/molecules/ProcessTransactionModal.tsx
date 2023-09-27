@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 const ModalContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
         position: fixed;
-        z-index: 910;
+        z-index: 920;
         display: flex;
         left: 24px;
         right: 24px;
@@ -85,16 +85,16 @@ const ModalName = styled.div`
         display: flex;
         color: ${Colors.neutral600};
         p {
-            font-size: 20px;
-            font-weight: 500;
-            line-height: 24px;
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 29px;
         }
     }
 
     @media ${StyledMediaQuery.S} {
         p {
             font-size: 32px;
-            font-weight: 500;
+            font-weight: 800;
             line-height: 39px;
         }
     }
@@ -113,9 +113,9 @@ const ModalNumber = styled.div`
 
     @media ${StyledMediaQuery.S} {
         p {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 500;
-            line-height: 39px;
+            line-height: 29px;
         }
     }
 `;
@@ -144,7 +144,7 @@ const ModalCloseIcon = styled.div`
         top: 24px;
         right: 24px;
     }
-`
+`;
 
 const BottomButtons = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -156,7 +156,51 @@ const BottomButtons = styled.div`
     }
 `;
 
-interface FoundCustomerModalProps {
+const PTMTopContent = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+`;
+
+const PTMMidConent = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+`;
+
+const PTMMidContent1 = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        color: ${Colors.neutral500};
+        p {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 19px; 
+            text-align: center;
+        }
+    }
+`;
+
+const PTMMidContent2 = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        color: ${Colors.neutral700};
+        p {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 19px;
+            text-align: center;
+        }
+    }
+`;
+
+interface ProcessTransactionModalProps {
     isOpen: boolean;
     onClose: () => void;
     customer?: {
@@ -164,6 +208,7 @@ interface FoundCustomerModalProps {
         fullPhoneNumber: string;
         customerid: string;
     };
+    content: ReactNode;
 }
 
 function formatPhoneNumber(number: string) {
@@ -180,11 +225,11 @@ function formatPhoneNumber(number: string) {
     return `(${areaCode}) ${centralOfficeCode}-${stationCode}`;
 }
 
-const FoundCustomerModal: React.FC<FoundCustomerModalProps> = ({ isOpen, onClose, customer }) => {
+const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpen, onClose, customer }) => {
     const router = useRouter();
     if (!isOpen || !customer) return null;
 
-    const handleProcessTransaction = () => {
+    const confirmTransactionProcess = () => {
         console.log('customer', customer);
         console.log('customer.customerId', customer.customerid);
         if (customer && customer.customerid) {
@@ -202,8 +247,8 @@ const FoundCustomerModal: React.FC<FoundCustomerModalProps> = ({ isOpen, onClose
                     fill={Colors.neutral700}
                 />
             </ModalCloseIcon>
-            <IconPlusText>
-                <ModalIcon>
+            <PTMTopContent>
+            <ModalIcon>
                     <PersonIcon 
                         fill={Colors.neutral600}
                     />
@@ -216,16 +261,28 @@ const FoundCustomerModal: React.FC<FoundCustomerModalProps> = ({ isOpen, onClose
                     <Text text={formattedNumber} />
                     </ModalNumber>
                 </ModalNameNumber>
-            </IconPlusText>
+            </PTMTopContent>
+            <PTMMidConent>
+            <PTMMidContent1>
+                <Text
+                    text="Are you sure you would like to give this customer 1 reward point and complete this transaction?"
+                />
+            </PTMMidContent1>
+            <PTMMidContent2>
+                <Text
+                    text="The customer’s new point balance will be 12."
+                />
+            </PTMMidContent2>
+            </PTMMidConent>
             <BottomButtons>
                 <Button
-                    label='Process Transaction'
+                    label='Yes, Confirm'
                     buttonTypeVariant='primary'
                     buttonWidthVariant='fill'
-                    onClick={handleProcessTransaction}
+                    onClick={confirmTransactionProcess}
                 />
                 <Button
-                    label='Return to Search'
+                    label='No, Go Back'
                     buttonTypeVariant='secondary'
                     buttonWidthVariant='fill'
                     onClick={onClose}
@@ -235,4 +292,4 @@ const FoundCustomerModal: React.FC<FoundCustomerModalProps> = ({ isOpen, onClose
     );
 };
 
-export default FoundCustomerModal;
+export default ProcessTransactionModal;

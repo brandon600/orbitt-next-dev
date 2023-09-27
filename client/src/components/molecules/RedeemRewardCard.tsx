@@ -7,7 +7,7 @@ import { RewardData } from '@/types/RewardData';
 
 interface RedeemRewardCardProps {
     reward: RewardData; 
-    onClick: () => void; 
+    onClick: (rewardName: string) => void;
     customerPoints: number; 
 }
 
@@ -89,6 +89,10 @@ const RRCBottomButton = styled.div`
 `;
 
 const RedeemRewardCard: React.FC<RedeemRewardCardProps> = ({ reward, onClick, customerPoints }) => {
+    const handleRedeemClick = () => {
+        onClick(reward.rewardName);
+    };
+
     return (
         <RedeemRewardCardContainer isAffordable={customerPoints >= reward.rewardCost}>
             <RRCRewardInfo>
@@ -106,7 +110,9 @@ const RedeemRewardCard: React.FC<RedeemRewardCardProps> = ({ reward, onClick, cu
                     />
                 </RRCValueAndCost>
             </RRCRewardInfo>
-            <RRCBottomButton>
+            <RRCBottomButton
+                onClick={handleRedeemClick}
+            >
                 <Text
                     text="Redeem Reward"
                 />
