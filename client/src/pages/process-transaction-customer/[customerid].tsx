@@ -19,6 +19,8 @@ import { VisitType } from '@/components/molecules/CustomerVisit';
 import { VisitData } from '@/types/VisitData';
 import PillBar from '@/components/molecules/PillBar';
 import RedeemRewardCard from '@/components/molecules/RedeemRewardCard';
+import ProcessTransactionModal from '@/components/molecules/ProcessTransactionModal';
+import Overlay from '@/components/atoms/Overlay';
 
 interface ProcessTransactionCustomerProps {
     customer: CustomerData | null;
@@ -36,7 +38,7 @@ const FlexDiv = styled.div`
         padding: 24px 16px;
         box-sizing: border-box;
     }
-`
+`;
 
 const PTCTopContent = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -218,9 +220,16 @@ function formatPhoneNumber(number: string) {
 
 const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({ customer, rewardsData }) => {
     const [activeOption, setActiveOption] = useState<string>('Give Points');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState<React.ReactNode | null>(null);
 
     const handleActivePillChange = (activeLabel: string) => {
         setActiveOption(activeLabel);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalContent(null);
     };
 
     if (!customer) {
@@ -245,6 +254,13 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
 
     return (
         <FlexDiv>
+                <ProcessTransactionModal
+                    isOpen={isModalOpen} 
+                    onClose={closeModal} 
+                    content={modalContent}
+                    customer={customer}
+                />
+                { (isModalOpen) && <Overlay />}
             <GlobalStyle />
             <PTCTopContent>
                 <PTCBackButton>
@@ -285,7 +301,10 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                     </PTCFields>
                     <Button
                         label="Process Transaction"
-                        onClick={() => console.log('clicked')}
+                        onClick={() => {
+                            setModalContent(<div>Content for the Give Points modal</div>);
+                            setIsModalOpen(true);
+                        }}
                     />
                 </PTCFieldsAndButton> 
                 : 
@@ -295,7 +314,10 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                             key={reward.id}
                             reward={reward} 
                             customerPoints={customer.rewardNumber}
-                            onClick={() => console.log(`Clicked on reward: ${reward.rewardName}`)} 
+                            onClick={(rewardName: string) => {
+                                setModalContent(<div>You clicked on reward: {rewardName}</div>);
+                                setIsModalOpen(true);
+                            }}
                         />
                     ) :
                     null
