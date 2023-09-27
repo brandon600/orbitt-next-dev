@@ -16,6 +16,7 @@ import DataCard from '@/components/atoms/DataCard';
 import CustomerVisit from '@/components/molecules/CustomerVisit';
 import { VisitType } from '@/components/molecules/CustomerVisit';
 import { VisitData } from '@/types/VisitData';
+import Pill from '@/components/atoms/Pill';
 
 interface ProcessTransactionCustomerProps {
     customer: CustomerData | null;
@@ -145,21 +146,6 @@ const PTCPillBar = styled.div`
     }
 `;
 
-const PTCPill = styled.div`
-    @media ${StyledMediaQuery.XS} {
-        display: flex;
-        height: 40px;
-        padding: 0px 20px;
-        justify-content: center;
-        align-items: center;
-        p {
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 19px;
-        }
-    }
-`;
-
 const PTCFieldsAndButton = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
@@ -268,12 +254,6 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
             </PTCTopContent>
             <PTCBottomContent>
                 <PTCPillBar>
-                    <PTCPill>
-                        <p>Give Points</p>
-                    </PTCPill>
-                    <PTCPill>
-                        <p>Redeem Rewards</p>
-                    </PTCPill>
                 </PTCPillBar>
                 <PTCFieldsAndButton>
                     <PTCFields>
