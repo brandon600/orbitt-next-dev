@@ -2,6 +2,46 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
+@font-face {
+  font-family: 'Avenir';
+  src: url('../public/Avenir-Book.woff2') format('woff2'),
+       url('../public/Avenir-Book.woff') format('woff');
+  font-weight: 350;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Avenir';
+  src: url('../public/Avenir-Roman.woff2') format('woff2'),
+       url('../public/Avenir-Roman.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Avenir';
+  src: url('../public/Avenir-Medium.woff2') format('woff2'),
+       url('../public/Avenir-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Avenir';
+  src: url('../public/Avenir-Heavy.woff2') format('woff2'),
+       url('../public/Avenir-Heavy.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Avenir';
+  src: url('../public/Avenir-Black.woff2') format('woff2'),
+       url('../public/Avenir-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+}
+
   body {
     display: flex;
     margin: 0;
@@ -21,6 +61,10 @@ const GlobalStyle = createGlobalStyle`
     display: flex;
     flex-direction: column;
     margin-top: 0em;
+}
+
+body {
+  font-family: 'Avenir', sans-serif;
 }
 
 /* Reset default input styles */
@@ -98,7 +142,6 @@ textarea {
     /* Reset default styles for select */
 
 }
-
 `;
 
 export default GlobalStyle;
