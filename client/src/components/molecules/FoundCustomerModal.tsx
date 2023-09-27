@@ -161,11 +161,24 @@ interface FoundCustomerModalProps {
     onClose: () => void;
     customer?: {
         fullName: string;
-        phoneNumber: string;
+        fullPhoneNumber: string;
         customerid: string;
     };
 }
 
+function formatPhoneNumber(number: string) {
+    const strNum = number
+    
+    if (strNum.length !== 11) {
+        return "Invalid Number";
+    }
+
+    const areaCode = strNum.substring(1, 4);  // get the digits for area code
+    const centralOfficeCode = strNum.substring(4, 7); // get the next three digits
+    const stationCode = strNum.substring(7); // get the last four digits
+
+    return `(${areaCode}) ${centralOfficeCode}-${stationCode}`;
+}
 
 const FoundCustomerModal: React.FC<FoundCustomerModalProps> = ({ isOpen, onClose, customer }) => {
     if (!isOpen || !customer) return null;
@@ -178,6 +191,9 @@ const FoundCustomerModal: React.FC<FoundCustomerModalProps> = ({ isOpen, onClose
             router.push(`/process-transaction-customer/${customer.customerid}`);
         }
     };
+
+    const formattedNumber = formatPhoneNumber(customer.fullPhoneNumber);
+    console.log(formattedNumber);
 
     return (
         <ModalContainer onClick={onClose}>
@@ -197,7 +213,7 @@ const FoundCustomerModal: React.FC<FoundCustomerModalProps> = ({ isOpen, onClose
                         <Text text={customer.fullName} />
                     </ModalName>
                     <ModalNumber>
-                    <Text text={customer.phoneNumber} />
+                    <Text text={formattedNumber} />
                     </ModalNumber>
                 </ModalNameNumber>
             </IconPlusText>
