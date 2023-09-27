@@ -21,6 +21,14 @@ module.exports = (app) => {
     res.json(currentOutboundRewards);
     });
 
+      //Get Reward Offerings
+      app.get('/current-active-rewards/', async (req, res) => {
+        const rcs = await Reward.find({user: '1680735892067', rewardActive: true})
+        .catch(err => console.log(err));;
+        const currentRewards = Array.from(rcs);
+        res.json(currentRewards);
+      });
+
     app.post('/add-reward/', (req, res) => {
       const { rewardDetails, user } = req.body;
       console.log(req.body)
