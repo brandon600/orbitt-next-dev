@@ -5,6 +5,46 @@ import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Colors from '../../constants/Colors';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import NavItem from '../atoms/NavItem';
+import { DashboardIcon } from '../subatomic/Icons/DashboardIcon';
+import { GroupsIcon } from '../subatomic/Icons/GroupsIcon';
+import { RewardIcon } from '../subatomic/Icons/RewardIcon';
+import { MailIcon } from '../subatomic/Icons/MailIcon';
+import { ProcessTransactionIcon } from '../subatomic/Icons/ProcessTransactionIcon';
+
+const navItems = [
+    {
+        id: 'dashboard',
+        label: 'Dashboard',
+        href: '/dashboard',
+        svgComponent: DashboardIcon // replace this with the SVG for "Customers"
+      },
+    {
+      id: 'customers',
+      label: 'Customers',
+      href: '/customers',
+      svgComponent: GroupsIcon // replace this with the SVG for "Customers"
+    },
+    {
+        id: 'rewards',
+        label: 'Rewards',
+        href: '/rewards',
+        svgComponent: RewardIcon // replace this with the SVG for "Messages"
+      },
+    {
+      id: 'messages',
+      label: 'Messages',
+      href: '/messages',
+      svgComponent: MailIcon // replace this with the SVG for "Messages"
+    },
+    {
+        id: 'processtransaction',
+        label: 'Process Transaction',
+        href: '/process-transaction',
+        svgComponent: ProcessTransactionIcon // replace this with the SVG for "Messages"
+      }
+    // ... add more items as needed
+  ];
 
 const NavigationBarContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -18,7 +58,7 @@ const NavigationBarContainer = styled.div`
         padding: 12px;
         flex-direction: column;
         gap: 12px;
-        background: ${Colors.neutral400};
+        background: ${Colors.shades100};
         box-sizing: border-box;
         z-index: 1000;
     }
@@ -37,19 +77,7 @@ const ActiveNavItem = styled.div`
   font-weight: bold; // make it stand out
 `;
 
-interface NavItemProps {
-    pageName: string;
-    activePage: string;
-  }
-
-  const renderNavItem = ({ pageName, activePage }: NavItemProps) => {
-    if (pageName === activePage) {
-      return <ActiveNavItem>{pageName}</ActiveNavItem>;
-    }
-    return <div>{pageName}</div>;
-  }
-
-  interface NavigationBarProps {}
+interface NavigationBarProps {}
 
 const NavigationBar: React.FC<NavigationBarProps> = () => {
     const [activePage, setActivePage] = useState<string>('');
@@ -61,12 +89,16 @@ const NavigationBar: React.FC<NavigationBarProps> = () => {
 
     return (
         <NavigationBarContainer>
-                <Link href='/customers' onClick={() => handleTabClick('customers')}>
-                    {renderNavItem({ pageName: 'customers', activePage })}
+            {navItems.map(item => (
+                <Link key={item.id} href={item.href} onClick={() => handleTabClick(item.id)}>
+                    <NavItem
+                        label={item.label}
+                        isActive={activePage === item.id}
+                        fill={activePage === item.id ? Colors.shades100 : Colors.neutral600}
+                        SvgComponent={item.svgComponent}  // Pass the SVG component down here
+                    />
                 </Link>
-                <Link href='/messages' onClick={() => handleTabClick('messages')}>
-                    {renderNavItem({ pageName: 'messages', activePage })}
-                </Link>
+            ))}
         </NavigationBarContainer>
     );
 }
