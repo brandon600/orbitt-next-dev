@@ -232,7 +232,9 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
     const [transactionDetails, setTransactionDetails] = useState<string>('');
     const { data, fetchData, toast, showToast, hideToast } = useStore();
 
-
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const handleActivePillChange = (activeLabel: string) => {
         setActiveOption(activeLabel);
@@ -262,11 +264,6 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
 
     console.log(rewardsData);
     const sortedRewardsData = [...rewardsData].sort((a, b) => a.rewardCost - b.rewardCost);
-
-
-    useEffect(() => {
-        fetchData();
-    }, []);
 
     return (
         <FlexDiv>
