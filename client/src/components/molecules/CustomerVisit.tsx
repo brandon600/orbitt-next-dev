@@ -56,6 +56,7 @@ interface CustomerVisitProps {
         gap: 12px;
         border-radius: 8px;
         background: ${Colors.shades100};
+        box-sizing: border-box;
     }
 
     @media ${StyledMediaQuery.L} {
@@ -81,6 +82,7 @@ const VisitInfoText = styled.div`
 
     @media ${StyledMediaQuery.L} {
         p {
+            color: ${Colors.neutral600};
             font-size: 20px;
             line-height: 24px;
         }

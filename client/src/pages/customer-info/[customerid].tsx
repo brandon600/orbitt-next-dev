@@ -28,7 +28,6 @@ interface CustomerInfoProps {
     } | null;
 }
 
-
 const FlexDiv = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
@@ -38,6 +37,14 @@ const FlexDiv = styled.div`
         gap: 24px;
         padding: 24px 16px;
         box-sizing: border-box;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        padding: 24px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        gap: 32px;
     }
 `
 
@@ -87,13 +94,10 @@ const TopCustomerInfo = styled.div`
         flex-direction: column;
         width: 100%;
         gap: 8px;
+    }
 
-        p {
-            color: ${Colors.neutral600};
-            font-size: 24px;
-            font-weight: 800;
-            line-height: 29px;
-        }
+    @media ${StyledMediaQuery.S} {
+        gap: 12px;
     }
 `
 
@@ -102,13 +106,10 @@ const CustomerInfoDiv = styled.div`
         display: flex;
         flex-direction: column;
         gap: 8px;
+    }
 
-        p {
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 19px;
-            color: ${Colors.neutral700};
-        }
+    @media ${StyledMediaQuery.L} {
+        gap: 12px;
     }
 `
 
@@ -118,7 +119,17 @@ const BottomSection = styled.div`
         flex-direction: column;
         align-items: flex-start;
         gap: 48px;
-        align-self: stretch;
+        width: 100%;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        flex-direction: row;
+        gap: 32px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        flex-direction: column;
+        gap: 40px;
     }
 `
 
@@ -129,6 +140,10 @@ const CustomerStatistics = styled.div`
         align-items: flex-start;
         gap: 16px;
         align-self: stretch;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        flex: 1;
     }
 `
 
@@ -153,6 +168,10 @@ const DataCards = styled.div`
         gap: 12px;
         align-self: stretch;
     }
+
+    @media ${StyledMediaQuery.L} {
+        flex-direction: row;
+    }
 `
 
 const DataCardsRow = styled.div`
@@ -170,7 +189,11 @@ const EditCustomerButton = styled.div`
         display: flex;
         width: 100%;
     }
-`
+
+    @media ${StyledMediaQuery.S} {
+        display: none;
+    }
+`;
 
 const CustomerRecentActivity = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -180,23 +203,24 @@ const CustomerRecentActivity = styled.div`
         gap: 16px;
         align-self: stretch;
     }
-`
+
+    @media ${StyledMediaQuery.S} {
+        flex: 1;
+    }
+`;
 
 const RecentActivityLabel = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
-    }
-`
+        color: ${Colors.neutral600};
 
-const VisitsPlusCTA = styled.div`
-    @media ${StyledMediaQuery.XS} {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 16px;
-        align-self: stretch;
+        p {
+            font-size: 20px;
+            font-weight: 800;
+            line-height: 24px; 
+        }
     }
-`
+`;
 
 const CustomerVisitCells = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -204,9 +228,101 @@ const CustomerVisitCells = styled.div`
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
-        align-self: stretch;
+        width: 100%;
     }
 `
+
+const TopButtons = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+
+    @media ${StyledMediaQuery.XS} {
+        & > :first-child {
+            display: none;
+        }
+    }
+
+    @media ${StyledMediaQuery.S} {
+        & > :first-child {
+            display: flex;
+        }
+    }
+`;
+
+const TCIName = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        
+        p {
+            color: ${Colors.neutral600};
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 29px;
+        }
+    }
+
+    @media ${StyledMediaQuery.S} {
+        p {
+            font-size: 40px;
+            line-height: 48px;
+        }
+    }
+
+    @media ${StyledMediaQuery.L} {
+        p {
+            font-size: 48px;
+            line-height: 58px;
+        }
+    }
+`;
+
+const TCINumber = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        
+        p {
+            color: ${Colors.neutral700};
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 19px;
+        }
+    }
+
+    @media ${StyledMediaQuery.S} {
+        p {
+            font-size: 24px;
+            line-height: 29px;
+        }
+    }
+
+    @media ${StyledMediaQuery.L} {
+        p {
+            font-size: 32px;
+            line-height: 39px;
+        }
+    }
+`;
+
+const TCIBirthday = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        
+        p {
+            color: ${Colors.neutral700};
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 19px;
+        }
+    }
+
+    @media ${StyledMediaQuery.S} {
+        p {
+            font-size: 24px;
+            line-height: 29px;
+        }
+    }
+`;
 
 export async function getServerSideProps(context: any) {
     const { customerid } = context.params;
@@ -262,8 +378,35 @@ function generateVisitInfoText(visit: VisitData): string {
     }
 }
 
+function useBodyScrollLock(isLocked: boolean) {
+    useEffect(() => {
+      if (isLocked) {
+        document.body.style.overflowY = 'hidden';
+      } else {
+        document.body.style.overflowY = 'auto';
+      }
+  
+      return () => {
+        document.body.style.overflowY = 'auto';
+      };
+    }, [isLocked]);
+  }
+
 const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
+    const router = useRouter();
+
+    const handleTransactionClick = () => {
+        if (customer) {
+            router.push(`/process-transaction-customer/${customer.customerid}`);
+        }
+    }
+
+    const handleGoBack = () => {
+        router.back();
+    }
+
     const [showEditForm, setShowEditForm] = useState<boolean>(false);
+    useBodyScrollLock(showEditForm);
     const { 
         data, fetchData, toast,
       } = useStore((state: AppState) => state);
@@ -296,30 +439,49 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
             <GlobalStyle />
             <TopSection>
                 <TopNavigation>
-                    <BackIconDiv>
+                    <BackIconDiv
+                        onClick={handleGoBack}
+                    >
                         <IOSBackIcon fill={Colors.neutral700} />
                     </BackIconDiv>
+                    <TopButtons>
+                    <TopButtonDiv>
+                        <Button
+                            buttonTypeVariant="secondary"
+                            sizeVariant='large'
+                            label="Edit Customer Info"
+                            buttonWidthVariant='content'
+                            onClick={() => setShowEditForm(true)}
+                        />
+                    </TopButtonDiv>
                     <TopButtonDiv>
                         <Button
                             buttonTypeVariant="primary"
                             sizeVariant='large'
                             label="Process Transaction"
                             buttonWidthVariant='content'
-                            onClick={() => console.log('Process Transaction')}
+                            onClick={handleTransactionClick}
                         />
                     </TopButtonDiv>
+                    </TopButtons>
                 </TopNavigation>
                 <TopCustomerInfo>
-                    <Text
-                        text={customer.fullName}
-                    />
+                    <TCIName>
+                        <Text
+                            text={customer.fullName}
+                        />
+                    </TCIName>
                     <CustomerInfoDiv>
-                        <Text
-                            text={formatPhoneNumber(customer.fullPhoneNumber)}
-                        />
-                        <Text
-                            text={customer.fullBirthday}
-                        />
+                        <TCINumber>
+                            <Text
+                                text={formatPhoneNumber(customer.fullPhoneNumber)}
+                            />
+                        </TCINumber>
+                        <TCIBirthday>
+                            <Text
+                                text={customer.fullBirthday}
+                            />
+                        </TCIBirthday>
                     </CustomerInfoDiv>
                 </TopCustomerInfo>
             </TopSection>
@@ -345,7 +507,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
                         </DataCardsRow>
                         <DataCardsRow>
                             <DataCard
-                                label='Points'
+                                label='Points Earned'
                                 number1={customer.starsEarned.toString()}
                                 number2=''
                             />
