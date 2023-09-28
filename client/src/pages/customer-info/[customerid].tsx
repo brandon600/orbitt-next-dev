@@ -16,6 +16,7 @@ import DataCard from '@/components/atoms/DataCard';
 import CustomerVisit from '@/components/molecules/CustomerVisit';
 import { VisitType } from '@/components/molecules/CustomerVisit';
 import { VisitData } from '@/types/VisitData';
+import EditCustomerForm from '@/components/organism/EditCustomerForm';
 
 interface CustomerInfoProps {
     customer: CustomerData | null;
@@ -260,12 +261,17 @@ function generateVisitInfoText(visit: VisitData): string {
 }
 
 const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
+    const [showEditForm, setShowEditForm] = useState<boolean>(false);
+
     if (!customer) {
         return <p>Loading...</p>;
     }
 
     return (
         <FlexDiv>
+            {
+                showEditForm && <EditCustomerForm onClose={() => setShowEditForm(false)} customer={customer} />
+            }
             <GlobalStyle />
             <TopSection>
                 <TopNavigation>
@@ -336,7 +342,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
                         sizeVariant='large'
                         label="Edit Customer Info"
                         buttonWidthVariant='fill'
-                        onClick={() => console.log('Process Transaction')}
+                        onClick={() => setShowEditForm(true)}
                     />
                 </EditCustomerButton>
                 <CustomerRecentActivity>
