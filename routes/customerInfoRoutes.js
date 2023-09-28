@@ -7,6 +7,7 @@ const OutboundReward = mongoose.model('outboundrewards');
 const Visit = mongoose.model('visits');
 const TriggeredMessage = mongoose.model('triggeredmessages');
 const SentMessage = mongoose.model('sentmessages');
+const Reward = mongoose.model('rewards');
 
 const db = require('../config/keys')
 const client = require('twilio')(db.accountSid, db.authToken)
@@ -226,7 +227,279 @@ module.exports = (app) => {
     });
   
     
+
+    /*
+
+      const newVisit = new Visit({
+                _id: new mongoose.Types.ObjectId(),
+                customerid: newCustomer.customerid,
+                customer: newCustomer,
+                userClass: user,
+                userMemberstackId: user.memberstackId,
+                date: uniqid,
+                user: user.userid,
+                visitid: uniqid,
+                customerName: customerFullName,
+                status: true,
+                visitType: 'New User',
+                currentRewardsRedeemed: 0,
+                currentRewardsEarned: signUpRewardValueText,
+                currentRewardsName: 'N/A',
+                currentRewardsValue: 'N/A',
+              });
+
+              */
+
+
+
+              /*
+                        newVisit = new Visit ({
+            _id: new mongoose.Types.ObjectId(),
+            customerid: underid,
+            customer: underClass,
+            userClass: req.user,
+            userMemberstackId: req.user.memberstackId,
+            date: uniqid,
+            user: user,
+            visitid: uniqid,
+            customerName: cusName,
+            status: true,
+            visitType: 'Purchase',
+            currentRewardsRedeemed: 0,
+            currentRewardsName: 'N/A',
+            currentRewardsValue: 'N/A',
+            currentRewardsEarned: newRewardsInt,
+            visitDetails: visitDetails
+          })
+          /
+
+
+          /*
+
+             newVisit = new Visit ({
+            _id: new mongoose.Types.ObjectId(),
+            customerid: underid,
+            customer: underClass,
+            userClass: req.user,
+            userMemberstackId: req.user.memberstackId,
+            date: uniqid,
+            user: user,
+            visitid: uniqid,
+            customerName: cusName,
+            currentRewardsRedeemed: rewardSubtractVar,
+            currentRewardsEarned: 0,
+            currentRewardsName: req.body.props.currentRedeemReward.rewardName,
+            currentRewardsValue: req.body.props.currentRedeemReward.rewardValue,
+            status: true,
+            visitType: 'Reward',
+            visitDetails: visitDetails,
+            redeemedReward: req.body.props.currentRedeemReward
+          })
+
+          */
+
+
+          /*
+
+                  const newSentMessage = new SentMessage({
+                    _id: new mongoose.Types.ObjectId(),
+                    messageNumberId: mySignUpMessage.messageNumberId,
+                    user: user.userid,
+                    userMemberstackId: user.memberstackId,
+                    date: uniqid,
+                    messageTitle: mySignUpMessage.messageTitle,
+                    messageContent: completeSignUpMessage,
+                    messageDelay: 0,
+                    userClass: user,
+                    customersReceived: customersReceivedArray,
+                  });
+                  */
     
+
+    app.post('/give-points', async (req, res) => {
+        const { customerId, points, user, transactionDetails } = req.body;
+        console.log(user)
+
+        try {
+            const { customerId, points, user, transactionDetails } = req.body;
+            const uniqid = Date.now();
+    
+            const customer = await Customer.findOne({ customerid: customerId });
+            if (!customer) {
+                return res.status(400).send({ success: false, message: 'Customer not found.' });
+            }
+    
+            const currentPoints = customer.rewardNumber;
+            const updatedPoints = currentPoints + parseInt(points);
+    
+            customer.rewardNumber = updatedPoints;
+            customer.totalVisits = customer.totalVisits + 1;
+            await customer.save();
+    
+            const visit = new Visit({
+                _id: new mongoose.Types.ObjectId(),
+                customerid: customerId,
+                customer: customer,
+                userClass: user,
+                userMemberstackId: user.memberstackId,
+                date: uniqid,
+                user: user.userid,
+                visitid: uniqid,
+                customerName: customer.fullName,
+                status: true,
+                visitType: 'Purchase',
+                currentRewardsRedeemed: 0,
+                currentRewardsName: 'N/A',
+                currentRewardsValue: 'N/A',
+                currentRewardsEarned: points,
+                visitDetails: transactionDetails
+            });
+    
+            await visit.save();
+    
+            const myPointsMessage = await TriggeredMessage.findOne({ messageTitle: 'Transaction Message', user: user.userid });
+    
+            if (myPointsMessage && myPointsMessage.active) {
+                const messageContent = `Congratulations! You've earned ${points} star(s), bringing your total to ${updatedPoints} star(s). ${myPointsMessage.textMessageCustomText} ${myPointsMessage.textMessageDefaultTextEnd1}`;
+                const sendNumber = customer.fullPhoneNumber;
+
+                await client.messages.create({
+                    body: messageContent,
+                    from: `+${user.messagingPhoneNumber}`, // assuming userClass has the messagingPhoneNumber
+                    to: sendNumber
+                });
+    
+                const newSentMessage = new SentMessage({
+                    _id: new mongoose.Types.ObjectId(),
+                    messageNumberId: myPointsMessage.messageNumberId,
+                    user: user.userid,
+                    userMemberstackId: user.memberstackId,
+                    date: uniqid,
+                    messageTitle: myPointsMessage.messageTitle,
+                    messageContent: messageContent,
+                    messageDelay: 0,
+                    userClass: user,
+                    customersReceived: [customer],
+                });
+    
+                await newSentMessage.save();
+    
+                const userToUpdate = await User.findOne({ userid: customer.user });
+                userToUpdate.totalMessagesSent += 1;
+                userToUpdate.monthlyMessagesLeft -= 1;
+                await userToUpdate.save();
+            } else {
+                console.log('Points Given message was not active. Did not send.');
+            }
+            // Link the visit to the customer
+            customer.visits.unshift(visit);
+            await customer.save();
+    
+            res.status(200).send({ success: true, message: 'Points added successfully.' });
+    
+        } catch (err) {
+            console.error(err);
+            res.status(500).send({ success: false, message: 'Error processing request.' });
+        }
+    });
+
+
+
+    app.post('/redeem-reward', async (req, res) => {
+        try {
+            const { customerId, rewardId, user } = req.body;
+            const uniqid = Date.now();
+    
+            const customer = await Customer.findOne({ customerid: customerId });
+            if (!customer) {
+                return res.status(400).send({ success: false, message: 'Customer not found.' });
+            }
+    
+            const reward = await Reward.findOne({ rewardid: rewardId });
+            if (!reward) {
+                return res.status(400).send({ success: false, message: 'Reward not found.' });
+            }
+    
+            const currentPoints = customer.rewardNumber;
+            if (currentPoints < reward.rewardCost) {
+                return res.status(400).send({ success: false, message: 'Insufficient reward points.' });
+            }
+    
+            const updatedPoints = currentPoints - reward.rewardCost;
+            customer.rewardNumber = updatedPoints;
+            customer.totalVisits = customer.totalVisits + 1;
+            await customer.save();
+    
+            const visit = new Visit({
+                _id: new mongoose.Types.ObjectId(),
+                customerid: customerId,
+                customer: customer,
+                userClass: user,
+                userMemberstackId: user.memberstackId,
+                date: uniqid,
+                user: user.userid,
+                visitid: uniqid,
+                customerName: customer.fullName,
+                status: true,
+                visitType: 'Reward',
+                currentRewardsRedeemed: reward.rewardCost,
+                currentRewardsName: reward.rewardName,
+                currentRewardsValue: reward.rewardCost.toString(),
+                currentRewardsEarned: 0, // As no rewards are earned while redeeming
+                visitDetails: "Reward redeemed", // You might want to customize this as per requirements
+                redeemedReward: reward
+            });
+    
+            await visit.save();
+    
+            const myRedeemMessage = await TriggeredMessage.findOne({ messageTitle: 'Reward Redeemed Message', user: user.userid }); // This might need a different title, update accordingly
+    
+            if (myRedeemMessage && myRedeemMessage.active) {
+                const messageContent = `Thank you for being a loyal customer. You've just redeemed ${reward.rewardCost} point(s), bringing your new total to ${updatedPoints} points. ${myRedeemMessage.textMessageCustomText} ${myRedeemMessage.textMessageDefaultTextEnd1}`;
+    
+                const sendNumber = customer.fullPhoneNumber;
+    
+                await client.messages.create({
+                    body: messageContent,
+                    from: `+${user.messagingPhoneNumber}`, 
+                    to: sendNumber
+                });
+    
+                const newSentMessage = new SentMessage({
+                    _id: new mongoose.Types.ObjectId(),
+                    messageNumberId: myRedeemMessage.messageNumberId,
+                    user: user.userid,
+                    userMemberstackId: user.memberstackId,
+                    date: uniqid,
+                    messageTitle: myRedeemMessage.messageTitle,
+                    messageContent: messageContent,
+                    messageDelay: 0,
+                    userClass: user,
+                    customersReceived: [customer],
+                });
+    
+                await newSentMessage.save();
+    
+                const userToUpdate = await User.findOne({ userid: customer.user });
+                userToUpdate.totalMessagesSent += 1;
+                userToUpdate.monthlyMessagesLeft -= 1;
+                await userToUpdate.save();
+            } else {
+                console.log('Reward Redeemed message was not active. Did not send.');
+            }
+    
+            customer.visits.unshift(visit);
+            await customer.save();
+    
+            res.status(200).send({ success: true, message: 'Reward redeemed successfully.' });
+    
+        } catch (err) {
+            console.error(err);
+            res.status(500).send({ success: false, message: 'Error processing request.' });
+        }
+    });
+
+
 
 
         app.get('/users/customer', async (req, res) => {

@@ -7,9 +7,12 @@ import Pill from '../atoms/Pill';  // Assuming the Pill component is in the same
 
 const PillBarContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
-        display: flex;
+        display: inline-flex;
         flex-direction: row;
+        align-items: flex-start;
         height: 40px;
+        border-radius: 24px;
+        background-color:${Colors.neutral200};
     }
 `
 

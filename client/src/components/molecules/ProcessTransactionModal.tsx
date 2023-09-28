@@ -7,6 +7,8 @@ import { PersonIcon } from '../subatomic/Icons/PersonIcon';
 import { CancelIcon } from '../subatomic/Icons/CancelIcon';
 import Button from '../atoms/Button';
 import { useRouter } from 'next/router';
+import { RewardData } from '@/types/RewardData';
+import { useStore, AppState } from '../../store/store'; // Import your store
 
 const ModalContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -200,6 +202,15 @@ const PTMMidContent2 = styled.div`
     }
 `;
 
+const ContentDiv = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 32px;
+    }
+`;
+
 interface ProcessTransactionModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -207,8 +218,12 @@ interface ProcessTransactionModalProps {
         fullName: string;
         fullPhoneNumber: string;
         customerid: string;
+        rewardNumber: number;
     };
-    content: ReactNode;
+    mode?: 'givePoints' | 'redeemReward';
+    reward?: RewardData;
+    pointsGive?: string;
+    transactionDetails?: string;
 }
 
 function formatPhoneNumber(number: string) {
@@ -225,20 +240,157 @@ function formatPhoneNumber(number: string) {
     return `(${areaCode}) ${centralOfficeCode}-${stationCode}`;
 }
 
-const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpen, onClose, customer }) => {
+const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpen, onClose, customer, mode, reward, pointsGive,
+    transactionDetails, }) => {
     const router = useRouter();
     if (!isOpen || !customer) return null;
 
+    const { data } = useStore.getState(); // Directly access Zustand state
+    
+    const handleGivePoints = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/give-points`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    customerId: customer?.customerid,
+                    points: pointsGive,
+                    transactionDetails: transactionDetails,
+                    user: data
+                }),
+            });
+
+            const responseData = await response.json();
+
+            if (responseData.success) {
+                // Handle success (e.g., show a notification or update the UI)
+            } else {
+                // Handle error (e.g., show an error notification)
+            }
+        } catch (error) {
+            console.error('Failed to give points:', error);
+            // Handle unexpected errors (e.g., network issues, timeouts, etc.)
+        }
+    };
+
+
+    const handleRedeemReward = async () => {
+        if (!reward) return;  // Safety check
+        try {
+            const response = await fetch(`http://localhost:5000/redeem-reward`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    customerId: customer?.customerid,
+                    rewardId: reward.rewardid,  // Assuming reward has an ID
+                    user: data
+                }),
+            });
+
+            const responseData = await response.json();
+
+            if (responseData.success) {
+                // Handle success
+            } else {
+                // Handle error
+            }
+        } catch (error) {
+            console.error('Failed to redeem reward:', error);
+            // Handle unexpected errors
+        }
+    };
+
+
     const confirmTransactionProcess = () => {
-        console.log('customer', customer);
-        console.log('customer.customerId', customer.customerid);
-        if (customer && customer.customerid) {
-            router.push(`/process-transaction-customer/${customer.customerid}`);
+        if (mode === 'givePoints') {
+            handleGivePoints();
+        } else if (mode === 'redeemReward') {
+            handleRedeemReward();
         }
     };
 
     const formattedNumber = formatPhoneNumber(customer.fullPhoneNumber);
-    console.log(formattedNumber);
+
+    let content;
+    let pointsGiveNumber
+
+    if (mode === 'givePoints') {
+        if (pointsGive === undefined) {
+            pointsGiveNumber = 1
+        } else {
+            pointsGiveNumber = parseInt(pointsGive)
+        }
+        content = (
+        <ContentDiv>
+        <PTMMidConent>
+        <PTMMidContent1>
+            <Text
+                text={`Are you sure you would like to give ${customer?.fullName} ${pointsGive} reward point(s) and complete this transaction?`}
+            />
+        </PTMMidContent1>
+        <PTMMidContent2>
+            <Text
+                text={`The customer’s new point balance will be ${customer?.rewardNumber + pointsGiveNumber}.`}
+            />
+        </PTMMidContent2>
+        </PTMMidConent>
+        <BottomButtons>
+            <Button
+                label='Yes, Confirm'
+                buttonTypeVariant='primary'
+                buttonWidthVariant='fill'
+                onClick={confirmTransactionProcess}
+            />
+            <Button
+                label='No, Go Back'
+                buttonTypeVariant='secondary'
+                buttonWidthVariant='fill'
+                onClick={onClose}
+            />
+        </BottomButtons>
+        </ContentDiv>
+        );
+    } else if (mode === 'redeemReward' && reward) {
+        content = (
+            <ContentDiv>
+            <PTMMidConent>
+            <PTMMidContent1>
+                <Text
+                    text={`Are you sure you would like to redeem a ${reward.rewardName} for ${customer?.fullName} for ${reward.rewardCost} points?`}
+                />
+            </PTMMidContent1>
+            <PTMMidContent2>
+                <Text
+                    text={`This customer's new point balance will be ${customer?.rewardNumber - reward.rewardCost}`}
+                />
+            </PTMMidContent2>
+            </PTMMidConent>
+            <BottomButtons>
+                <Button
+                    label='Yes, Redeem This Reward'
+                    buttonTypeVariant='primary'
+                    buttonWidthVariant='fill'
+                    onClick={confirmTransactionProcess}
+                />
+                <Button
+                    label='No, Go Back'
+                    buttonTypeVariant='secondary'
+                    buttonWidthVariant='fill'
+                    onClick={onClose}
+                />
+            </BottomButtons>
+            </ContentDiv>
+            );
+    } else {
+        content = (
+            <ContentDiv>
+            </ContentDiv>
+        )
+    }
 
     return (
         <ModalContainer onClick={onClose}>
@@ -262,32 +414,7 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
                     </ModalNumber>
                 </ModalNameNumber>
             </PTMTopContent>
-            <PTMMidConent>
-            <PTMMidContent1>
-                <Text
-                    text="Are you sure you would like to give this customer 1 reward point and complete this transaction?"
-                />
-            </PTMMidContent1>
-            <PTMMidContent2>
-                <Text
-                    text="The customer’s new point balance will be 12."
-                />
-            </PTMMidContent2>
-            </PTMMidConent>
-            <BottomButtons>
-                <Button
-                    label='Yes, Confirm'
-                    buttonTypeVariant='primary'
-                    buttonWidthVariant='fill'
-                    onClick={confirmTransactionProcess}
-                />
-                <Button
-                    label='No, Go Back'
-                    buttonTypeVariant='secondary'
-                    buttonWidthVariant='fill'
-                    onClick={onClose}
-                />
-            </BottomButtons>
+            {content}
         </ModalContainer>
     );
 };

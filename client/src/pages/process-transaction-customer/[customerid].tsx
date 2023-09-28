@@ -21,6 +21,9 @@ import PillBar from '@/components/molecules/PillBar';
 import RedeemRewardCard from '@/components/molecules/RedeemRewardCard';
 import ProcessTransactionModal from '@/components/molecules/ProcessTransactionModal';
 import Overlay from '@/components/atoms/Overlay';
+import InputField from '@/components/atoms/InputField';
+import Textarea from '@/components/atoms/Textarea';
+import { useStore, AppState } from '../../store/store'; // Import your store
 
 interface ProcessTransactionCustomerProps {
     customer: CustomerData | null;
@@ -141,6 +144,7 @@ const PTCBottomContent = styled.div`
         display: flex;
         flex-direction: column;
         gap: 24px;
+        align-items: flex-start;
     }
 `;
 
@@ -221,7 +225,14 @@ function formatPhoneNumber(number: string) {
 const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({ customer, rewardsData }) => {
     const [activeOption, setActiveOption] = useState<string>('Give Points');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalContent, setModalContent] = useState<React.ReactNode | null>(null);
+    const [modalMode, setModalMode] = useState<'givePoints' | 'redeemReward' | undefined>('givePoints');
+    const [selectedReward, setSelectedReward] = useState<RewardData | undefined>();
+    const [pointsGive, setPointsGive] = useState<string>('');
+    const [pointsGiveValid, setPointsGiveValid] = useState<boolean>(false);
+    const [transactionDetails, setTransactionDetails] = useState<string>('');
+    const { data, fetchData, toast, showToast, hideToast } = useStore();
+
+
 
     const handleActivePillChange = (activeLabel: string) => {
         setActiveOption(activeLabel);
@@ -229,7 +240,7 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setModalContent(null);
+        setModalMode(undefined);
     };
 
     if (!customer) {
@@ -252,13 +263,21 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
     console.log(rewardsData);
     const sortedRewardsData = [...rewardsData].sort((a, b) => a.rewardCost - b.rewardCost);
 
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     return (
         <FlexDiv>
                 <ProcessTransactionModal
-                    isOpen={isModalOpen} 
-                    onClose={closeModal} 
-                    content={modalContent}
-                    customer={customer}
+                       isOpen={isModalOpen} 
+                       onClose={closeModal} 
+                       customer={customer}
+                       mode={modalMode}
+                       reward={selectedReward}
+                       pointsGive={pointsGive}
+                       transactionDetails={transactionDetails}
                 />
                 { (isModalOpen) && <Overlay />}
             <GlobalStyle />
@@ -298,11 +317,26 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                     activeOption === 'Give Points' ? 
                     <PTCFieldsAndButton>
                     <PTCFields>
+                        <InputField
+                            label="Enter the number of points you'd like to give the customer for this purchase."
+                            value={pointsGive}
+                            onChange={(value) => {
+                                setPointsGive(value);
+                                setPointsGiveValid(value === '' || !isNaN(Number(value)));
+                            }}
+                            placeholder='Ex: 1'
+                        />
+                        <Textarea
+                            label='Enter details/notes about this purchase.'
+                            value={transactionDetails}
+                            onChange={(value) => setTransactionDetails(value)}
+                            placeholder='Ex: Customer purchased a large coffee and a breakfast sandwich.'
+                        />
                     </PTCFields>
                     <Button
                         label="Process Transaction"
                         onClick={() => {
-                            setModalContent(<div>Content for the Give Points modal</div>);
+                            setModalMode('givePoints');
                             setIsModalOpen(true);
                         }}
                     />
@@ -314,8 +348,9 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                             key={reward.id}
                             reward={reward} 
                             customerPoints={customer.rewardNumber}
-                            onClick={(rewardName: string) => {
-                                setModalContent(<div>You clicked on reward: {rewardName}</div>);
+                            onClick={(selectedReward: RewardData) => {
+                                setModalMode('redeemReward');
+                                setSelectedReward(selectedReward);
                                 setIsModalOpen(true);
                             }}
                         />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import Colors from '../../constants/Colors';
 import Text from '../subatomic/Text'
@@ -7,7 +7,7 @@ import { RewardData } from '@/types/RewardData';
 
 interface RedeemRewardCardProps {
     reward: RewardData; 
-    onClick: (rewardName: string) => void;
+    onClick: (reward: RewardData) => void;
     customerPoints: number; 
 }
 
@@ -89,9 +89,16 @@ const RRCBottomButton = styled.div`
 `;
 
 const RedeemRewardCard: React.FC<RedeemRewardCardProps> = ({ reward, onClick, customerPoints }) => {
-    const handleRedeemClick = () => {
-        onClick(reward.rewardName);
-    };
+    const isAffordable = customerPoints >= reward.rewardCost;
+
+    const handleRedeemClick = useCallback(() => {
+        if (isAffordable) {
+            onClick(reward);
+        } else {
+            // Optionally: Display a toast or notification to the user
+            console.warn("Not enough points to redeem this reward."); // Replace this with a toast or notification call
+        }
+    }, [isAffordable, reward, onClick]);
 
     return (
         <RedeemRewardCardContainer isAffordable={customerPoints >= reward.rewardCost}>
