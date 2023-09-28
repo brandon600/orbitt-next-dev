@@ -80,6 +80,11 @@ const FlexDiv = styled.div`
     box-sizing: border-box;
     background: ${Colors.primary100};
 }
+
+@media ${StyledMediaQuery.L} {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+}
 `
 
 const DataCards = styled.div`
