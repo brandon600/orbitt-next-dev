@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Colors from '@/constants/Colors';
 import GlobalStyle from '../../GlobalStyle'
+import { useStore, AppState } from '../../store/store';
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
@@ -17,6 +18,7 @@ import CustomerVisit from '@/components/molecules/CustomerVisit';
 import { VisitType } from '@/components/molecules/CustomerVisit';
 import { VisitData } from '@/types/VisitData';
 import EditCustomerForm from '@/components/organism/EditCustomerForm';
+import Overlay from '@/components/atoms/Overlay';
 
 interface CustomerInfoProps {
     customer: CustomerData | null;
@@ -262,6 +264,13 @@ function generateVisitInfoText(visit: VisitData): string {
 
 const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
     const [showEditForm, setShowEditForm] = useState<boolean>(false);
+    const { 
+        data, fetchData, toast,
+      } = useStore((state: AppState) => state);
+
+      useEffect(() => {
+        fetchData();
+      }, []);
 
     if (!customer) {
         return <p>Loading...</p>;
@@ -269,9 +278,21 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
 
     return (
         <FlexDiv>
-            {
-                showEditForm && <EditCustomerForm onClose={() => setShowEditForm(false)} customer={customer} />
-            }
+            <AnimatePresence>
+                {
+                    showEditForm && <EditCustomerForm onClose={() => setShowEditForm(false)} customer={customer} />
+                }
+            </AnimatePresence>
+            <AnimatePresence>
+                {
+                    showEditForm && <Overlay />
+                }
+            </AnimatePresence>
+            <AnimatePresence>
+                {toast.visible && (
+                    <Toast key="toast" />
+                )}
+            </AnimatePresence>
             <GlobalStyle />
             <TopSection>
                 <TopNavigation>

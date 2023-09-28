@@ -25,7 +25,7 @@ const ModalCloseButton = styled.div`
       position: fixed;
       top: 20px;
       right: 20px;
-      z-index: 1000;
+      z-index: 941;
 
         svg {
           width: 48px;
@@ -395,6 +395,7 @@ const EditCustomerForm: React.FC<EditCustomerFormProps> = ({ onClose, customer }
   const [newCustomerBirthdayMonth, setNewCustomerBirthdayMonth] = useState<string>(customer.birthdayMonth || ''); 
   const [newCustomerBirthdayDay, setNewCustomerBirthdayDay] = useState<string>(customer.birthdayDay || ''); 
   const [newCustomerBirthdayYear, setNewCustomerBirthdayYear] = useState<string>(customer.birthdayYear || ''); 
+  const [newCustomerRewardNumber, setNewCustomerRewardNumber] = useState<string>(customer.rewardNumber ? customer.rewardNumber.toString() : '');
 
   const [isNewCustomerFirstNameValid, setNewCustomerFirstNameValid] = useState<boolean>(false);
   const [isNewCustomerPhoneNumberValid, setNewCustomerPhoneNumberValid] = useState<boolean>(false);
@@ -426,7 +427,8 @@ useEffect(() => {
         newPhoneNumber: newCustomerPhoneNumber,
         newBirthdayMonth: newCustomerBirthdayMonth,
         newBirthdayDay: newCustomerBirthdayDay,
-        newBirthdayYear: newCustomerBirthdayYear
+        newBirthdayYear: newCustomerBirthdayYear,
+        customerid: customer.customerid
       },
       user: data, // example global state data
       // include any other relevant state data

@@ -8,6 +8,7 @@ const Visit = mongoose.model('visits');
 const TriggeredMessage = mongoose.model('triggeredmessages');
 const SentMessage = mongoose.model('sentmessages');
 const Reward = mongoose.model('rewards');
+const UpdatedCustomer = mongoose.model('updatedcustomers');
 
 const db = require('../config/keys')
 const client = require('twilio')(db.accountSid, db.authToken)
@@ -30,290 +31,314 @@ module.exports = (app) => {
         });
 
 
+    app.post('/edit-customer', async (req, res) => {
+        console.log('Edit Customer Endpoint Hit');
+        console.log('Incoming Payload:', req.body); 
 
-        app.post('/add-customer', async (req, res) => {
-          try {
-              const { customerDetails, user } = req.body;
-              const { firstName: customerFirstName, lastName: customerLastName, phoneNumber, birthdayMonth, birthdayDay, birthdayYear } = customerDetails;
-      
-              console.log('Destructured customerDetails: ', customerDetails);
-              console.log('Destructured user: ', user);
-
-              const uniqid = Date.now();
-              const signUpDate = new Date();
-              const companyNameText = user.companyName;
-      
-              const filter = { rewardNumberId: 2, user: user.userid };
-              const originalSignUpReward = await OutboundReward.findOne(filter);
-
-
-              console.log('Filter for OutboundReward:', filter);
-              console.log('Original SignUp Reward:', originalSignUpReward);
-      
-              const signUpRewardValueText = originalSignUpReward && originalSignUpReward.rewardActive ? originalSignUpReward.rewardValue : 0;
-      
-              const cleanedInput = phoneNumber.replace(/\D/g, "");
-              const areaCodeSave = cleanedInput.slice(0, 3);
-              const phoneNumber1Save = cleanedInput.slice(3, 10);
-              const fullPhoneNumSave = `1${areaCodeSave}${phoneNumber1Save}`;
-              const fullBirthDateSave = `${birthdayMonth}/${birthdayDay}/${birthdayYear}`;
-              const customerFullName = `${customerFirstName} ${customerLastName}`;
-              const sendNumber = `1${areaCodeSave}${phoneNumber1Save}`;
-      
-              const existingCustomer = await Customer.findOne({ fullPhoneNumber: fullPhoneNumSave, user: user.userid });
-
-              console.log('Existing Customer Check:', existingCustomer);
-      
-              if (existingCustomer) {
-                  return res.redirect('/');
-              }
-      
-              const newCustomer = new Customer({
-                  _id: new mongoose.Types.ObjectId(),
-                  customerid: uniqid,
-                  userClass: user,
-                  date: uniqid,
-                  signUpDate: signUpDate,
-                  lastTransactionDate: uniqid,
-                  user: user.userid,
-                  userMemberstackId: user.memberstackId,
-                  firstName: customerFirstName,
-                  lastName: customerLastName,
-                  fullName: customerFullName,
-                  email: '',
-                  areaCodeNumber: areaCodeSave,
-                  phoneNumber1: phoneNumber1Save,
-                  fullPhoneNumber: fullPhoneNumSave,
-                  rewardNumber: signUpRewardValueText,
-                  active: true,
-                  atRisk: false,
-                  totalVisits: 1,
-                  starsEarned: signUpRewardValueText,
-                  rewardsRedeemed: 0,
-                  birthdayMonth: birthdayMonth,
-                  birthdayDay: birthdayDay,
-                  birthdayYear: birthdayYear,
-                  fullBirthday: fullBirthDateSave
-              });
-      
-              console.log('Customer saved successfully');
-              await newCustomer.save();
-              console.log('New Customer Object:', newCustomer);
-
-      
-              const newVisit = new Visit({
-                _id: new mongoose.Types.ObjectId(),
-                customerid: newCustomer.customerid,
-                customer: newCustomer,
-                userClass: user,
-                userMemberstackId: user.memberstackId,
-                date: uniqid,
-                user: user.userid,
-                visitid: uniqid,
-                customerName: customerFullName,
-                status: true,
-                visitType: 'New User',
-                currentRewardsRedeemed: 0,
-                currentRewardsEarned: signUpRewardValueText,
-                currentRewardsName: 'N/A',
-                currentRewardsValue: 'N/A',
-              });
-      
-              console.log('New Visit Object:', newVisit);
-              await newVisit.save();
-              console.log('Visit saved successfully');
-      
-              const mySignUpMessage = await TriggeredMessage.findOne({ messageTitle: 'New Sign-Up Message', user: user.userid });
-
-              console.log('Triggered Message:', mySignUpMessage);
-      
-              if (mySignUpMessage && mySignUpMessage.active) {
-                  const completeSignUpMessage = `Thanks for signing up for the ${companyNameText} loyalty program! You've earned ${signUpRewardValueText} star(s), keep going to earn more rewards. ${mySignUpMessage.textMessageCustomText} ${mySignUpMessage.textMessageDefaultTextEnd2}`;
-      
-                  await client.messages.create({
-                      body: completeSignUpMessage,
-                      from: `+${user.messagingPhoneNumber}`,
-                      to: sendNumber
-                  });
-
-                  console.log('Message sent successfully');
-                  let customersReceivedArray = []
-                  customersReceivedArray.push(newCustomer)
-      
-                  const newSentMessage = new SentMessage({
-                    _id: new mongoose.Types.ObjectId(),
-                    messageNumberId: mySignUpMessage.messageNumberId,
-                    user: user.userid,
-                    userMemberstackId: user.memberstackId,
-                    date: uniqid,
-                    messageTitle: mySignUpMessage.messageTitle,
-                    messageContent: completeSignUpMessage,
-                    messageDelay: 0,
-                    userClass: user,
-                    customersReceived: customersReceivedArray,
-                  });
-      
-                  await newSentMessage.save();
-      
-                  const myquery2 = { userid: user.userid };
-                  const monthlyMessagesBefore = user.monthlyMessagesLeft;
-                  const totalSentMessages = user.totalMessagesSent;
-                  const newvalues2 = {
-                      $set: {
-                          totalMessagesSent: totalSentMessages + 1,
-                          monthlyMessagesLeft: monthlyMessagesBefore - 1
-                      }
-                  };
-      
-                  await User.updateOne(myquery2, newvalues2);
-              } else {
-                  console.log('message was not active. Did not send');
-              }
-      
-              const funcCustomer = await Customer.findOne({ customerid: uniqid });
-              funcCustomer.visits.unshift(newVisit);
-              await funcCustomer.save();
-      
-              res.status(200).send({ message: 'Customer created successfully.' });
-              console.log('Finished processing /add-customer');
-      
-          } catch (err) {
-              console.error(err);
-              res.status(500).send({ message: 'Error processing request.' });
-              console.error('Error in /add-customer:', err);
-          }
-      });
-
-
-
-
-      app.get('/process-transaction', async (req, res) => {
-        console.log('Phone number:', req.query.phoneNumber);  
+        const uniqid = Date.now();
 
         try {
-            // Extract phone number from query
-            const phoneNumber = req.query.phoneNumber;
-            console.log('Phone number:', phoneNumber);
-            
-    
-            // Validate phone number
-            if (!phoneNumber) {
-                return res.status(400).json({ message: 'Phone number is required' });
-            }
-    
-            // Clean up phone number
-            const cleanedInput = phoneNumber.replace(/\D/g, "");
-            const areaCode1 = cleanedInput.slice(0, 3);
-            const phoneNumber1 = cleanedInput.slice(3, 10);
+            const { customerDetails, user } = req.body;
 
-            console.log(areaCode1);
-            console.log(phoneNumber1);
+            console.log('Parsed Customer Details:', customerDetails);
+            console.log('Parsed User Details:', user);
     
-            const customer = await Customer.findOne({ 
-                user: '1680735892067',
-                areaCodeNumber: areaCode1, 
-                phoneNumber1: phoneNumber1 // Fixed the incorrect property name
+            const {
+                newFirstName,
+                newLastName,
+                newPhoneNumber,
+                newBirthdayMonth,
+                newBirthdayDay,
+                newBirthdayYear,
+                customerid,
+                customerRewardNumber,
+            } = customerDetails;
+    
+            // Convert the phone number to the desired format
+            const cleanedInput = newPhoneNumber.replace(/\D/g, "");
+            const areaCodeSave = cleanedInput.slice(0, 3);
+            const phoneNumber1Save = cleanedInput.slice(3, 10);
+            const fullPhoneNumSave = `1${areaCodeSave}${phoneNumber1Save}`;
+            const fullBirthDateSave = `${newBirthdayMonth}/${newBirthdayDay}/${newBirthdayYear}`;
+            const customerFullName = `${newFirstName} ${newLastName}`;
+
+            console.log('Processed Phone Number:', fullPhoneNumSave); 
+        console.log('Processed Birth Date:', fullBirthDateSave);
+    
+            // Find the existing customer details based on phoneNumber
+            const existingCustomer = await Customer.findOne({
+                customerid: customerid,
+                user: user.userid
             });
+
+            console.log('Found Existing Customer:', existingCustomer);
     
-            if (!customer) {
-                return res.status(404).json({ message: 'Customer not found' });
+            if (!existingCustomer) {
+                return res.status(404).send({ message: 'Customer not found.' });
             }
     
-            res.status(200).json(customer);
-        } catch (error) {
-            console.error('Error searching for customer:', error);
-            res.status(500).json({ message: 'Internal server error' });
+            // Store all the previous details of the customer
+            const prevDetails = {
+                prevFirstName: existingCustomer.firstName,
+                prevLastName: existingCustomer.lastName,
+                prevFullName: existingCustomer.fullName,
+                prevPhoneNumber: existingCustomer.fullPhoneNumber,
+                prevFullBirthday: existingCustomer.fullBirthday,
+                prevRewardNumber: existingCustomer.rewardNumber,
+                // ... and so on for any other properties you want to capture
+            };
+    
+            console.log('Previous Customer Details:', prevDetails);
+
+            console.log(customerRewardNumber)
+
+            const updatedCustomerDetails = {
+                firstName: newFirstName,
+                lastName: newLastName,
+                fullName: customerFullName,
+                areaCodeNumber: areaCodeSave,
+                phoneNumber1: phoneNumber1Save,
+                fullPhoneNumber: fullPhoneNumSave,
+                birthdayMonth: newBirthdayMonth,
+                birthdayDay: newBirthdayDay,
+                birthdayYear: newBirthdayYear,
+                fullBirthday: fullBirthDateSave,
+            };
+    
+            const updatedCustomer = await Customer.findOneAndUpdate(
+                { customerid: customerid, user: user.userid },
+                updatedCustomerDetails,
+                { new: true }
+            );
+
+            console.log('Updated Customer Details:', updatedCustomer);
+
+            newUpdatedCustomer = new UpdatedCustomer ({
+                _id: new mongoose.Types.ObjectId(),
+                customerid: customerid,
+                user: user.userid,
+                date: uniqid,
+                userMemberstackId: user.memberstackId,
+                firstNameBefore: prevDetails.prevFirstName,
+                firstNameAfter: updatedCustomerDetails.firstName,
+                lastNameBefore: prevDetails.prevLastName,
+                lastNameAfter: updatedCustomerDetails.lastName,
+                fullNameBefore: prevDetails.prevFullName,
+                fullNameAfter: updatedCustomerDetails.fullName,
+                phoneNumberBefore: prevDetails.prevPhoneNumber,
+                phoneNumberAfter: updatedCustomerDetails.fullPhoneNumber,
+                rewardNumberBefore: prevDetails.prevRewardNumber,
+                rewardNumberAfter: prevDetails.prevRewardNumber,
+                fullBirthdayBefore: prevDetails.prevFullBirthday,
+                fullBirthdayAfter: updatedCustomerDetails.fullBirthday,
+                userClass: user,
+                customer: existingCustomer
+              })
+            
+            await newUpdatedCustomer.save();
+    
+            res.status(200).send({ message: 'Customer updated successfully.', updatedCustomer });
+        } catch (err) {
+            console.error(err);
+            res.status(500).send({ message: 'Error processing request.' });
         }
     });
-  
     
 
-    /*
+    app.post('/add-customer', async (req, res) => {
+        try {
+            const { customerDetails, user } = req.body;
+            const { firstName: customerFirstName, lastName: customerLastName, phoneNumber, birthdayMonth, birthdayDay, birthdayYear } = customerDetails;
+    
+            console.log('Destructured customerDetails: ', customerDetails);
+            console.log('Destructured user: ', user);
 
-      const newVisit = new Visit({
+            const uniqid = Date.now();
+            const signUpDate = new Date();
+            const companyNameText = user.companyName;
+    
+            const filter = { rewardNumberId: 2, user: user.userid };
+            const originalSignUpReward = await OutboundReward.findOne(filter);
+
+
+            console.log('Filter for OutboundReward:', filter);
+            console.log('Original SignUp Reward:', originalSignUpReward);
+    
+            const signUpRewardValueText = originalSignUpReward && originalSignUpReward.rewardActive ? originalSignUpReward.rewardValue : 0;
+    
+            const cleanedInput = phoneNumber.replace(/\D/g, "");
+            const areaCodeSave = cleanedInput.slice(0, 3);
+            const phoneNumber1Save = cleanedInput.slice(3, 10);
+            const fullPhoneNumSave = `1${areaCodeSave}${phoneNumber1Save}`;
+            const fullBirthDateSave = `${birthdayMonth}/${birthdayDay}/${birthdayYear}`;
+            const customerFullName = `${customerFirstName} ${customerLastName}`;
+            const sendNumber = `1${areaCodeSave}${phoneNumber1Save}`;
+    
+            const existingCustomer = await Customer.findOne({ fullPhoneNumber: fullPhoneNumSave, user: user.userid });
+
+            console.log('Existing Customer Check:', existingCustomer);
+    
+            if (existingCustomer) {
+                return res.redirect('/');
+            }
+    
+            const newCustomer = new Customer({
                 _id: new mongoose.Types.ObjectId(),
-                customerid: newCustomer.customerid,
-                customer: newCustomer,
+                customerid: uniqid,
                 userClass: user,
-                userMemberstackId: user.memberstackId,
                 date: uniqid,
+                signUpDate: signUpDate,
+                lastTransactionDate: uniqid,
                 user: user.userid,
-                visitid: uniqid,
-                customerName: customerFullName,
-                status: true,
-                visitType: 'New User',
-                currentRewardsRedeemed: 0,
-                currentRewardsEarned: signUpRewardValueText,
-                currentRewardsName: 'N/A',
-                currentRewardsValue: 'N/A',
-              });
+                userMemberstackId: user.memberstackId,
+                firstName: customerFirstName,
+                lastName: customerLastName,
+                fullName: customerFullName,
+                email: '',
+                areaCodeNumber: areaCodeSave,
+                phoneNumber1: phoneNumber1Save,
+                fullPhoneNumber: fullPhoneNumSave,
+                rewardNumber: signUpRewardValueText,
+                active: true,
+                atRisk: false,
+                totalVisits: 1,
+                starsEarned: signUpRewardValueText,
+                rewardsRedeemed: 0,
+                birthdayMonth: birthdayMonth,
+                birthdayDay: birthdayDay,
+                birthdayYear: birthdayYear,
+                fullBirthday: fullBirthDateSave
+            });
+    
+            console.log('Customer saved successfully');
+            await newCustomer.save();
+            console.log('New Customer Object:', newCustomer);
 
-              */
-
-
-
-              /*
-                        newVisit = new Visit ({
+    
+            const newVisit = new Visit({
             _id: new mongoose.Types.ObjectId(),
-            customerid: underid,
-            customer: underClass,
-            userClass: req.user,
-            userMemberstackId: req.user.memberstackId,
+            customerid: newCustomer.customerid,
+            customer: newCustomer,
+            userClass: user,
+            userMemberstackId: user.memberstackId,
             date: uniqid,
-            user: user,
+            user: user.userid,
             visitid: uniqid,
-            customerName: cusName,
+            customerName: customerFullName,
             status: true,
-            visitType: 'Purchase',
+            visitType: 'New User',
             currentRewardsRedeemed: 0,
+            currentRewardsEarned: signUpRewardValueText,
             currentRewardsName: 'N/A',
             currentRewardsValue: 'N/A',
-            currentRewardsEarned: newRewardsInt,
-            visitDetails: visitDetails
-          })
-          /
+            });
+    
+            console.log('New Visit Object:', newVisit);
+            await newVisit.save();
+            console.log('Visit saved successfully');
+    
+            const mySignUpMessage = await TriggeredMessage.findOne({ messageTitle: 'New Sign-Up Message', user: user.userid });
+
+            console.log('Triggered Message:', mySignUpMessage);
+    
+            if (mySignUpMessage && mySignUpMessage.active) {
+                const completeSignUpMessage = `Thanks for signing up for the ${companyNameText} loyalty program! You've earned ${signUpRewardValueText} star(s), keep going to earn more rewards. ${mySignUpMessage.textMessageCustomText} ${mySignUpMessage.textMessageDefaultTextEnd2}`;
+    
+                await client.messages.create({
+                    body: completeSignUpMessage,
+                    from: `+${user.messagingPhoneNumber}`,
+                    to: sendNumber
+                });
+
+                console.log('Message sent successfully');
+                let customersReceivedArray = []
+                customersReceivedArray.push(newCustomer)
+    
+                const newSentMessage = new SentMessage({
+                _id: new mongoose.Types.ObjectId(),
+                messageNumberId: mySignUpMessage.messageNumberId,
+                user: user.userid,
+                userMemberstackId: user.memberstackId,
+                date: uniqid,
+                messageTitle: mySignUpMessage.messageTitle,
+                messageContent: completeSignUpMessage,
+                messageDelay: 0,
+                userClass: user,
+                customersReceived: customersReceivedArray,
+                });
+    
+                await newSentMessage.save();
+    
+                const myquery2 = { userid: user.userid };
+                const monthlyMessagesBefore = user.monthlyMessagesLeft;
+                const totalSentMessages = user.totalMessagesSent;
+                const newvalues2 = {
+                    $set: {
+                        totalMessagesSent: totalSentMessages + 1,
+                        monthlyMessagesLeft: monthlyMessagesBefore - 1
+                    }
+                };
+    
+                await User.updateOne(myquery2, newvalues2);
+            } else {
+                console.log('message was not active. Did not send');
+            }
+    
+            const funcCustomer = await Customer.findOne({ customerid: uniqid });
+            funcCustomer.visits.unshift(newVisit);
+            await funcCustomer.save();
+    
+            res.status(200).send({ message: 'Customer created successfully.' });
+            console.log('Finished processing /add-customer');
+    
+        } catch (err) {
+            console.error(err);
+            res.status(500).send({ message: 'Error processing request.' });
+            console.error('Error in /add-customer:', err);
+        }
+    });
 
 
-          /*
-
-             newVisit = new Visit ({
-            _id: new mongoose.Types.ObjectId(),
-            customerid: underid,
-            customer: underClass,
-            userClass: req.user,
-            userMemberstackId: req.user.memberstackId,
-            date: uniqid,
-            user: user,
-            visitid: uniqid,
-            customerName: cusName,
-            currentRewardsRedeemed: rewardSubtractVar,
-            currentRewardsEarned: 0,
-            currentRewardsName: req.body.props.currentRedeemReward.rewardName,
-            currentRewardsValue: req.body.props.currentRedeemReward.rewardValue,
-            status: true,
-            visitType: 'Reward',
-            visitDetails: visitDetails,
-            redeemedReward: req.body.props.currentRedeemReward
-          })
-
-          */
 
 
-          /*
+    app.get('/process-transaction', async (req, res) => {
+    console.log('Phone number:', req.query.phoneNumber);  
 
-                  const newSentMessage = new SentMessage({
-                    _id: new mongoose.Types.ObjectId(),
-                    messageNumberId: mySignUpMessage.messageNumberId,
-                    user: user.userid,
-                    userMemberstackId: user.memberstackId,
-                    date: uniqid,
-                    messageTitle: mySignUpMessage.messageTitle,
-                    messageContent: completeSignUpMessage,
-                    messageDelay: 0,
-                    userClass: user,
-                    customersReceived: customersReceivedArray,
-                  });
-                  */
+    try {
+        // Extract phone number from query
+        const phoneNumber = req.query.phoneNumber;
+        console.log('Phone number:', phoneNumber);
+        
+
+        // Validate phone number
+        if (!phoneNumber) {
+            return res.status(400).json({ message: 'Phone number is required' });
+        }
+
+        // Clean up phone number
+        const cleanedInput = phoneNumber.replace(/\D/g, "");
+        const areaCode1 = cleanedInput.slice(0, 3);
+        const phoneNumber1 = cleanedInput.slice(3, 10);
+
+        console.log(areaCode1);
+        console.log(phoneNumber1);
+
+        const customer = await Customer.findOne({ 
+            user: '1680735892067',
+            areaCodeNumber: areaCode1, 
+            phoneNumber1: phoneNumber1 // Fixed the incorrect property name
+        });
+
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
+
+        res.status(200).json(customer);
+    } catch (error) {
+        console.error('Error searching for customer:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
     
 
     app.post('/give-points', async (req, res) => {
