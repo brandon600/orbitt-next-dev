@@ -202,7 +202,7 @@ useEffect(() => {
             <Button
                 buttonTypeVariant='primary'
                 sizeVariant='large'
-                label='Add Reward'
+                label='Add New Reward'
                 buttonWidthVariant='fill'
                 onClick={openOverlay}
             />
