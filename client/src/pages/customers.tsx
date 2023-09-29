@@ -77,12 +77,33 @@ const PageTitle = styled.div`
 const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
     display: flex;
-    gap: 32px;
     flex-direction: column;
     padding: 24px 16px;
     width: 100vw;
     box-sizing: border-box;
     background: ${Colors.primary100};
+    min-height: 100vh;
+}
+
+@media ${StyledMediaQuery.S} {
+    padding: 24px;
+}
+
+@media ${StyledMediaQuery.L} {
+    margin-left: 260px;
+    width: calc(100vw - 260px);
+}
+`
+
+const FlexContainer = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    gap: 32px;
+    flex-direction: column;
+    width: 100%;
+}
+
+@media ${StyledMediaQuery.L} {
 }
 `
 
@@ -384,6 +405,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                 )}
             </AnimatePresence>
             <GlobalStyle />
+            <FlexContainer>
             <TitlePlusButton>
                 <PageTitle>
                     <Text text='Customers' />
@@ -430,6 +452,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                     />
                 </LabelPlusCells>
             </TableAndSearch>
+            </FlexContainer>
         </FlexDiv>
     );
 }

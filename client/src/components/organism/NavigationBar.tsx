@@ -50,7 +50,7 @@ const navItems = [
 
 const NavigationBarContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
-        display: flex;
+        display: none;
         flex-direction: column;
         width: 260px;
         height: 100vh;
@@ -69,7 +69,8 @@ const NavigationBarContainer = styled.div`
         padding: 16px;
     }
 
-    @media ${StyledMediaQuery.M} {
+    @media ${StyledMediaQuery.L} {
+        display: flex;
         padding: 24px;
     }
 `
