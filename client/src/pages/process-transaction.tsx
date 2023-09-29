@@ -15,7 +15,6 @@ import Overlay from '@/components/atoms/Overlay';
 const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
     display: flex;
-    gap: 40px;
     flex-direction: column;
     padding: 24px 16px;
     width: 100vw;
@@ -26,7 +25,8 @@ const FlexDiv = styled.div`
 }
 
 @media ${StyledMediaQuery.S} {
-    padding: 24px;
+    padding: 120px 24px 24px 24px;
+    align-items: center;
 }
 
 @media ${StyledMediaQuery.L} {
@@ -42,6 +42,11 @@ const ProcessTransactionContainer = styled.div`
     width: 100%;
     gap: 24px;
 }
+
+@media ${StyledMediaQuery.S} {
+    gap: 32px;
+    width: 442px;
+}
 `
 
 const TitlePlusSubhead = styled.div`
@@ -49,6 +54,10 @@ const TitlePlusSubhead = styled.div`
     display: flex;
     flex-direction: column;
     gap: 4px;
+}
+
+@media ${StyledMediaQuery.S} {
+    gap: 8px;
 }
 `
 
@@ -60,6 +69,14 @@ const Title = styled.div`
         font-size: 32px;
         line-height: 39px;
         font-weight: 800;
+    }
+}
+
+@media ${StyledMediaQuery.S} {
+    p {
+        text-align: center;
+        font-size: 48px;
+        line-height: 58px;
     }
 }
 `
@@ -74,6 +91,14 @@ const Subhead = styled.div`
         font-weight: 500;
     }
 }
+
+@media ${StyledMediaQuery.S} {
+    p {
+        text-align: center;
+        font-size: 20px;
+        line-height: 24px;
+    }
+}
 `
 
 const FieldAndButton = styled.div`
@@ -83,6 +108,20 @@ const FieldAndButton = styled.div`
     gap: 16px;
 }
 `
+
+function useBodyScrollLock(isLocked: boolean) {
+    useEffect(() => {
+      if (isLocked) {
+        document.body.style.overflowY = 'hidden';
+      } else {
+        document.body.style.overflowY = 'auto';
+      }
+  
+      return () => {
+        document.body.style.overflowY = 'auto';
+      };
+    }, [isLocked]);
+  }
 
 const fetchCustomer = async (phoneNumber: string) => {
     try {
@@ -139,6 +178,8 @@ const ProcessTransaction = () => {
         data, fetchData, toast, 
         hideToast, showToast 
       } = useStore((state: AppState) => state);
+
+      useBodyScrollLock(isModalOpen);
 
 
       const handleSearchCustomer = async () => {

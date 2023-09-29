@@ -20,6 +20,7 @@ export const PillContainer = styled.div<PillContainerProps>`
     align-items: center;
     gap: 8px;
     border-radius: 24px;
+    cursor: pointer;
 
     ${props => props.isActive ? `
         background-color: ${Colors.primary400};
