@@ -127,6 +127,7 @@ require('./routes/rewardRoutes')(app);
 require('./routes/messageRoutes')(app);
 require('./routes/visitRoutes')(app);
 require('./routes/dashboardRoutes')(app);
+require('./routes/settingsRoutes')(app);
 
 
 

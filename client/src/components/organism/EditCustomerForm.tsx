@@ -395,7 +395,7 @@ const EditCustomerForm: React.FC<EditCustomerFormProps> = ({ onClose, customer }
   const [newCustomerBirthdayMonth, setNewCustomerBirthdayMonth] = useState<string>(customer.birthdayMonth || ''); 
   const [newCustomerBirthdayDay, setNewCustomerBirthdayDay] = useState<string>(customer.birthdayDay || ''); 
   const [newCustomerBirthdayYear, setNewCustomerBirthdayYear] = useState<string>(customer.birthdayYear || ''); 
-  const [newCustomerRewardNumber, setNewCustomerRewardNumber] = useState<string>(customer.rewardNumber ? customer.rewardNumber.toString() : '');
+ // const [newCustomerRewardNumber, setNewCustomerRewardNumber] = useState<string>(customer.rewardNumber ? customer.rewardNumber.toString() : '');
 
   const [isNewCustomerFirstNameValid, setNewCustomerFirstNameValid] = useState<boolean>(false);
   const [isNewCustomerPhoneNumberValid, setNewCustomerPhoneNumberValid] = useState<boolean>(false);

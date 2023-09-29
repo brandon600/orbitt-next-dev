@@ -13,6 +13,7 @@ const PillBarContainer = styled.div`
         height: 40px;
         border-radius: 24px;
         background-color:${Colors.neutral200};
+        width: fit-content;
     }
 `
 
