@@ -12,6 +12,16 @@ const FlexDiv = styled.div`
     width: 100vw;
     box-sizing: border-box;
     background: ${Colors.primary100};
+    min-height: 100vh;
+
+    @media ${StyledMediaQuery.S} {
+        padding: 24px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        margin-left: 260px;
+        width: calc(100vw - 260px);
+    }
 }
 `
 

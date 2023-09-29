@@ -79,14 +79,22 @@ const FlexDiv = styled.div`
     padding: 24px 16px;
     box-sizing: border-box;
     background: ${Colors.primary100};
+    min-height: 100vh;
+}
+
+@media ${StyledMediaQuery.S} {
+    padding: 24px;
+}
+
+@media ${StyledMediaQuery.L} {
+    margin-left: 260px;
+    width: calc(100vw - 260px);
 }
 `
 
 /*
 
 @media ${StyledMediaQuery.L} {
-    margin-left: 260px;
-    width: calc(100% - 260px);
 }
 
 */

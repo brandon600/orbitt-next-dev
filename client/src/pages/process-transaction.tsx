@@ -19,8 +19,19 @@ const FlexDiv = styled.div`
     flex-direction: column;
     padding: 24px 16px;
     width: 100vw;
+    height: 100vh;
     box-sizing: border-box;
     background: ${Colors.primary100};
+    min-height: 100vh;
+}
+
+@media ${StyledMediaQuery.S} {
+    padding: 24px;
+}
+
+@media ${StyledMediaQuery.L} {
+    margin-left: 260px;
+    width: calc(100vw - 260px);
 }
 `
 

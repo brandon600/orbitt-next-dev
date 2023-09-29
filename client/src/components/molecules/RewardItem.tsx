@@ -165,7 +165,7 @@ const RewardEdit = styled.div`
     @media ${StyledMediaQuery.S} {
         display: flex;
         width: 80px;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         flex-shrink: 0;
     }

@@ -37,6 +37,8 @@ const FlexDiv = styled.div`
         gap: 24px;
         padding: 24px 16px;
         box-sizing: border-box;
+        background: ${Colors.primary100};
+        min-height: 100vh;
     }
 
     @media ${StyledMediaQuery.S} {
@@ -44,6 +46,8 @@ const FlexDiv = styled.div`
     }
 
     @media ${StyledMediaQuery.L} {
+        margin-left: 260px;
+        width: calc(100vw - 260px);
         gap: 32px;
     }
 `
