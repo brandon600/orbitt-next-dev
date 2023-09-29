@@ -3,6 +3,7 @@ import { create } from 'zustand';
 
 export interface UserData {
   userid: string;
+  companyName?: string;
   // Add other properties here as needed
 }
 

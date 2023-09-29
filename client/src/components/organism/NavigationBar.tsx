@@ -10,6 +10,7 @@ import { DashboardIcon } from '../subatomic/Icons/DashboardIcon';
 import { GroupsIcon } from '../subatomic/Icons/GroupsIcon';
 import { RewardIcon } from '../subatomic/Icons/RewardIcon';
 import { MailIcon } from '../subatomic/Icons/MailIcon';
+import { SettingsIcon } from '../subatomic/Icons/SettingsIcon';
 import { ProcessTransactionIcon } from '../subatomic/Icons/ProcessTransactionIcon';
 import { useRouter } from 'next/router';
 import GlobalStyle  from '../../GlobalStyle';
@@ -44,6 +45,12 @@ const navItems = [
         label: 'Process Transaction',
         href: '/process-transaction',
         svgComponent: ProcessTransactionIcon // replace this with the SVG for "Messages"
+      },
+      {
+        id: 'settings',
+        label: 'Settings',
+        href: '/settings',
+        svgComponent: SettingsIcon // replace this with the SVG for "Messages"
       }
     // ... add more items as needed
   ];

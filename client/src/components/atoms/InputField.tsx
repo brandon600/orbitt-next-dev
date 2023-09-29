@@ -9,6 +9,7 @@ interface InputFieldProps {
   onChange: (value: string) => void;
   required?: boolean; // Add a prop to make the input required
   placeholder?: string; // Add the 'placeholder' prop
+  disabled?: boolean;
 }
 
 
@@ -69,29 +70,32 @@ const InputFieldInput = styled.input`
     }
 `
 
-
-const InputField: React.FC<InputFieldProps> = ({
-  label,
-  value,
-  onChange,
-  required, // Accept the 'required' prop
-  placeholder, // Accept the 'placeholder' prop
-}) => {
-  return (
-    <InputFieldContainer>
+const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
+  ({
+    label,
+    value,
+    onChange,
+    required, // Accept the 'required' prop
+    placeholder, // Accept the 'placeholder' prop
+    disabled
+  }, ref) => {
+    return (
+      <InputFieldContainer>
         <InputFieldLabel>
-        {required && <RequiredAsterisk>*</RequiredAsterisk>} {/* Render asterisk if 'required' prop is true */}
-        {label}
+          {required && <RequiredAsterisk>*</RequiredAsterisk>} {/* Render asterisk if 'required' prop is true */}
+          {label}
         </InputFieldLabel>
         <InputFieldInput
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required={required} // Add the 'required' attribute conditionally
-        placeholder={placeholder} // Pass the 'placeholder' prop
+          ref={ref}
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          required={required}
+          placeholder={placeholder}
         />
-    </InputFieldContainer>
-  );
-};
+      </InputFieldContainer>
+    );
+  }
+);
 
 export default InputField;
