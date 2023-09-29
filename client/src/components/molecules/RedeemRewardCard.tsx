@@ -18,7 +18,7 @@ interface RedeemRewardCardContainerProps {
 const RedeemRewardCardContainer = styled.div<RedeemRewardCardContainerProps>`
     @media ${StyledMediaQuery.XS} {
         display: flex;
-        width: 288px;
+        width: 100%;
         padding-top: 16px;
         flex-direction: column;
         align-items: flex-start;
@@ -27,6 +27,22 @@ const RedeemRewardCardContainer = styled.div<RedeemRewardCardContainerProps>`
         background: ${Colors.shades100};
         box-shadow: 0px 4px 12px 2px rgba(0, 0, 0, 0.08);
         opacity: ${props => props.isAffordable ? 1 : 0.3};
+    }
+
+    @media ${StyledMediaQuery.S} {
+        width: calc(50% - 8px);
+        margin-right: 16px;    
+        margin-bottom: 16px;   
+
+        &:nth-child(2n) {   
+            margin-right: 0;
+        }
+    }
+
+    @media ${StyledMediaQuery.L} {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 0;
     }
 `;
 

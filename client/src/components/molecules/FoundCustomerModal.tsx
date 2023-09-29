@@ -37,8 +37,8 @@ const ModalContainer = styled.div`
     @media ${StyledMediaQuery.L} {
         width: 604px;
         top: 50%; 
-        left: 50%;  /* Center horizontally */
-        transform: translate(-50%, -50%); 
+        left: calc(50% + (260px / 2) - (604px / 2)); 
+        transform: translateY(-50%);
     }
 `;
 

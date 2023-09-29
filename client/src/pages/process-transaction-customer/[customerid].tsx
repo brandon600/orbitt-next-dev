@@ -37,19 +37,43 @@ const FlexDiv = styled.div`
         width: 100vw;
         flex-direction: column;
         align-items: flex-start;
-        gap: 24px;
         padding: 24px 16px;
         box-sizing: border-box;
         min-height: 100vh;
+        background: ${Colors.primary100};
     }
 
     @media ${StyledMediaQuery.S} {
         padding: 24px;
+        align-items: center;
     }
 
     @media ${StyledMediaQuery.L} {
         margin-left: 260px;
         width: calc(100vw - 260px);
+    }
+`;
+
+const PTCContent = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        width: 100%;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        width: 558px;
+        align-items: center;
+        gap: 40px;
+        padding-top: 88px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        width: 100%;
+        flex-direction: row;
+        align-items: flex-start;
+        padding-top: 0px;
     }
 `;
 
@@ -60,6 +84,14 @@ const PTCTopContent = styled.div`
         flex-direction: column;
         gap: 24px;
     }
+
+    @media ${StyledMediaQuery.S} {
+        gap: 40px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        gap: 48px;
+    }
 `;
 
 const PTCBackButton = styled.div`
@@ -67,11 +99,22 @@ const PTCBackButton = styled.div`
         display: flex;
         width: 40px;
         height: 40px;
+        position: static;
         
         svg {
             width: 100%;
             height: 100%;
         }
+    }
+
+    @media ${StyledMediaQuery.S} {
+        position: fixed;
+        left: 24px;
+        top: 24px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        position: static;
     }
 `;
 
@@ -81,6 +124,10 @@ const PTCAllCustomerInfo = styled.div`
         flex-direction: column;
         gap: 24px;
     }
+
+    @media ${StyledMediaQuery.S} {
+        gap: 40px;
+    }
 `;
 
 const PTCTopCustomerInfo = styled.div`
@@ -88,6 +135,10 @@ const PTCTopCustomerInfo = styled.div`
         display: flex;
         flex-direction: column;
         gap: 8px;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        gap: 12px;
     }
 `;
 
@@ -101,6 +152,24 @@ const TopCustomerInfoName = styled.div`
             line-height: 29px;
         }
     }
+
+    @media ${StyledMediaQuery.S} {
+        justify-content: center;
+        p {
+            text-align: center;
+            font-size: 40px;
+            line-height: 48px;
+        }
+    }
+
+    @media ${StyledMediaQuery.L} {
+        justify-content: flex-start;
+        p {
+            text-align: left;
+            font-size: 48px;
+            line-height: 58px;
+        }
+    }
 `;
 
 const TopCustomerInfoCI = styled.div`
@@ -108,6 +177,22 @@ const TopCustomerInfoCI = styled.div`
         display: flex;
         flex-direction: column;
         gap: 8px;
+        align-items: flex-start;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        align-items: center;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        align-items: flex-start;
+        gap: 12px;
+    }
+`;
+
+ const TCINumber = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
         color: ${Colors.neutral700};
         p {
             font-size: 16px;
@@ -115,7 +200,44 @@ const TopCustomerInfoCI = styled.div`
             line-height: 19px;
         }
     }
-`;
+
+    @media ${StyledMediaQuery.S} {
+        p {
+            text-align: center;
+            font-size: 24px;
+            line-height: 29px;
+        }
+    }
+
+    @media ${StyledMediaQuery.L} {
+        p {
+            text-align: left;
+            font-size: 32px;
+            line-height: 39px;
+        }
+    }
+ `
+
+ const TCIBirthday = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        color: ${Colors.neutral700};
+        p {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 19px;
+        }
+    }
+
+    @media ${StyledMediaQuery.S} {
+        p {
+            text-align: center;
+            font-size: 24px;
+            line-height: 29px;
+        }
+    }
+ `
+
 
 const PTCCustomerPointInfo = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -135,6 +257,20 @@ const CustomerPointInfoAvailable = styled.div`
             line-height: 29px;
         }
     }
+
+    @media ${StyledMediaQuery.S} {
+        justify-content: center;
+        p {
+            text-align: center;
+        }
+    }
+
+    @media ${StyledMediaQuery.L} {
+        justify-content: flex-start;
+        p {
+            text-align: left;
+        }
+    }
 `;
 
 const CustomerPointInfoVisits = styled.div`
@@ -147,6 +283,25 @@ const CustomerPointInfoVisits = styled.div`
             line-height: 24px;
         }
     }
+
+    @media ${StyledMediaQuery.S} {
+        justify-content: center;
+
+        p {
+            text-align: center;
+            font-size: 24px;
+            line-height: 29px;
+        }
+    }
+
+
+    @media ${StyledMediaQuery.L} {
+        justify-content: flex-start;
+
+        p {
+            text-align: left;
+        }
+    }
 `;
 
 const PTCBottomContent = styled.div`
@@ -155,6 +310,17 @@ const PTCBottomContent = styled.div`
         flex-direction: column;
         gap: 24px;
         align-items: flex-start;
+        width: 100%;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        gap: 32px;
+        align-items: center;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        gap: 48px;
+        padding-top: 88px;
     }
 `;
 
@@ -178,10 +344,34 @@ const PTCOption = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
         flex-direction: column;
+        gap: 16px;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        gap: 16px;
     }
 `;
 
-
+function useBodyScrollLock(isLocked: boolean) {
+    useEffect(() => {
+      if (isLocked) {
+        document.body.style.overflowY = 'hidden';
+      } else {
+        document.body.style.overflowY = 'auto';
+      }
+  
+      return () => {
+        document.body.style.overflowY = 'auto';
+      };
+    }, [isLocked]);
+  }
 
 export async function getServerSideProps(context: any) {
     const { customerid } = context.params;
@@ -241,6 +431,7 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
     const [pointsGiveValid, setPointsGiveValid] = useState<boolean>(false);
     const [transactionDetails, setTransactionDetails] = useState<string>('');
     const { data, fetchData, toast, showToast, hideToast } = useStore();
+    useBodyScrollLock(isModalOpen);
 
     useEffect(() => {
         fetchData();
@@ -288,6 +479,7 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                 />
                 { (isModalOpen) && <Overlay />}
             <GlobalStyle />
+            <PTCContent>
             <PTCTopContent>
                 <PTCBackButton>
                     <IOSBackIcon 
@@ -300,8 +492,12 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                             <p>{customer.fullName}</p>
                         </TopCustomerInfoName>
                         <TopCustomerInfoCI>
-                            <p>{formattedPhoneNumber}</p>
-                            <p>{formattedBirthday}</p>
+                            <TCINumber>
+                                <p>{formattedPhoneNumber}</p>
+                            </TCINumber>
+                            <TCIBirthday>
+                                <p>{formattedBirthday}</p>
+                            </TCIBirthday>
                         </TopCustomerInfoCI>
                     </PTCTopCustomerInfo>
                     <PTCCustomerPointInfo>
@@ -366,6 +562,7 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                 }
                 </PTCOption>
                 </PTCBottomContent>
+                </PTCContent>
         </FlexDiv>
     );
 };
