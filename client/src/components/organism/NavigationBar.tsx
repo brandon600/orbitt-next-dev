@@ -11,6 +11,8 @@ import { GroupsIcon } from '../subatomic/Icons/GroupsIcon';
 import { RewardIcon } from '../subatomic/Icons/RewardIcon';
 import { MailIcon } from '../subatomic/Icons/MailIcon';
 import { ProcessTransactionIcon } from '../subatomic/Icons/ProcessTransactionIcon';
+import { useRouter } from 'next/router';
+import GlobalStyle  from '../../GlobalStyle';
 
 const navItems = [
     {
@@ -80,17 +82,22 @@ const ActiveNavItem = styled.div`
 interface NavigationBarProps {}
 
 const NavigationBar: React.FC<NavigationBarProps> = () => {
-    const [activePage, setActivePage] = useState<string>('');
+    const router = useRouter();
+    const currentPage = router.pathname; // e.g., '/dashboard'
+    const initialActiveItem = navItems.find(item => item.href === currentPage)?.id || ''; // e.g., 'dashboard'
+    const [activePage, setActivePage] = useState<string>(initialActiveItem);
 
-    const handleTabClick = (page: string) => {
+    const handleTabClick = (page: string, href: string) => {
         console.log('tab clicked');
         setActivePage(page); // update the active page
+        router.push(href, undefined, { shallow: true });
+  // navigate to the new page
     };
 
     return (
         <NavigationBarContainer>
             {navItems.map(item => (
-                <Link key={item.id} href={item.href} onClick={() => handleTabClick(item.id)}>
+                <Link key={item.id} href={item.href} onClick={() => handleTabClick(item.id, item.href)}>
                     <NavItem
                         label={item.label}
                         isActive={activePage === item.id}

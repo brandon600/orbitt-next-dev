@@ -40,7 +40,7 @@ const NavItemContainer = styled.div<NavItemContainerProps>`
             font-weight: 800;
         }
     ` : `
-        background-color: none; // Inactive color
+        background-color: transparent; // Inactive color
         color: ${Colors.neutral600};
     `}
 }
@@ -72,7 +72,7 @@ const NavItemContainer = styled.div<NavItemContainerProps>`
         background-color: ${Colors.primary400};
         color: ${Colors.shades100};
     ` : `
-        background-color: none; // Inactive color
+        background-color: transparent; // Inactive color
         color: ${Colors.neutral600};
     `}
 }

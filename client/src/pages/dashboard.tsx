@@ -80,12 +80,16 @@ const FlexDiv = styled.div`
     box-sizing: border-box;
     background: ${Colors.primary100};
 }
+`
+
+/*
 
 @media ${StyledMediaQuery.L} {
     margin-left: 260px;
     width: calc(100% - 260px);
 }
-`
+
+*/
 
 const DataCards = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -370,6 +374,7 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
 
     return (
         <FlexDiv>
+            <GlobalStyle />
             {
                 (timeFilter === 'lastWeek' || timeFilter === 'last2Weeks' || timeFilter === 'lastMonth' || timeFilter === 'last3Months' || timeFilter === 'last6Months' || timeFilter === 'lastYear'  || timeFilter === 'allTime') && (dashboardData?.dailyVisits || dashboardData?.weeklyVisits || dashboardData?.monthlyVisits) && 
                 <BarChartComponent dailyVisits={dashboardData?.dailyVisits || []} weeklyVisits={dashboardData?.weeklyVisits || []} monthlyVisits={dashboardData?.monthlyVisits || []} />
