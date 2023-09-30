@@ -10,6 +10,11 @@ import PillBar from '../components/molecules/PillBar';
 import InputField from '../components/atoms/InputField';
 import { EditIcon } from '@/components/subatomic/Icons/EditIcon';
 
+interface ProgressBarProps {
+    value: number;
+    maxValue: number;
+  }
+
 const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
     display: flex;
@@ -117,6 +122,114 @@ const PillTitle = styled.div`
     }
 `
 
+const SMSContentContainer = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+}
+`
+
+const CreditsPlusButton = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+}
+`
+
+const SMSCreditsRemaining = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+`
+
+
+const SMSCreditsTitle = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    color: ${Colors.neutral700};
+
+    p {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 24px;
+    }
+}
+`
+
+const SMSCreditsBarContainerNotice = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+`
+
+const SMSCreditsBarContainer = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+}
+`
+
+const SMSCreditsBar = styled.div`
+  @media ${StyledMediaQuery.XS} {
+    display: flex;
+    height: 24px; // Define a height for the bar
+    background-color: ${Colors.neutral300}; // Light background to indicate the unfilled part
+    border-radius: 24px; 
+    width: 400px;
+    ...
+  }
+`;
+
+const SMSCreditsBarCount = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    color: ${Colors.neutral700};
+
+    p {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19px;
+    }
+}
+`
+
+const SMSCreditsBarFill = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        height: 100%;
+        background-color: ${Colors.neutral700};
+        transition: width 0.3s;
+        border-radius: 24px;
+        min-width: 2px;
+    }
+`
+
+const ProgressBar: React.FC<ProgressBarProps> = ({ value, maxValue }) => {
+    const filledPercentage = (value / maxValue) * 100;
+    console.log(value)
+    console.log(maxValue)
+  
+    return (
+      <SMSCreditsBar>
+        <SMSCreditsBarFill
+          style={{
+            width: `${filledPercentage}%`,
+          }}
+        />
+      </SMSCreditsBar>
+    );
+  };
+
 interface SettingsProps {
     // Define any props if you have specific ones for this component.
 }
@@ -181,7 +294,7 @@ const Settings: React.FC<SettingsProps> = () => {
           }
         } catch (error) {
           console.error('Error:', error);
-          showToast(`Error: Something wrong happened!`, 'error');
+          showToast(`sdj: Something wrong happened!`, 'error');
         }
 
     };
@@ -193,6 +306,10 @@ const Settings: React.FC<SettingsProps> = () => {
     const handleTabChange = (tabName: string) => {
         setActiveTab(tabName);
     };
+
+    const barValue = data.totalMessagesSent;
+    const barMaxValue = 1000
+
 
     return (
         <FlexDiv>
@@ -247,6 +364,28 @@ const Settings: React.FC<SettingsProps> = () => {
                     <div>
                         {/* SMS Tab Content */}
                         <p>SMS settings content here.</p>
+                        <SMSContentContainer>
+                            <CreditsPlusButton>
+                                <SMSCreditsRemaining>
+                                    <SMSCreditsTitle>
+                                        <Text
+                                            text="title goes here"
+                                        />
+                                    </SMSCreditsTitle>
+                                    <SMSCreditsBarContainerNotice>
+                                        <SMSCreditsBarContainer>
+                                        <ProgressBar
+                                            value={barValue ?? 0}
+                                            maxValue={barMaxValue ?? 1000}
+                                            />
+                                            <SMSCreditsBarCount>
+                                                {`${barValue ?? 0}/${barMaxValue ?? 1000}`}
+                                            </SMSCreditsBarCount>
+                                        </SMSCreditsBarContainer>
+                                    </SMSCreditsBarContainerNotice>
+                                </SMSCreditsRemaining>
+                            </CreditsPlusButton>
+                        </SMSContentContainer>
                     </div>
                 )}
 
