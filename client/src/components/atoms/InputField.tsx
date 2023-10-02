@@ -64,9 +64,20 @@ const InputFieldInput = styled.input`
             color: ${Colors.primary400};
         }
 
+        &:disabled,
+        &:disabled:not(:focus):not(:placeholder-shown) { 
+            color: ${Colors.neutral400};
+            cursor: not-allowed;
+        }
+  
+      &:not(:focus):not(:placeholder-shown) {
+          color: ${Colors.neutral600};
+      }
+
         &::placeholder {
           color: ${Colors.neutral300};
         }
+
     }
 `
 
@@ -92,6 +103,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           onChange={(e) => onChange(e.target.value)}
           required={required}
           placeholder={placeholder}
+          disabled={disabled}
         />
       </InputFieldContainer>
     );

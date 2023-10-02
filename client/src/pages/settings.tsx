@@ -10,6 +10,11 @@ import PillBar from '../components/molecules/PillBar';
 import InputField from '../components/atoms/InputField';
 import { EditIcon } from '@/components/subatomic/Icons/EditIcon';
 
+interface ProgressBarProps {
+    value: number;
+    maxValue: number;
+  }
+
 const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
     display: flex;
@@ -117,9 +122,215 @@ const PillTitle = styled.div`
     }
 `
 
+const SMSContentContainer = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+
+    @media ${StyledMediaQuery.S} {
+        flex-direction: row;
+    }
+}
+`
+
+const CreditsPlusButton = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    width: 100%;
+}
+`
+
+const SMSCreditsRemaining = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+`
+
+
+const SMSCreditsTitle = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    color: ${Colors.neutral700};
+
+    p {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 24px;
+    }
+}
+`
+
+const SMSCreditsBarContainerNotice = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+}
+`
+
+const SMSCreditsBarContainer = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+    width: 100%;
+}
+`
+
+const SMSCreditsBar = styled.div`
+  @media ${StyledMediaQuery.XS} {
+    display: flex;
+    height: 24px; // Define a height for the bar
+    background-color: ${Colors.neutral300}; // Light background to indicate the unfilled part
+    border-radius: 24px; 
+    width: 100%;
+  }
+`;
+
+const SMSCreditsBarCount = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    color: ${Colors.neutral600};
+
+    p {
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 19px;
+    }
+}
+`
+
+const SMSCreditsBarFill = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        height: 100%;
+        background-color: ${Colors.neutral600};
+        transition: width 0.3s;
+        border-radius: 24px;
+        min-width: 2px;
+    }
+`
+
+const NoFlexDiv = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+}
+`
+
+const SMSButtonsContainer = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+`
+
+const SMSPhoneNumber = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+`
+
+const SMSPhoneNumberTextContainer = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}
+`
+
+const SMSPhoneNumberTitle = styled.div`
+    display: flex;
+    color: ${Colors.neutral700};
+    p {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 24px;
+    }
+`
+
+const SMSPhoneNumberSubtitle = styled.div`
+    display: flex;
+    color: ${Colors.neutral400};
+    p {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 19px;
+    }
+`
+
+const SMSNoticeText = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    color: ${Colors.neutral400};
+    p {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 19px;
+    }
+}
+`
+
+const ProgressBar: React.FC<ProgressBarProps> = ({ value, maxValue }) => {
+    const filledPercentage = (value / maxValue) * 100;
+    console.log(value)
+    console.log(maxValue)
+  
+    return (
+      <SMSCreditsBar>
+        <SMSCreditsBarFill
+          style={{
+            width: `${filledPercentage}%`,
+          }}
+        />
+      </SMSCreditsBar>
+    );
+  };
+
 interface SettingsProps {
     // Define any props if you have specific ones for this component.
 }
+
+
+/**
+ * Formats a phone number to the format: (XXX) XXX-XXXX.
+ * @param value - The string to format.
+ * @returns {string} - Formatted phone number.
+ */
+export const formatPhoneNumber = (value: string): string => {
+    let numericValue = value.replace(/\D/g, '');  // Remove non-digit characters
+  
+    // Check for 11 digits and starts with "1"
+    if (numericValue.length === 11 && numericValue.startsWith('1')) {
+      numericValue = numericValue.substring(1); // Remove the leading "1"
+    }
+  
+    if (numericValue.length < 4) {
+      return numericValue;
+    } else if (numericValue.length < 7) {
+      return `(${numericValue.substring(0, 3)}) ${numericValue.substring(3)}`;
+    } else {
+      return `(${numericValue.substring(0, 3)}) ${numericValue.substring(3, 6)}-${numericValue.substring(6, 10)}`;
+    }
+  };
 
 const Settings: React.FC<SettingsProps> = () => {
     const { data, fetchData, toast, showToast } = useStore();
@@ -181,7 +392,7 @@ const Settings: React.FC<SettingsProps> = () => {
           }
         } catch (error) {
           console.error('Error:', error);
-          showToast(`Error: Something wrong happened!`, 'error');
+          showToast(`sdj: Something wrong happened!`, 'error');
         }
 
     };
@@ -194,6 +405,19 @@ const Settings: React.FC<SettingsProps> = () => {
         setActiveTab(tabName);
     };
 
+    const inputSMSNumber = formatPhoneNumber(data.messagingPhoneNumber)
+    const barValue = data.monthlyMessagesLeft;
+    const barMaxValue = 1000
+
+    const handleUpgradeSubscription = () => {
+        console.log('Upgrade Subscription button clicked!');
+    }
+
+    const handleBuyMoreCredits = () => {
+        console.log('Buy More Credits button clicked!')
+    }
+
+
     return (
         <FlexDiv>
             <GlobalStyle />
@@ -204,7 +428,7 @@ const Settings: React.FC<SettingsProps> = () => {
             <PillBar options={['Account', 'SMS', 'Privacy']} onActiveChange={handleTabChange} />
             </PillTitle>
 
-            <div>
+            <NoFlexDiv>
                 {activeTab === 'Account' && (
                     <CompanyNameContainer>
                         <InputPlusEdit>
@@ -246,7 +470,72 @@ const Settings: React.FC<SettingsProps> = () => {
                 {activeTab === 'SMS' && (
                     <div>
                         {/* SMS Tab Content */}
-                        <p>SMS settings content here.</p>
+                        <SMSContentContainer>
+                            <CreditsPlusButton>
+                                <SMSCreditsRemaining>
+                                    <SMSCreditsTitle>
+                                        <Text
+                                            text="SMS Credits Remaining"
+                                        />
+                                    </SMSCreditsTitle>
+                                    <SMSCreditsBarContainerNotice>
+                                        <SMSCreditsBarContainer>
+                                        <ProgressBar
+                                            value={barValue ?? 0}
+                                            maxValue={barMaxValue ?? 1000}
+                                            />
+                                            <SMSCreditsBarCount>
+                                                <Text
+                                                    text={`${barValue ?? 0}/${barMaxValue ?? 1000}`}
+                                                />
+                                            </SMSCreditsBarCount>
+                                        </SMSCreditsBarContainer>
+                                        <SMSNoticeText>
+                                            <Text
+                                                text='SMS Credits to be reset on 9/09/2023'
+                                            />
+                                        </SMSNoticeText>
+                                    </SMSCreditsBarContainerNotice>
+                                </SMSCreditsRemaining>
+                                <SMSButtonsContainer>
+                                    <Button
+                                        label='Upgrade Subscription'
+                                        buttonTypeVariant='secondary'
+                                        buttonWidthVariant='fill'
+                                        sizeVariant='large'
+                                        onClick={handleUpgradeSubscription}
+                                    />
+                                    <Button
+                                        label='Buy More Credits'
+                                        buttonTypeVariant='primary'
+                                        buttonWidthVariant='fill'
+                                        sizeVariant='large'
+                                        onClick={handleBuyMoreCredits}
+                                    />
+                                    </SMSButtonsContainer>
+                            </CreditsPlusButton>
+                            <SMSPhoneNumber>
+                            <SMSPhoneNumberTextContainer>
+                                <SMSPhoneNumberTitle>
+                                    <Text
+                                        text="SMS Phone Number"
+                                    />
+                                </SMSPhoneNumberTitle>
+                                <SMSPhoneNumberSubtitle>
+                                    <Text
+                                        text="This is the phone number you are sending SMS messages from."
+                                    />
+                                </SMSPhoneNumberSubtitle>
+                            </SMSPhoneNumberTextContainer>
+                            <InputField
+                                ref={businessNameRef}
+                                label="Company Name"
+                                value={inputSMSNumber}
+                                onChange={setNewBusinessName}
+                                disabled={true}
+                            />
+                        </SMSPhoneNumber>
+                        </SMSContentContainer>
                     </div>
                 )}
 
@@ -256,7 +545,7 @@ const Settings: React.FC<SettingsProps> = () => {
                         <p>Privacy settings content here.</p>
                     </div>
                 )}
-            </div>
+            </NoFlexDiv>
         </FlexDiv>
     );
 };

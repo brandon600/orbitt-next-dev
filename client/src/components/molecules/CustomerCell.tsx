@@ -305,6 +305,7 @@ const CustomerCell: React.FC<CustomerCellProps> = ({
     const formattedPhoneNumber = formatPhoneNumber(fullPhoneNumber);
     const starsEarnedString = String(starsEarned)
     const totalVisitsString = String(totalVisits)
+    const currentRewardNumberString = String(rewardNumber)
 
     // FORMATTING SIGN UP DATE
     const suDate = new Date(signUpDate);
@@ -356,7 +357,7 @@ const CustomerCell: React.FC<CustomerCellProps> = ({
             </CustomerBirthday>
             <RCPoints>
                 <Text
-                    text={starsEarnedString}
+                    text={currentRewardNumberString}
                 />
             </RCPoints>
             <RCVisits>

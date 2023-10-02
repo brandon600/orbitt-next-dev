@@ -49,7 +49,7 @@ export const FILTER_CONFIGS: Record<FilterType, FilterConfig> = {
         headingText: "Filter by Points",
         filterFunction: (customer: any, filterConfig: FilterValue) => {
             const value = filterConfig.value as string;
-            return customer.starsEarned >= Number(value);
+            return customer.rewardNumber >= Number(value);
         }
     },
     [FilterType.VISITS]: {
