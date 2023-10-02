@@ -4,6 +4,9 @@ import { create } from 'zustand';
 export interface UserData {
   userid: string;
   companyName?: string;
+  monthlyMessagesLeft?: number;
+  totalMessagesSent?: number;
+  messagingPhoneNumber: string;
   // Add other properties here as needed
 }
 
@@ -27,6 +30,7 @@ export interface AppState {
 
 const initialData: UserData = {
   userid: '',
+  messagingPhoneNumber: '',
   // Add initial values for other properties as needed
 };
 
