@@ -7,6 +7,7 @@ export interface UserData {
   monthlyMessagesLeft?: number;
   totalMessagesSent?: number;
   messagingPhoneNumber: string;
+  termsConditions?: string;
   // Add other properties here as needed
 }
 

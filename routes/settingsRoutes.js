@@ -12,7 +12,7 @@ module.exports = (app) => {
                 return res.status(400).send({ message: 'Bad request parameters.' });
             }
         
-            const myquery = { userid: user.userid };
+            const myquery = { userid: '1680735892067' };
             const newvalues = { $set: { companyName: businessName } };
         
             // Using promise approach
@@ -28,19 +28,25 @@ module.exports = (app) => {
     
           //User updates their terms & conditions
           app.post('/update-terms-conditions', (req, res) => {
-            var user = req.user.userid;
-            var myquery = {userid: user};
-            var newvalues = {$set: { termsConditions: req.body.value } };
+            const { businessTC, user } = req.body;
+            console.log(req.body.businessTC)
+
+            if (!businessTC || !user || !user.userid) {
+              return res.status(400).send({ message: 'Bad request parameters.' });
+          }
       
-            User.updateOne(myquery, newvalues, function(err, res) {
-              if (err) throw err
-              console.log("1 document updated");
-            })
+            const myquery = { userid: user.userid };
+            const newvalues = {$set: { termsConditions: businessTC } };
+
+            console.log(req.body)
+
+            User.updateOne(myquery, newvalues)
             .then(() => {
-              res.status(200).send({ message: 'Terms & Conditions updated successfully.' });
+                res.status(200).send({ message: 'TCs updated successfully.' });
             })
-            .catch((err) => 
-              res.status(500).send({ message: 'Error updating Terms & Conditions.' })
-            );
+            .catch((err) => {
+                console.error("Update error:", err);
+                res.status(500).send({ message: 'Error updating TCs.' });
+            });
           })
 }

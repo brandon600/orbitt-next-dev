@@ -41,6 +41,9 @@ const UserSchema = new Schema ({
     },
     messagingPhoneNumber: {
         type: String
+    },
+    termsConditions: {
+        type: String
     }
 });
 
