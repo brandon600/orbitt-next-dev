@@ -299,8 +299,6 @@ module.exports = (app) => {
     });
 
 
-
-
     app.get('/process-transaction', async (req, res) => {
     console.log('Phone number:', req.query.phoneNumber);  
 
@@ -355,9 +353,11 @@ module.exports = (app) => {
             }
     
             const currentPoints = customer.rewardNumber;
-            const updatedPoints = currentPoints + parseInt(points);
+            const updatedPoints = currentPoints + parseInt(points); 
+            const updatedStarsEarned = customer.starsEarned + parseInt(points);
     
             customer.rewardNumber = updatedPoints;
+            customer.starsEarned = updatedStarsEarned
             customer.totalVisits = customer.totalVisits + 1;
             await customer.save();
     
@@ -387,11 +387,12 @@ module.exports = (app) => {
             if (myPointsMessage && myPointsMessage.active) {
                 const messageContent = `Congratulations! You've earned ${points} star(s), bringing your total to ${updatedPoints} star(s). ${myPointsMessage.textMessageCustomText} ${myPointsMessage.textMessageDefaultTextEnd1}`;
                 const sendNumber = customer.fullPhoneNumber;
+                console.log(sendNumber)
 
                 await client.messages.create({
                     body: messageContent,
                     from: `+${user.messagingPhoneNumber}`, // assuming userClass has the messagingPhoneNumber
-                    to: sendNumber
+                    to: `+${sendNumber}`
                 });
     
                 const newSentMessage = new SentMessage({

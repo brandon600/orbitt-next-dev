@@ -367,16 +367,25 @@ function formatPhoneNumber(number: string): string {
     return number;
 }
 
+function formatDateFromMilliseconds(milliseconds: string): string {
+    const dateObj = new Date(Number(milliseconds));
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');  // Months are 0-indexed
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const year = dateObj.getFullYear();
+    return `${month}/${day}/${year}`;
+}
+
+
 function generateVisitInfoText(visit: VisitData): string {
     switch (visit.visitType) {
         case 'New User':
-            return `${visit.customerName} signed up on ${new Date(visit.date).toLocaleDateString()}`;
+            return `${visit.customerName} signed up on ${formatDateFromMilliseconds(visit.date)}`;
         case 'Reward':
-            return `${visit.customerName} redeemed a reward on ${new Date(visit.date).toLocaleDateString()}`;
+            return `${visit.customerName} redeemed a reward on ${formatDateFromMilliseconds(visit.date)}`;
         case 'Purchase':
-            return `${visit.customerName} made a purchase on ${new Date(visit.date).toLocaleDateString()}`;
+            return `${visit.customerName} made a purchase on ${formatDateFromMilliseconds(visit.date)}`;
         case 'Birthday':
-            return `${visit.customerName} received a birthday reward on ${new Date(visit.date).toLocaleDateString()}`;
+            return `${visit.customerName} received a birthday reward on ${formatDateFromMilliseconds(visit.date)}`;
         default:
             return visit.visitid;  // fallback to provided infoText
     }

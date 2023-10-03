@@ -64,16 +64,19 @@ const NavItemContainer = styled.div<NavItemContainerProps>`
 
     p {
         font-size: 16px;
-        font-weight: 800;
+        font-weight: 500;
         line-height: 26px;
     }
 
     ${props => props.isActive ? `
         background-color: ${Colors.primary400};
         color: ${Colors.shades100};
+        p {
+            font-weight: 800;
+        }
     ` : `
         background-color: transparent; // Inactive color
-        color: ${Colors.neutral600};
+        color: ${Colors.neutral500};
     `}
 }
 `;
