@@ -457,8 +457,14 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
     
     const storeData = useStore.getState();
     console.log('Store Data:', storeData);
-
     console.log('Dashboard Data:', dashboardData);
+
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+    
+    const companyName = data?.companyName || 'Company Name';
 
     const BarChartComponent: React.FC<BarChartProps> = ({ dailyVisits, weeklyVisits, monthlyVisits }) => {
         let labels, dataValues, datasetLabel;
@@ -622,7 +628,7 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
         <FlexDiv>
             <GlobalStyle />
                 <PageTitle>
-                    <Text text='Customers' />
+                    <Text text={companyName} />
                 </PageTitle>
                 <DashboardContent>
             <DropdownContainer>
@@ -663,7 +669,7 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
                         number2=''
                     />
                     <DataCard
-                        label='Trasnactions'
+                        label='Transactions'
                         number1={dashboardData?.totalVisits?.toString()}
                         number2=''
                     />

@@ -95,6 +95,7 @@ const DropdownFieldSelect2 = styled.select`
     @media ${StyledMediaQuery.XS} {
       font: inherit;
       font-size: 16px;
+      font-weight: 500;
       font-family: inherit;
       background-color: ${Colors.neutral100};
       border: none;

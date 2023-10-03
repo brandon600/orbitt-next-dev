@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Colors from '../../constants/Colors';
 import Text from '../subatomic/Text';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
+import { useState, useEffect } from 'react';
 
 interface NavItemContainerProps {
     isActive: boolean;
@@ -32,12 +33,12 @@ const NavItemContainer = styled.div<NavItemContainerProps>`
     }
 
     ${props => props.isActive ? `
-        background-color: ${Colors.primary400};
-        color: ${Colors.shades100};
+        background-color: transparent; // Inactive color
+        color: ${Colors.neutral600};
 
         p {
-            color: ${Colors.shades100};
-            font-weight: 800;
+            color: ${Colors.neutral600};
+            font-weight: 500;
         }
     ` : `
         background-color: transparent; // Inactive color
@@ -73,6 +74,7 @@ const NavItemContainer = styled.div<NavItemContainerProps>`
         color: ${Colors.shades100};
         p {
             font-weight: 800;
+            color: ${Colors.shades100};
         }
     ` : `
         background-color: transparent; // Inactive color
@@ -109,10 +111,51 @@ const NavItemLabel = styled.div`
         display: flex;
 `
 
+const useWindowWidth = () => {
+  const [windowWidth, setWindowWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 0);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  return windowWidth;
+};
+
+const useHasMounted = (): boolean => {
+    const [hasMounted, setHasMounted] = useState(false);
+  
+    useEffect(() => {
+      setHasMounted(true);
+    }, []);
+  
+    return hasMounted;
+  };
+  
+
 const NavItem: React.FC<NavItemProps> = ({ label, isActive, onClick, fill, SvgComponent }) => {
+    const hasMounted = useHasMounted();
+
+    if (!hasMounted) {
+      return null; // Don't render anything until we've determined the client side has mounted.
+    }
+  
+    const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
+    const isLargeScreen = windowWidth >= 1280;
+  
+    // Determine the fill color
+    let fillColor = Colors.neutral600;
+    if (isActive && isLargeScreen) {
+      fillColor = Colors.shades100;
+    }
+    
     return (
       <NavItemContainer isActive={isActive} onClick={onClick}>
-        {SvgComponent && <NavItemSVG><SvgComponent fill={fill} /></NavItemSVG>}
+        {SvgComponent && <NavItemSVG>   <SvgComponent fill={fillColor} /></NavItemSVG>}
         <NavItemLabel>
           <Text text={label} />
         </NavItemLabel>
