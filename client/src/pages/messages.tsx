@@ -105,14 +105,11 @@ export async function getServerSideProps() {
 function Messages( { triggeredMessagesData: initialTriggeredMessagesData }: MessagesProps) {
     const { data, fetchData, toast, showToast, hideToast } = useStore();
 
-
 const [hasPendingMessageChanges, setHasPendingMessageChanges] = useState(false);
 const [originalTriggeredMessageToggles, setOriginalTriggeredMessageToggles] = useState<boolean[]>([]);
 const [currentTriggeredMessageToggles, setCurrentTriggeredMessageToggles] = useState<boolean[]>([]);
 const [triggeredMessagesData, setTriggeredMessagesData] = useState(initialTriggeredMessagesData);
 const [editingIndex, setEditingIndex] = useState<number | null>(null);
-
-
 
 useEffect(() => {
     console.log("Setting up socket connection.");
