@@ -9,6 +9,7 @@ import { useStore, AppState } from '../store/store'; // Import your store
 import PillBar from '../components/molecules/PillBar';
 import InputField from '../components/atoms/InputField';
 import { EditIcon } from '@/components/subatomic/Icons/EditIcon';
+import Textarea from '../components/atoms/Textarea';
 
 interface ProgressBarProps {
     value: number;
@@ -289,6 +290,35 @@ const SMSNoticeText = styled.div`
 }
 `
 
+const TermsConditionsContainer = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+`
+
+const TermsConditionsButton = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+@media ${StyledMediaQuery.S} {
+    width: fit-content;
+}
+`
+
+const TextAreaContainer = styled.div`
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    height: 400px;
+    width: 100%;
+}
+`
+
 const ProgressBar: React.FC<ProgressBarProps> = ({ value, maxValue }) => {
     const filledPercentage = (value / maxValue) * 100;
     console.log(value)
@@ -339,6 +369,11 @@ const Settings: React.FC<SettingsProps> = () => {
     const [newBusinessName, setNewBusinessName] = useState<string>('');
     const [isEditingBusinessName, setEditingBusinessName] = useState<boolean>(false);
     const businessNameRef = useRef<HTMLInputElement | null>(null);
+    const businessTCRef = useRef<HTMLTextAreaElement | null>(null);
+    const [businessTC, setBusinessTC] = useState<string>(data.termsConditions || '');
+    const [newBusinessTC, setNewBusinessTC] = useState<string>('');
+    const [isEditingBusinessTC, setEditingBusinessTC] = useState<boolean>(false);
+
 
     useEffect(() => {
         if (isEditingBusinessName) {
@@ -350,9 +385,22 @@ const Settings: React.FC<SettingsProps> = () => {
         setBusinessName(data.companyName || '');
     }, [data.companyName]);
 
+
+    useEffect(() => {
+        if (isEditingBusinessTC) {
+            businessTCRef.current?.focus();
+        }
+    }, [isEditingBusinessTC]);
+
+
+    useEffect(() => {
+        setBusinessTC(data.termsConditions || '');
+    }, [data.termsConditions]);
+
     useEffect(() => {
         fetchData();
     }, []);
+
 
     const handleEditBusinessName = () => {
         setNewBusinessName(businessName);
@@ -361,6 +409,15 @@ const Settings: React.FC<SettingsProps> = () => {
 
     const handleCancelEditBusinessName = () => {
         setEditingBusinessName(false);
+    };
+
+    const handleEditBusinessTC= () => {
+        setNewBusinessTC(businessTC);
+        setEditingBusinessTC(true);
+    };
+
+    const handleCancelEditBusinessTC = () => {
+        setEditingBusinessTC(false);
     };
 
     const handleSaveBusinessName = async (e?: React.FormEvent) => {
@@ -389,6 +446,41 @@ const Settings: React.FC<SettingsProps> = () => {
           } else {
             console.log('Failed:', response);
             showToast('Failed to add customer.', 'error');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          showToast(`sdj: Something wrong happened!`, 'error');
+        }
+
+    };
+
+    const handleSaveBusinessTC = async (e?: React.FormEvent) => {
+        e?.preventDefault();
+        setBusinessTC(newBusinessTC);
+        setEditingBusinessTC(false);
+        console.log("Sending to backend:", newBusinessTC); 
+         const payload = {
+          businessTC: newBusinessTC,
+          user: data,
+        };
+    
+        try {
+          const response = await fetch('http://localhost:5000/update-terms-conditions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+      
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Success:', data);
+            showToast(`T&C's updated successfully!`, 'success');
+            // Additional logic here (e.g., close the form, refresh rewards list, etc.)
+          } else {
+            console.log('Failed:', response);
+            showToast(`Failed to update T&C's.`, 'error');
           }
         } catch (error) {
           console.error('Error:', error);
@@ -427,7 +519,6 @@ const Settings: React.FC<SettingsProps> = () => {
             </PageTitle>
             <PillBar options={['Account', 'SMS', 'Privacy']} onActiveChange={handleTabChange} />
             </PillTitle>
-
             <NoFlexDiv>
                 {activeTab === 'Account' && (
                     <CompanyNameContainer>
@@ -540,10 +631,49 @@ const Settings: React.FC<SettingsProps> = () => {
                 )}
 
                 {activeTab === 'Privacy' && (
-                    <div>
-                        {/* Privacy Tab Content */}
-                        <p>Privacy settings content here.</p>
-                    </div>
+                    <TermsConditionsContainer>
+                        <TextAreaContainer>
+                            <Textarea
+                                value={isEditingBusinessTC ? newBusinessTC : businessTC}
+                                onChange={setNewBusinessTC}
+                                height='100%'
+                                ref={businessTCRef}
+                            />
+                        </TextAreaContainer>
+                        {!isEditingBusinessTC && <BottomButtonDiv>
+                            <TermsConditionsButton>
+                                    <Button
+                                        label='Edit'
+                                        onClick={handleEditBusinessTC}
+                                        buttonTypeVariant='neutral'
+                                        buttonWidthVariant='fill'
+                                        sizeVariant='large'
+                                    />
+                            </TermsConditionsButton>
+                                </BottomButtonDiv>}
+                        {isEditingBusinessTC && (
+                            <BottomButtonFlex>
+                                <BottomButtonDiv>
+                                    <Button
+                                        label='Cancel'
+                                        onClick={handleCancelEditBusinessTC}
+                                        buttonTypeVariant='neutral'
+                                        buttonWidthVariant='fill'
+                                        sizeVariant='large'
+                                    />
+                                </BottomButtonDiv>
+                                <BottomButtonDiv>
+                                    <Button
+                                        label='Save'
+                                        onClick={handleSaveBusinessTC}
+                                        buttonTypeVariant='primary'
+                                        buttonWidthVariant='fill'
+                                        sizeVariant='large'
+                                    />
+                                </BottomButtonDiv>
+                            </BottomButtonFlex>
+                        )}
+                    </TermsConditionsContainer>
                 )}
             </NoFlexDiv>
         </FlexDiv>

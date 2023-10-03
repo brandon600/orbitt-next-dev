@@ -78,23 +78,29 @@ const TextareaTextarea = styled.textarea`
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ label, value, onChange, required, placeholder, disabled, height }, ref) => {
     return (
-      <TextareaContainer
-        height={height}
-      >
-          {/* ... */}
-          <TextareaTextarea
-            value={value}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onChange(e.target.value)}
-            required={required}
-            placeholder={placeholder}
-            disabled={disabled}
-            ref={ref}
-          />
+      <TextareaContainer height={height}>
+        {label && (
+          <TextareaLabel>
+            {label}
+            {required && <RequiredAsterisk>*</RequiredAsterisk>}
+          </TextareaLabel>
+        )}
+        <TextareaTextarea
+          value={value}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onChange(e.target.value)}
+          required={required}
+          placeholder={placeholder}
+          disabled={disabled}
+          ref={ref}
+        />
       </TextareaContainer>
     );
   }
 );
-
 Textarea.displayName = 'Textarea';
-
 export default Textarea;
+
+
+
+
+
