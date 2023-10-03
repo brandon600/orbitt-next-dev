@@ -14,6 +14,8 @@ import DataCard from '@/components/atoms/DataCard';
 import { Chart as ChartJS, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from "chart.js";
 import { Doughnut, Bar } from "react-chartjs-2";
 import PillBar from '@/components/molecules/PillBar';
+import { DropdownOption } from '@/components/atoms/DropdownField';
+import DropdownField from '@/components/atoms/DropdownField';
 
   
 type DailyVisit = {
@@ -65,6 +67,19 @@ interface DashboardProps {
     initialDashboardData: DashboardData | null;
 }
 
+interface DoughnutChartData {
+    labels: string[];
+    datasets: {
+        data: number[];
+        backgroundColor: string[];
+        hoverOffset: number;
+    }[];
+}
+
+interface DoughnutChartComponentProps {
+    data: DoughnutChartData;
+}
+
 interface BarChartProps {
     dailyVisits: DailyVisit[];
     weeklyVisits: WeeklyVisit[];
@@ -80,6 +95,7 @@ const FlexDiv = styled.div`
     box-sizing: border-box;
     background: ${Colors.primary100};
     min-height: 100vh;
+    gap: 24px;
 }
 
 @media ${StyledMediaQuery.S} {
@@ -92,12 +108,41 @@ const FlexDiv = styled.div`
 }
 `
 
-/*
+const DashboardContent = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 16px;
+    }
+`
 
-@media ${StyledMediaQuery.L} {
-}
+const PageTitle = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        
+        p {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 39px;
+            color: ${Colors.neutral700};
+        }
+    }
 
-*/
+    @media ${StyledMediaQuery.S} {
+        p {
+            font-size: 40px;
+            line-height: 48px;
+        }
+    }
+
+    @media ${StyledMediaQuery.L} {
+        p {
+            font-size: 48px;
+            line-height: 58px;
+        }
+    }
+`
 
 const DataCards = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -106,6 +151,11 @@ const DataCards = styled.div`
         align-items: flex-start;
         gap: 12px;
         align-self: stretch;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        width: calc(50% - 8px);
+        gap: 8px;
     }
 `
 
@@ -117,7 +167,130 @@ const DataCardsRow = styled.div`
         justify-content: space-between;
         width: 100%;
     }
+
+    @media ${StyledMediaQuery.L} {
+        gap: 8px;
+    }
 `
+
+const ScrollableContainer = styled.div`
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+
+    &::-webkit-scrollbar {
+        display: none; // Hide scrollbar for Chrome, Safari and Opera
+    }
+
+    -ms-overflow-style: none;  // Hide scrollbar for IE and Edge
+`;
+
+const PillsPlusDataCards = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 24px;
+    }
+`
+
+const DataCardsDataCharts = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 24px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        display: flex;
+        flex-direction: row;
+        width: calc(100% - 8px);
+        gap: 16px;
+    }
+`
+
+const Div = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+`
+
+const DataCharts = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    @media ${StyledMediaQuery.XS} {
+        flex-direction: column;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        flex-direction: row;
+        gap: 16px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        flex-direction: column;
+        width: calc(50% - 8px);
+    }
+`
+
+const DataBarChatContainer = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        width: 100%;
+        height: 310px;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        width: calc(50% - 8px); // 50% width minus half the gap
+        height: 328px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        width: 100%;
+    }
+`
+
+const DoughnutContainer = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: none;
+    }
+
+    @media ${StyledMediaQuery.S} {
+        display: flex;
+        width: calc(50% - 8px);
+        height: 328px;
+    }
+
+    @media ${StyledMediaQuery.L} 
+        width: 100%;
+    }
+`
+
+const DropdownContainer = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        width: 100%;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        width: 324px;
+    }
+`
+
+const timelineFilterOptions: DropdownOption[] = [
+    { label: "All Time", value: "allTime" },
+    { label: "Within Last Week", value: "lastWeek" },
+    { label: "Within Last 2 Weeks", value: "last2Weeks" },
+    { label: "Within Last Month", value: "lastMonth" },
+    { label: "Within Last 3 Months", value: "last3Months" },
+    { label: "Within Last 6 Months", value: "last6Months" },
+    { label: "Within Last Year", value: "lastYear" }
+  ];
 
 export async function getServerSideProps() {
     try {
@@ -151,6 +324,9 @@ export function getWeek(date: Date): number {
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJS.defaults.backgroundColor = '#7AC1FF'
+ChartJS.defaults.font.size = 14;
+ChartJS.defaults.borderColor = 'rgba(54, 162, 235, 0)';
 
 
 function generateBarChartDataForMonth(weeklyVisits: WeeklyVisit[], weeks: number): WeeklyVisit[] {
@@ -184,10 +360,20 @@ function generateBarChartDataForMonth(weeklyVisits: WeeklyVisit[], weeks: number
     return pastWeeks.reverse();
 }
 
+function getGradient(ctx: CanvasRenderingContext2D, chartHeight: number, colorStart: string, colorEnd: string): CanvasGradient {
+    const gradient = ctx.createLinearGradient(0, 0, 0, chartHeight);
+    gradient.addColorStop(0, colorStart);
+    gradient.addColorStop(1, colorEnd);
+    return gradient;
+}
 
-function generateBarChartData(dailyVisits: DailyVisit[], numOfDays: number = 7) {
+
+function generateBarChartData(dailyVisits: DailyVisit[], numOfDays: number = 7, ctx?: CanvasRenderingContext2D) {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     console.log(numOfDays)
+
+    const defaultColor = 'rgba(54, 162, 235, 0.2)';
+    const gradientColor = ctx ? getGradient(ctx, ctx.canvas.height, 'rgba(212, 100, 50, 1)', 'rgba(212, 187, 56, 0)') : defaultColor;
     
     // Generate an array of dates for the last numOfDays
     const dates = Array.from({ length: numOfDays }).map((_, i) => {
@@ -206,35 +392,57 @@ function generateBarChartData(dailyVisits: DailyVisit[], numOfDays: number = 7) 
         datasets: [{
             label: 'Visits',
             data: counts,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1
+            backgroundColor: '#7AC1FF',
         }]
     };
 }
 
+const chartOptions = {
+    maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            labels: {
+                color: "#8598AD", // Note: fontColor has been changed to color based on newer versions of Chart.js
+                font: {
+                    size: 14
+                }
+            }
+        }
+    },
+    scales: {
+        y: { // 'y' is the default ID for the y-axis
+            ticks: {
+                color: "#8598AD", // Note: fontColor has been changed to color
+                font: {
+                    size: 14
+                },
+                stepSize: 1,
+                beginAtZero: true
+            }
+        },
+        x: { // 'x' is the default ID for the x-axis
+            ticks: {
+                color: "#8598AD", // Note: fontColor has been changed to color
+                font: {
+                    size: 14
+                },
+                stepSize: 1,
+                beginAtZero: true
+            }
+        }
+    }
+};
 
-function DoughnutChartComponent() {
-    const data = {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.6)',
-                'rgba(54, 162, 235, 0.6)',
-                'rgba(255, 206, 86, 0.6)',
-                'rgba(75, 192, 192, 0.6)',
-                'rgba(153, 102, 255, 0.6)',
-                'rgba(255, 159, 64, 0.6)'
-            ],
-            hoverOffset: 4
-        }]
+
+function DoughnutChartComponent({ data }: DoughnutChartComponentProps) {
+    const doughnutOptions = {
+        maintainAspectRatio: false
     };
 
     return (
-        <div>
-            <Doughnut data={data} />
-        </div>
+        <Div>
+            <Doughnut data={data} width={'100%'} height={310} options={doughnutOptions} />
+        </Div>
     );
 }
 
@@ -244,6 +452,7 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
     const [timeFilter, setTimeFilter] = useState('allTime');
     const [barChartData, setBarChartData] = useState<any | null>(null);
     const [activeOption, setActiveOption] = useState<string>('Visits');
+    const [doughnutChartData, setDoughnutChartData] = useState<DoughnutChartData | null>(null);
 
     
     const storeData = useStore.getState();
@@ -252,34 +461,35 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
     console.log('Dashboard Data:', dashboardData);
 
     const BarChartComponent: React.FC<BarChartProps> = ({ dailyVisits, weeklyVisits, monthlyVisits }) => {
-        let labels, dataValues;
+        let labels, dataValues, datasetLabel;
 
-        console.log(dailyVisits);
-        console.log(weeklyVisits);
-    
         if (weeklyVisits && weeklyVisits.length > 0) {
             labels = weeklyVisits.map(visit => `Week ${visit.week}`);
             dataValues = weeklyVisits.map(visit => visit.count);
-        }   else if (monthlyVisits && monthlyVisits.length > 0) {
+            datasetLabel = 'Weekly Visits';
+        } else if (monthlyVisits && monthlyVisits.length > 0) {
             labels = monthlyVisits.map((_, idx) => `Month ${idx + 1}`);
             dataValues = monthlyVisits.map(visit => visit.count);
+            datasetLabel = 'Monthly Visits';
         } else {
             labels = dailyVisits.map(visit => `${visit.month}/${visit.day}`);
             dataValues = dailyVisits.map(visit => visit.count);
+            datasetLabel = 'Daily Visits';
         }
     
         const data = {
             labels,
             datasets: [
                 {
-                    label: weeklyVisits ? 'Weekly Visits' : 'Daily Visits',
+                    label: datasetLabel,
                     data: dataValues,
+                    backgroundColor: '#7AC1FF',
                     // ...rest of the settings
                 }
             ]
         };
     
-        return <Bar data={data} />;
+        return <Bar data={data} width={'100%'} height={310} options={chartOptions} />;
     };
 
     useEffect(() => {
@@ -294,7 +504,7 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
             const newData = {
                 labels: dashboardData.monthlyVisits.map((_, idx) => `Month ${idx + 1}`),
                 datasets: [{
-                    label: 'Monthly Visits',
+                    label: 'Monthly Transactions',
                     data: dashboardData.monthlyVisits.map(visit => visit.count),
                     // ... rest of the settings
                 }]
@@ -304,7 +514,7 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
             const newData = {
                 labels: dashboardData.monthlyVisits.map((_, idx) => `Month ${idx + 1}`),
                 datasets: [{
-                    label: 'Monthly Visits',
+                    label: 'Monthly Transactions',
                     data: dashboardData.monthlyVisits.map(visit => visit.count),
                     // ... rest of the settings
                 }]
@@ -314,7 +524,7 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
             const newData = {
                 labels: dashboardData.monthlyVisits.map((_, idx) => `Month ${idx + 1}`),
                 datasets: [{
-                    label: 'Monthly Visits',
+                    label: 'Monthly Transactions',
                     data: dashboardData.monthlyVisits.map(visit => visit.count),
                     // ... rest of the settings
                 }]
@@ -324,7 +534,7 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
             const newData = {
                 labels: dashboardData.monthlyVisits.map((_, idx) => `Month ${idx + 1}`),
                 datasets: [{
-                    label: 'Monthly Visits',
+                    label: 'Monthly Transactions',
                     data: dashboardData.monthlyVisits.map(visit => visit.count),
                     // ... rest of the settings
                 }]
@@ -379,28 +589,72 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
         setActiveOption(activeLabel);
     };
 
+    useEffect(() => {
+        if (barChartData) {
+            const doughnutData: DoughnutChartData = {
+                labels: barChartData.labels,
+                datasets: [{
+                    data: barChartData.datasets[0].data,
+                    backgroundColor: [
+                        '#B8E0FF',
+                        '#7AC1FF',
+                        '#3D9EFF',
+                        '#0177FE',
+                        '#0064D6',
+                        '#003E84',
+                        '#002B5C',
+                        '#29323D',
+                        '#364B63',
+                        '#3D638F',
+                        '#597DA6'
+                    ],
+                    hoverOffset: 4
+                }]
+            };
+            setDoughnutChartData(doughnutData);
+        } else {
+            setDoughnutChartData(null);
+        }
+    }, [barChartData]);
+
 
     return (
         <FlexDiv>
             <GlobalStyle />
-            {
-                (timeFilter === 'lastWeek' || timeFilter === 'last2Weeks' || timeFilter === 'lastMonth' || timeFilter === 'last3Months' || timeFilter === 'last6Months' || timeFilter === 'lastYear'  || timeFilter === 'allTime') && (dashboardData?.dailyVisits || dashboardData?.weeklyVisits || dashboardData?.monthlyVisits) && 
-                <BarChartComponent dailyVisits={dashboardData?.dailyVisits || []} weeklyVisits={dashboardData?.weeklyVisits || []} monthlyVisits={dashboardData?.monthlyVisits || []} />
-            }
-            <DoughnutChartComponent />
-            <select value={timeFilter} onChange={(e) => setTimeFilter(e.target.value)}>
-                <option value="allTime">All Time</option>
-                <option value="lastWeek">Within Last Week</option>
-                <option value="last2Weeks">Within Last 2 Weeks</option>
-                <option value="lastMonth">Within Last Month</option>
-                <option value="last3Months">Within Last 3 Months</option>
-                <option value="last6Months">Within Last 6 Months</option>
-                <option value="lastYear">Within Last Year</option>
-            </select>
-                <PillBar
-                        options={['Visits', 'Customers', /* ... other labels ... */]}
+                <PageTitle>
+                    <Text text='Customers' />
+                </PageTitle>
+                <DashboardContent>
+            <DropdownContainer>
+                <DropdownField
+                    value={timeFilter} 
+                    onChange={(value) => setTimeFilter(value)}
+                    label="Timeline Filter" 
+                    useDefaultDropdown={false} 
+                    options={timelineFilterOptions}
+                />
+            </DropdownContainer>
+            <PillsPlusDataCards>
+                <ScrollableContainer>
+                    <PillBar
+                        options={['Transactions', 'Customers', 'Sign-Ups', 'Rewards Redeemed', 'Total Points Given', 'Surveys Completed']}
                         onActiveChange={handleActivePillChange}
                     />
+                </ScrollableContainer>
+                <DataCardsDataCharts>
+                <DataCharts>
+            <DataBarChatContainer>
+                {
+                    (timeFilter === 'lastWeek' || timeFilter === 'last2Weeks' || timeFilter === 'lastMonth' || timeFilter === 'last3Months' || timeFilter === 'last6Months' || timeFilter === 'lastYear'  || timeFilter === 'allTime') && (dashboardData?.dailyVisits || dashboardData?.weeklyVisits || dashboardData?.monthlyVisits) && 
+                    <BarChartComponent dailyVisits={dashboardData?.dailyVisits || []} weeklyVisits={dashboardData?.weeklyVisits || []} monthlyVisits={dashboardData?.monthlyVisits || []} />
+                }
+            </DataBarChatContainer>
+            <DoughnutContainer>
+                {
+                    doughnutChartData && <DoughnutChartComponent data={doughnutChartData} />
+                }
+            </DoughnutContainer>
+            </DataCharts>
             <DataCards>
                 <DataCardsRow>
                     <DataCard
@@ -439,6 +693,9 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
                     />
                 </DataCardsRow>
             </DataCards>
+            </DataCardsDataCharts>
+            </PillsPlusDataCards>
+            </DashboardContent>
         </FlexDiv>
     );
 }
