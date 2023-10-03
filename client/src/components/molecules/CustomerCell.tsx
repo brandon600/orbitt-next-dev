@@ -6,6 +6,7 @@ import Text from '../subatomic/Text'
 import Button from '../atoms/Button';
 import Checkbox from '../atoms/Checkbox';
 import { CustomerData } from '@/types/CustomerData';
+import { useRouter } from 'next/router';
 
 // Define the props interface for RewardItem
 interface CustomerCellProps extends CustomerData {
@@ -291,14 +292,16 @@ const CustomerCell: React.FC<CustomerCellProps> = ({
 
     const [isChecked, setIsChecked] = useState(isSelected);
 
+    const router = useRouter();
+  
+    const handleClick = () => {
+      router.push(`/customer-info/${customerid}`);
+    }
+
     const handleCheckboxToggle = () => {
         const newState = !isChecked;
         setIsChecked(newState);
         onCustomerSelection(customerid, newState);
-    }
-
-    const handleClick = () => {
-        console.log('handled clicked.')
     }
 
     // FORMATTING VALUES
