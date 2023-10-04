@@ -96,6 +96,8 @@ const FlexDiv = styled.div`
     background: ${Colors.primary100};
     min-height: 100vh;
     gap: 24px;
+    overflow-y: hidden;
+    height: 100vh;
 }
 
 @media ${StyledMediaQuery.S} {
@@ -151,6 +153,7 @@ const DataCards = styled.div`
         align-items: flex-start;
         gap: 12px;
         align-self: stretch;
+        width: 100%;
     }
 
     @media ${StyledMediaQuery.L} {
@@ -197,16 +200,28 @@ const PillsPlusDataCards = styled.div`
 const DataCardsDataCharts = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap; // Children will wrap and take full width
         width: 100%;
         gap: 24px;
+        max-height: calc(100vh - 242px);
+        overflow-y: auto;  // Enables vertical scroll
+        &::after { // Pseudo-element
+            content: "";
+            display: block;
+            height: 24px;
+        }
+    }
+
+    @media ${StyledMediaQuery.S} {
+        max-height: calc(100vh - 251px);
     }
 
     @media ${StyledMediaQuery.L} {
-        display: flex;
         flex-direction: row;
         width: calc(100% - 8px);
         gap: 16px;
+        max-height: calc(100vh - 261px);
     }
 `
 
@@ -281,6 +296,13 @@ const DropdownContainer = styled.div`
         width: 324px;
     }
 `
+
+const InnerWrapper = styled.div`
+    display: flex;
+    flex-direction: row; // Make sure the contents are stacked
+    padding-bottom: 24px;
+    width: 100%; // It behaves as a block-level element
+`;
 
 const timelineFilterOptions: DropdownOption[] = [
     { label: "All Time", value: "allTime" },

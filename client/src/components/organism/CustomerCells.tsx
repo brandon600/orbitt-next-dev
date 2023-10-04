@@ -30,6 +30,21 @@ const CustomerCellsList = styled.div`
         display: flex;
         flex-direction: column;
         width: 100%;
+        max-height: calc(100vh - 372px);  // Set a height
+        overflow-y: auto;  // Ensure it can scroll if content inside exceeds this height
+        &::after { // Pseudo-element
+            content: "";
+            display: block;
+            height: 24px;
+        }
+    }
+
+    @media ${StyledMediaQuery.S} {
+        max-height: calc(100vh - 321px);
+    }
+
+    @media ${StyledMediaQuery.L} {
+        max-height: calc(100vh - 323px);
     }
 `
 
@@ -41,7 +56,6 @@ const CustomerCells: React.FC<CustomerCellsProps> = ({ customersData, onCustomer
       }
   return (
     <CustomerCellsContainer>
-        <CustomerCellsList>
             <CustomerTableHead
                 label1='Name'
                 label2='Phone Number'
@@ -52,6 +66,7 @@ const CustomerCells: React.FC<CustomerCellsProps> = ({ customersData, onCustomer
                 label7='Last Visit'
                 label8='View'
             />
+        <CustomerCellsList>
             {customersData.map((customer, index) => (
             <CustomerCell
                 _id={customer._id}
