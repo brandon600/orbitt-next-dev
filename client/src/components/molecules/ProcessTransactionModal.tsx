@@ -268,7 +268,7 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
     const router = useRouter();
     if (!isOpen || !customer) return null;
 
-    const { data } = useStore.getState(); // Directly access Zustand state
+    const { data, fetchData, toast, showToast, hideToast } = useStore.getState(); // Directly access Zustand state
     
     const handleGivePoints = async () => {
         try {
@@ -288,12 +288,14 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
             const responseData = await response.json();
 
             if (responseData.success) {
-                // Handle success (e.g., show a notification or update the UI)
+                showToast('Successfully gave points!', 'success');
+                router.push('/process-transaction');
             } else {
-                // Handle error (e.g., show an error notification)
+                showToast('Failed to give points.', 'error');
             }
         } catch (error) {
             console.error('Failed to give points:', error);
+            showToast('Failed to give points.', 'error');
             // Handle unexpected errors (e.g., network issues, timeouts, etc.)
         }
     };
@@ -317,12 +319,15 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
             const responseData = await response.json();
 
             if (responseData.success) {
-                // Handle success
+                showToast('Successfully redeemed reward!', 'success');
+                router.push('/process-transaction');
             } else {
                 // Handle error
+                showToast('Failed to redeem reward.', 'error');
             }
         } catch (error) {
             console.error('Failed to redeem reward:', error);
+            showToast('Failed to redeem reward.', 'error');
             // Handle unexpected errors
         }
     };

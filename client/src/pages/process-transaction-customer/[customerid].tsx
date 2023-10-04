@@ -479,6 +479,7 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
 
     return (
         <FlexDiv>
+            <AnimatePresence>
                 <ProcessTransactionModal
                        isOpen={isModalOpen} 
                        onClose={closeModal} 
@@ -488,7 +489,13 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                        pointsGive={pointsGive}
                        transactionDetails={transactionDetails}
                 />
+            </AnimatePresence>
                 { (isModalOpen) && <Overlay />}
+            <AnimatePresence>
+                {toast.visible && (
+                    <Toast key="toast" />
+                )}
+            </AnimatePresence>
             <GlobalStyle />
             <PTCContent>
             <PTCTopContent>
