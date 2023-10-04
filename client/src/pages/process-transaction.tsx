@@ -111,6 +111,8 @@ const FieldAndButton = styled.div`
 
 function useBodyScrollLock(isLocked: boolean) {
     useEffect(() => {
+      const originalOverflow = document.body.style.overflowY;
+      
       if (isLocked) {
         document.body.style.overflowY = 'hidden';
       } else {
@@ -118,10 +120,10 @@ function useBodyScrollLock(isLocked: boolean) {
       }
   
       return () => {
-        document.body.style.overflowY = 'auto';
+        document.body.style.overflowY = originalOverflow;
       };
     }, [isLocked]);
-  }
+}
 
 const fetchCustomer = async (phoneNumber: string) => {
     try {
@@ -200,6 +202,10 @@ const ProcessTransaction = () => {
         }
     };
 
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <FlexDiv>
             <AnimatePresence>
@@ -207,9 +213,14 @@ const ProcessTransaction = () => {
                     <Toast key="toast" />
                 )}
             </AnimatePresence>
-            <FoundCustomerModal
-                isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} customer={customer}
-            />
+            <AnimatePresence>
+                { (isModalOpen) &&  <FoundCustomerModal
+                key="foundCustomerModal"
+                isOpen={isModalOpen} 
+                onClose={handleCloseModal} 
+                customer={customer}
+            />}
+            </AnimatePresence>
             <AnimatePresence>
             { (isModalOpen) && <Overlay />}
             </AnimatePresence>

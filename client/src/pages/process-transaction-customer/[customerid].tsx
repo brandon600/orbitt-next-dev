@@ -444,6 +444,11 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
     const { data, fetchData, toast, showToast, hideToast } = useStore();
     useBodyScrollLock(isModalOpen);
 
+    const router = useRouter();
+    const handleGoBack = () => {
+        router.back();
+    }
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -480,6 +485,7 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
     return (
         <FlexDiv>
             <AnimatePresence>
+            { (isModalOpen) && 
                 <ProcessTransactionModal
                        isOpen={isModalOpen} 
                        onClose={closeModal} 
@@ -488,9 +494,11 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                        reward={selectedReward}
                        pointsGive={pointsGive}
                        transactionDetails={transactionDetails}
-                />
+                />}
             </AnimatePresence>
+            <AnimatePresence>
                 { (isModalOpen) && <Overlay />}
+            </AnimatePresence>
             <AnimatePresence>
                 {toast.visible && (
                     <Toast key="toast" />
@@ -499,7 +507,9 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
             <GlobalStyle />
             <PTCContent>
             <PTCTopContent>
-                <PTCBackButton>
+                <PTCBackButton
+                    onClick={handleGoBack}
+                >
                     <IOSBackIcon 
                         fill={Colors.neutral700}
                     />
