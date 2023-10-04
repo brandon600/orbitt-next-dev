@@ -10,6 +10,8 @@ import PillBar from '../components/molecules/PillBar';
 import InputField from '../components/atoms/InputField';
 import { EditIcon } from '@/components/subatomic/Icons/EditIcon';
 import Textarea from '../components/atoms/Textarea';
+import { AnimatePresence } from 'framer-motion';
+import Toast from '@/components/atoms/Toast';
 
 interface ProgressBarProps {
     value: number;
@@ -317,6 +319,11 @@ const TextAreaContainer = styled.div`
     height: 400px;
     width: 100%;
 }
+
+@media ${StyledMediaQuery.XS} {
+    display: flex;
+    height: 320px;
+}
 `
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ value, maxValue }) => {
@@ -441,11 +448,10 @@ const Settings: React.FC<SettingsProps> = () => {
           if (response.ok) {
             const data = await response.json();
             console.log('Success:', data);
-            showToast('Customer updated successfully!', 'success');
-            // Additional logic here (e.g., close the form, refresh rewards list, etc.)
+            showToast('Name updated successfully!', 'success');
           } else {
             console.log('Failed:', response);
-            showToast('Failed to add customer.', 'error');
+            showToast('Failed to update name.', 'error');
           }
         } catch (error) {
           console.error('Error:', error);
@@ -512,6 +518,11 @@ const Settings: React.FC<SettingsProps> = () => {
 
     return (
         <FlexDiv>
+            <AnimatePresence>
+            {toast.visible && (
+                <Toast key="toast" />
+            )}
+            </AnimatePresence>
             <GlobalStyle />
             <PillTitle>
             <PageTitle>

@@ -227,7 +227,7 @@ const ProcessTransaction = () => {
                     <InputField 
                         label="Enter Phone Number"
                         value={phoneNumber}
-                        placeholder="e.g. 555-555-5555"
+                        placeholder="e.g. (555) 555-5555"
                         onChange={(value) => {
                             const formattedNumber = formatPhoneNumber(value);
                             setPhoneNumber(formattedNumber);
