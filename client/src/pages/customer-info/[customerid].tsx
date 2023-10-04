@@ -328,6 +328,42 @@ const TCIBirthday = styled.div`
     }
 `;
 
+const getDefaultCustomer = (): CustomerData => ({
+    _id: '0', // Default DB ID. This should be handled more appropriately in real-world scenarios.
+    visits: [],
+    receivedBlasts: [],
+    customerid: '0',
+    userClass: '',
+    date: new Date().toISOString(), // Set to the current date as default
+    signUpDate: '01/01/1970',
+    lastTransactionDate: '01/01/1970',
+    user: '', // Default system user, should be updated based on the real-world scenario
+    userMemberstackId: '',
+    firstName: 'Unknown',
+    lastName: 'Customer',
+    fullName: 'Unknown Customer',
+    areaCodeNumber: '000',
+    phoneNumber1: '0000000',
+    fullPhoneNumber: '000-000-0000',
+    rewardNumber: 0,
+    active: false,
+    atRisk: false,
+    totalVisits: 0,
+    starsEarned: 0,
+    rewardsRedeemed: 0,
+    birthdayMonth: '01',
+    birthdayDay: '01',
+    birthdayYear: '1970',
+    fullBirthday: '01/01/1970',
+    index: 0
+    // If any other properties are added to the CustomerData type, they should be represented here as well.
+});
+
+const getDefaultRanking = () => ({
+    rank: -1, // or some default value that indicates an unknown rank.
+    totalCustomers: 0,
+});
+
 export async function getServerSideProps(context: any) {
     const { customerid } = context.params;
     try {
@@ -428,15 +464,34 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
         fetchData();
       }, []);
 
+      
+      const [localCustomer, setLocalCustomer] = useState<CustomerData>(customer || getDefaultCustomer());
+  
+
+      useEffect(() => {
+        console.log("Setting up socket connection.");
+        const socket = io("http://localhost:5000");
+    
+        // Listen for the 'customer-edited' event and update the customer
+        socket.on("customer-edited", (updatedCustomer: CustomerData) => {
+            setLocalCustomer(updatedCustomer);
+        });
+    
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
+
     if (!customer) {
         return <p>Loading...</p>;
     }
+
 
     return (
         <FlexDiv>
             <AnimatePresence>
                 {
-                    showEditForm && <EditCustomerForm onClose={() => setShowEditForm(false)} customer={customer} />
+                    showEditForm && <EditCustomerForm onClose={() => setShowEditForm(false)} customer={localCustomer} />
                 }
             </AnimatePresence>
             <AnimatePresence>
@@ -481,18 +536,18 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
                 <TopCustomerInfo>
                     <TCIName>
                         <Text
-                            text={customer.fullName}
+                            text={localCustomer.fullName}
                         />
                     </TCIName>
                     <CustomerInfoDiv>
                         <TCINumber>
                             <Text
-                                text={formatPhoneNumber(customer.fullPhoneNumber)}
+                                text={formatPhoneNumber(localCustomer.fullPhoneNumber)}
                             />
                         </TCINumber>
                         <TCIBirthday>
                             <Text
-                                text={customer.fullBirthday}
+                                text={localCustomer.fullBirthday}
                             />
                         </TCIBirthday>
                     </CustomerInfoDiv>
@@ -514,19 +569,19 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
                             />
                             <DataCard
                                 label='Number of Visits'
-                                number1={customer.totalVisits.toString()}
+                                number1={localCustomer && localCustomer.totalVisits.toString()}
                                 number2=''
                             />
                         </DataCardsRow>
                         <DataCardsRow>
                             <DataCard
                                 label='Points Earned'
-                                number1={customer.starsEarned.toString()}
+                                number1={localCustomer && localCustomer.starsEarned.toString()}
                                 number2=''
                             />
                             <DataCard
                                 label='Rewards Redeemed'
-                                number1={customer.rewardsRedeemed.toString()}
+                                number1={localCustomer && localCustomer.rewardsRedeemed.toString()}
                                 number2=''
                             />
                         </DataCardsRow>

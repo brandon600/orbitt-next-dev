@@ -73,6 +73,11 @@ export const useSockets = (initialRewards: any[], initialDefaultRewards: any[]):
         console.log("Setting up socket connection.");
         const socket = io("http://localhost:5000");
 
+        socket.on("reward-added", (addedReward: RewardData) => {
+            setRewardsData(prevRewards => [...prevRewards, addedReward]);
+        });
+    
+
         socket.on("reward-updated", (updatedReward) => {
             const updatedRewardsData = rewardsData.map((reward) => {
                 if (reward.rewardid === updatedReward.rewardid) {

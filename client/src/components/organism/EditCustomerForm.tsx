@@ -362,6 +362,7 @@ const birthdayMonthOptions: DropdownOption[] = [
  * @returns {string} - Formatted phone number.
  */
 export const formatPhoneNumber = (value: string): string => {
+  if (!value) return 'N/A';
     let numericValue = value.replace(/\D/g, '');  // Remove non-digit characters
   
     // Check for 11 digits and starts with "1"

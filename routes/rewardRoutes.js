@@ -53,6 +53,7 @@ module.exports = (app) => {
       });
       newReward.save()
       .then(() => {
+        req.io.emit('reward-added', newReward);
         res.status(200).send({ message: 'Reward added successfully.' });
       })
       .catch((err) => 
