@@ -142,6 +142,15 @@ textarea {
     /* Reset default styles for select */
 
 }
+
+body.hide-scrollbar::-webkit-scrollbar {
+  width: 0;  /* For WebKit browsers */
+}
+
+body.hide-scrollbar {
+  scrollbar-width: none;  /* For Firefox */
+}
+
 `;
 
 export default GlobalStyle;

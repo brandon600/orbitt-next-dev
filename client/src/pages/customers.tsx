@@ -83,6 +83,8 @@ const FlexDiv = styled.div`
     box-sizing: border-box;
     background: ${Colors.primary100};
     min-height: 100vh;
+    overflow: hidden;
+    height: 100vh;
 }
 
 @media ${StyledMediaQuery.S} {

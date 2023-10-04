@@ -66,7 +66,7 @@ const CompanyNameContainer = styled.div`
 }
 
 @media ${StyledMediaQuery.L} {
-    max-width: 320px;
+    width: 400px;
 }
 `
 

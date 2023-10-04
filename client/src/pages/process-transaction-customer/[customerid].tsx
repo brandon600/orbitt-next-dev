@@ -41,6 +41,7 @@ const FlexDiv = styled.div`
         box-sizing: border-box;
         min-height: 100vh;
         background: ${Colors.primary100};
+        overflow: hidden;
     }
 
     @media ${StyledMediaQuery.S} {
@@ -345,6 +346,14 @@ const PTCOption = styled.div`
         display: flex;
         flex-direction: column;
         gap: 16px;
+        width: 100%;
+        max-height: calc(100vh - 344px);
+        overflow-y: auto;  // Enables vertical scroll
+        &::after { // Pseudo-element
+            content: "";
+            display: block;
+            height: 24px;
+        }
     }
 
     @media ${StyledMediaQuery.S} {
@@ -352,10 +361,12 @@ const PTCOption = styled.div`
         flex-wrap: wrap;
         justify-content: center;
         gap: 0px;
+        max-height: calc(100vh - 456px);
     }
 
     @media ${StyledMediaQuery.L} {
         gap: 16px;
+        max-height: calc(100vh - 200px);
     }
 `;
 
