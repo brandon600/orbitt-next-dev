@@ -136,6 +136,8 @@ module.exports = (app) => {
               })
             
             await newUpdatedCustomer.save();
+
+            req.io.emit('customer-edited', updatedCustomer);
     
             res.status(200).send({ message: 'Customer updated successfully.', updatedCustomer });
         } catch (err) {
@@ -287,7 +289,9 @@ module.exports = (app) => {
             const funcCustomer = await Customer.findOne({ customerid: uniqid });
             funcCustomer.visits.unshift(newVisit);
             await funcCustomer.save();
-    
+
+            req.io.emit('customer-added', newCustomer);
+
             res.status(200).send({ message: 'Customer created successfully.' });
             console.log('Finished processing /add-customer');
     

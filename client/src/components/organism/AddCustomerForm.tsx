@@ -406,7 +406,7 @@ const AddCustomerForm: React.FC<AddCustomerFormProps> = ({ onClose }) => {
     const { data } = useStore.getState(); // Directly access Zustand state
     console.log(data)
     
-    // Collect reward details and some global state data into an object
+    // Collect reward details and some global state data into an object/
     const payload = {
       customerDetails: {
         firstName: customerFirstName,

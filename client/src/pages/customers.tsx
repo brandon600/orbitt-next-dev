@@ -303,6 +303,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     const mostCommonAreaCode = getMostCommonAreaCode(customersData);
     const [isAddCustomerFormOpen, setIsAddCustomerFormOpen] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
+    const [localCustomersData, setLocalCustomersData] = useState<CustomerData[]>(customersData);
 
     const [filters, setFilters] = useState<Record<FilterType, FilterValue>>({
         [FilterType.POINTS]: { value: '1', active: false },
@@ -313,6 +314,25 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         [FilterType.SIGN_UP_DATE]: { value: '24 Hours', active: false },
         // initialize other filters here if needed
     });
+
+
+    useEffect(() => {
+        console.log("Setting up socket connection.");
+        const socket = io("http://localhost:5000");
+      
+        socket.on("customer-added", (addedCustomer: CustomerData) => {
+            setLocalCustomersData(prevCustomers => [...prevCustomers, addedCustomer]);
+        });
+    
+        socket.on("disconnect", () => {
+          console.log("Disconnected from the server");
+        });
+      
+        return () => {
+          // Cleanup: Disconnect socket when component is unmounted
+          socket.disconnect();
+        };
+    }, []);
 
 
     useEffect(() => {
@@ -347,7 +367,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         setShowFilters(prevState => !prevState);
     }
 
-    const filteredCustomers = customersData.filter(customer => {
+    const filteredCustomers = localCustomersData.filter(customer => {
         if (!customer.fullName.toLowerCase().includes(newCustomerSearch.toLowerCase())) {
             return false;
         }
