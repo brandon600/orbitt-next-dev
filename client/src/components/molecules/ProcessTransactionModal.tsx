@@ -9,14 +9,38 @@ import Button from '../atoms/Button';
 import { useRouter } from 'next/router';
 import { RewardData } from '@/types/RewardData';
 import { useStore, AppState } from '../../store/store'; // Import your store
+import { motion } from 'framer-motion';
 
-const ModalContainer = styled.div`
+const ModalWrapper = styled.div`
+    position: fixed;
+    z-index: 910;
+    left: 50%;
+    transform: translateX(-50%); // horizontal centering
+
     @media ${StyledMediaQuery.XS} {
-        position: fixed;
-        z-index: 920;
+        top: 50%; 
+        width: calc(100% - 48px);  // width minus 24px left and 24px right
+        transform: translate(-50%, -50%); // centers both horizontally and vertically
+    }
+
+    @media ${StyledMediaQuery.S} {
+        width: 442px;
+        top: 50%;
+        transform: translate(-50%, -50%); // this centers both horizontally and vertically
+    }
+
+    @media ${StyledMediaQuery.L} {
+        width: 604px;
+        top: 50%;
+        transform: translate(-50%, -50%); // this centers both horizontally and vertically
+        left: calc(50% + 130px);
+        
+    }
+`;
+
+const ModalContainer = motion(styled.div`
+    @media ${StyledMediaQuery.XS} {
         display: flex;
-        left: 24px;
-        right: 24px;
         background: ${Colors.shades100};
         padding: 64px 16px 16px 16px;
         box-sizing: border-box;
@@ -28,22 +52,14 @@ const ModalContainer = styled.div`
     }
 
     @media ${StyledMediaQuery.S} {
-        width: 442px;
-        top: 120px;
-        left: 50%; 
-        transform: translateX(-50%);
-        right: 0px;
         padding: 96px 24px 32px 24px;
         gap: 40px;
     }
 
     @media ${StyledMediaQuery.L} {
         width: 604px;
-        top: 50%; 
-        left: calc(50% + (260px / 2) - (604px / 2)); 
-        transform: translateY(-50%);
     }
-`;
+`);
 
 const IconPlusText = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -421,7 +437,14 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
     }
 
     return (
-        <ModalContainer onClick={onClose}>
+        <ModalWrapper>
+        <ModalContainer 
+            initial={{ scale: 0 }}  // start from a dot
+            animate={{ scale: 1 }}  // grow to full size
+            exit={{ scale: 0 }}  // shrink back to a dot
+            transition={{ duration: 0.4, ease: [0.88, 0, 0.16, 1] }} 
+            onClick={onClose}
+        >
             <ModalCloseIcon>
                 <CancelIcon 
                     fill={Colors.neutral700}
@@ -444,6 +467,7 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
             </PTMTopContent>
             {content}
         </ModalContainer>
+        </ModalWrapper>
     );
 };
 
