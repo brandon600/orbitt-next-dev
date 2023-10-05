@@ -409,14 +409,16 @@ export async function getServerSideProps(context: any) {
 
     const { customerid } = context.params;
     const userId = userData.userid;
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
     try {
-        const customerResponse = await fetch(`/customers/${customerid}?userId=${userId}`);
+        const customerResponse = await fetch(`${apiUrl}/customers/${customerid}?userId=${userId}`);
         if (!customerResponse.ok) {
             throw new Error('Failed to fetch data');
         }
         const customer: CustomerData = await customerResponse.json();
 
-        const rewardsResponse = await fetch(`/current-active-rewards?userId=${userId}`);
+        const rewardsResponse = await fetch(`${apiUrl}/current-active-rewards?userId=${userId}`);
 
         if (!rewardsResponse.ok) {
             throw new Error('Network response was not ok');

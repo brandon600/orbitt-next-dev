@@ -109,7 +109,8 @@ export async function handleSaveChanges({
       console.log(`Sending updated data: ${JSON.stringify(payload)}`);
     
       try {
-        const response = await fetch('/update-active-rewards', {
+        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await fetch(`${apiUrl}/update-active-rewards`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

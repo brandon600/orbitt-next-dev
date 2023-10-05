@@ -423,7 +423,8 @@ const AddCustomerForm: React.FC<AddCustomerFormProps> = ({ onClose }) => {
     // Make POST request to your Express server
 
     try {
-      const response = await fetch('/add-customer', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await fetch(`${apiUrl}/add-customer`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

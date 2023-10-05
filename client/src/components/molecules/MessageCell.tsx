@@ -257,7 +257,8 @@ useEffect(() => {
         };
       
         try {
-          const response = await fetch('/update-triggered-message-content', {
+            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+          const response = await fetch(`${apiUrl}/update-triggered-message-content`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

@@ -344,7 +344,8 @@ const timelineFilterOptions: DropdownOption[] = [
 
     try {
         const userId = userData.userid;
-        const response = await fetch(`/api/dashboard?userId=${userId}`);
+        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await fetch(`${apiUrl}/api/dashboard?userId=${userId}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -512,7 +513,7 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
     console.log('Dashboard Data:', dashboardData);
     console.log(userData)
     
-    const companyName = data?.companyName || 'Company Name';
+    const companyName = userData?.companyName || 'Company Name';
 
     const BarChartComponent: React.FC<BarChartProps> = ({ dailyVisits, weeklyVisits, monthlyVisits }) => {
         let labels, dataValues, datasetLabel;
@@ -623,7 +624,8 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
     useEffect(() => {
         const fetchDataWithFilter = async () => {
             try {
-                const response = await fetch(`/api/dashboard?userId=${userData.userid}&timeFilter=${timeFilter}`);
+                const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+                const response = await fetch(`${apiUrl}/api/dashboard?userId=${userData.userid}&timeFilter=${timeFilter}`);
 
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

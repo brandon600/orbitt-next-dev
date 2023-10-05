@@ -5,11 +5,13 @@ import NavigationBar from '@/components/organism/NavigationBar';
 import { MemberstackProvider, MemberstackProtected, SignInModal } from "@memberstack/react";
 
 const config = {
-  publicKey: process.env.NEXT_PUBLIC_publicKey || '',
+  publicKey: process.env.NEXT_PUBLIC_PUBLIC_KEY || '',
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
-  console.log(process.env.NEXT_PUBLIC_publicKey);
+  console.log(process.env.NEXT_PUBLIC_PUBLIC_KEY);
+  console.log(process.env.NEXT_PUBLIC_API_BASE_URL);
+  console.log(process.env.NEXT_PUBLIC_WEBSOCKET_URL);
 
   return (
     <MemberstackProvider config={config}>

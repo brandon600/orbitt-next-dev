@@ -441,7 +441,8 @@ const Settings: React.FC<SettingsProps> = () => {
         };
     
         try {
-          const response = await fetch('/update-company-name', {
+            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+          const response = await fetch(`${apiUrl}/update-company-name`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -475,7 +476,8 @@ const Settings: React.FC<SettingsProps> = () => {
         };
     
         try {
-          const response = await fetch('/update-terms-conditions', {
+            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+          const response = await fetch(`${apiUrl}/update-terms-conditions`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

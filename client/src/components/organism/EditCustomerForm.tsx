@@ -438,7 +438,8 @@ useEffect(() => {
     // Make POST request to your Express server
 
     try {
-      const response = await fetch('/edit-customer', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await fetch(`${apiUrl}/edit-customer`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

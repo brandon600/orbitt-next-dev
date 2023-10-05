@@ -105,7 +105,8 @@ const MessagesPageTitle = styled.div`
     try {
         // Fetch messagess data
         const userId = userData.userid;
-        const response = await fetch(`/triggered-messages?userId=${userId}`);
+        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await fetch(`${apiUrl}/triggered-messages?userId=${userId}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -193,7 +194,8 @@ async function handleSaveMessageChanges() {
         const userId = userData.userid;
       
         try {
-          const response = await fetch(`/update-triggered-messages?userId=${userId}`, {
+          const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+          const response = await fetch(`${apiUrl}/update-triggered-messages?userId=${userId}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

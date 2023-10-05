@@ -236,7 +236,8 @@ type EditRewardFormProps = {
       };
   
       try {
-        const response = await fetch('/update-reward', {
+        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await fetch(`${apiUrl}/update-reward`, {
           method: 'PUT',  // Typically, updates are done via PUT
           headers: {
             'Content-Type': 'application/json',

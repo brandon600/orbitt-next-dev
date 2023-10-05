@@ -192,7 +192,8 @@ type EditDefaultRewardFormProps = {
       };
   
       try {
-        const response = await fetch('/update-default-reward', {
+        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await fetch(`${apiUrl}/update-default-reward`, {
           method: 'PUT',  // Typically, updates are done via PUT
           headers: {
             'Content-Type': 'application/json',

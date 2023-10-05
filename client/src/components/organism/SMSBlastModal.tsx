@@ -106,7 +106,8 @@ const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomer
         console.log(data)
 
         try {
-            const response = await fetch('/send-blast-message', {
+            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+            const response = await fetch(`${apiUrl}/send-blast-message`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -58,12 +58,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const userId = userData.userid;
       // Fetch rewards data
-      const rewardsData = await fetchDataFromURL(`/current-rewards?userId=${userId}`);
+      const rewardsData = await fetchDataFromURL(`${apiUrl}/current-rewards?userId=${userId}`);
 
       // Fetch reward offerings data
-      const defaultRewardsData = await fetchDataFromURL(`/current-outbound-rewards?userId=${userId}`);
+      const defaultRewardsData = await fetchDataFromURL(`${apiUrl}/current-outbound-rewards?userId=${userId}`);
 
       // Return the fetched data as props
       return {

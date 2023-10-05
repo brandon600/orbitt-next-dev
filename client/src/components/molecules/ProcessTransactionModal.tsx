@@ -290,8 +290,9 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
     const { data, fetchData, toast, showToast, hideToast } = useStore.getState(); // Directly access Zustand state
     
     const handleGivePoints = async () => {
+        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
         try {
-            const response = await fetch(`/give-points`, {
+            const response = await fetch(`${apiUrl}/give-points`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -323,7 +324,8 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
     const handleRedeemReward = async () => {
         if (!reward) return;  // Safety check
         try {
-            const response = await fetch(`/redeem-reward`, {
+            const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+            const response = await fetch(`${apiUrl}/redeem-reward`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
