@@ -4,8 +4,10 @@
   "description": "Starter kit for creating React/Redux and Express apps",
   "main": "server.js",
   "engines": {
-    "node": "8.1.1",
-    "npm": "5.0.3"
+    "engines": {
+      "node": "20.5.1",
+      "npm": "9.8.0"
+    }
   },
   "scripts": {
     "client-install": "cd client && npm install",
