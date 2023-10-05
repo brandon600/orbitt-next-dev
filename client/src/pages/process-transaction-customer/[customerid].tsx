@@ -23,7 +23,7 @@ import ProcessTransactionModal from '@/components/molecules/ProcessTransactionMo
 import Overlay from '@/components/atoms/Overlay';
 import InputField from '@/components/atoms/InputField';
 import Textarea from '@/components/atoms/Textarea';
-import { useStore, AppState } from '../../store/store'; // Import your store
+import { useStore, AppState, UserData, initialData, fetchData } from '../../store/store'; // Import your store
 import { useMemberAuth } from '../../util/global/globalHooks';
 
 interface ProcessTransactionCustomerProps {
@@ -386,15 +386,37 @@ function useBodyScrollLock(isLocked: boolean) {
   }
 
 export async function getServerSideProps(context: any) {
+    const userCookie = context.req.cookies.user;
+    let userData: UserData = initialData;
+
+    if (userCookie) {
+        userData = JSON.parse(userCookie);
+    } else {
+        // Fetch user data if it's not in the cookie
+        const memberstackId = context.req.cookies.memberstackId; // or however you're identifying the user
+        if (memberstackId) {
+            const fetchedData = await fetchData(memberstackId); // fetchData can return null
+            if (fetchedData) {
+                userData = fetchedData;
+                // fetchData already sets the cookie, so you don't have to do it again here
+            }
+        }
+    }
+
+    if (!userData.userid) {
+        return 'no user data'
+    }
+
     const { customerid } = context.params;
+    const userId = userData.userid;
     try {
-        const customerResponse = await fetch(`http://localhost:5000/customers/${customerid}`);
+        const customerResponse = await fetch(`http://localhost:5000/customers/${customerid}?userId=${userId}`);
         if (!customerResponse.ok) {
             throw new Error('Failed to fetch data');
         }
         const customer: CustomerData = await customerResponse.json();
 
-        const rewardsResponse = await fetch('http://localhost:5000/current-active-rewards');
+        const rewardsResponse = await fetch(`http://localhost:5000/current-active-rewards?userId=${userId}`);
 
         if (!rewardsResponse.ok) {
             throw new Error('Network response was not ok');

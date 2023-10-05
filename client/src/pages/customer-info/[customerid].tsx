@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Colors from '@/constants/Colors';
 import GlobalStyle from '../../GlobalStyle'
-import { useStore, AppState } from '../../store/store';
+import { useStore, AppState, UserData, fetchData, initialData } from '../../store/store';
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
@@ -23,6 +23,7 @@ import { useMemberAuth } from '../../util/global/globalHooks';
 
 interface CustomerInfoProps {
     customer: CustomerData | null;
+    userData: UserData;
     ranking: {
         rank: number;
         totalCustomers: number;
@@ -367,9 +368,31 @@ const getDefaultRanking = () => ({
 
 export async function getServerSideProps(context: any) {
     const { customerid } = context.params;
+    const userCookie = context.req.cookies.user;
+    let userData: UserData = initialData;
+  
+    if (userCookie) {
+        userData = JSON.parse(userCookie);
+    } else {
+        // Fetch user data if it's not in the cookie
+        const memberstackId = context.req.cookies.memberstackId; // or however you're identifying the user
+        if (memberstackId) {
+            const fetchedData = await fetchData(memberstackId); // fetchData can return null
+            if (fetchedData) {
+                userData = fetchedData;
+                // fetchData already sets the cookie, so you don't have to do it again here
+            }
+        }
+    }
+  
+    if (!userData.userid) {
+        return 'no user data'
+    }
+
     try {
-        const customerResponse = await fetch(`http://localhost:5000/customers/${customerid}`);
-        const rankingResponse = await fetch(`http://localhost:5000/customers/${customerid}/ranking`);
+        const userId = userData.userid;
+        const customerResponse = await fetch(`http://localhost:5000/customers/${customerid}?userId=${userData.userid}`);
+        const rankingResponse = await fetch(`http://localhost:5000/customers/${customerid}/ranking?userId=${userData.userid}`);
 
         if (!customerResponse.ok || !rankingResponse.ok) {
             throw new Error('Failed to fetch data');
@@ -380,6 +403,7 @@ export async function getServerSideProps(context: any) {
 
         return {
             props: {
+                userData,
                 customer,
                 ranking
             },
@@ -442,7 +466,7 @@ function useBodyScrollLock(isLocked: boolean) {
     }, [isLocked]);
   }
 
-const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
+const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking, userData }) => {
     const router = useRouter();
     const { userId } = useMemberAuth();
 
@@ -462,16 +486,8 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
         data, fetchData, toast,
       } = useStore((state: AppState) => state);
 
-      useEffect(() => {
-        if (userId) {
-          fetchData(userId);
-        }
-      }, [userId]);
-
-      
       const [localCustomer, setLocalCustomer] = useState<CustomerData>(customer || getDefaultCustomer());
   
-
       useEffect(() => {
         console.log("Setting up socket connection.");
         const socket = io("http://localhost:5000");
@@ -489,7 +505,6 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
     if (!customer) {
         return <p>Loading...</p>;
     }
-
 
     return (
         <FlexDiv>

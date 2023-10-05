@@ -12,7 +12,7 @@ import RewardForm from '@/components/organism/RewardForm';
 import EditRewardForm from '@/components/organism/EditRewardForm';
 import EditDefaultRewardForm from '@/components/organism/EditDefaultRewardForm';
 import GlobalStyle from '../GlobalStyle';
-import { useStore, AppState } from '../store/store'; // Import your store
+import { useStore, AppState, UserData, initialData, fetchData } from '../store/store'; // Import your store
 import { getServers } from 'dns';
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
@@ -23,30 +23,54 @@ import io from "socket.io-client";
 import { useSockets, useRewardToggles, useDefaultRewardToggles, useRewardsHandlers, useBodyScrollLock } from '@/util/pages/rewards/rewardsHooks';
 import { handleRewardsPendingChange, handleDefaultRewardsPendingChange, handleSaveChanges, handleCancelChangesFunc, fetchDataFromURL } from '@/util/pages/rewards/rewardsFunctions';
 import { useRewardsState } from '@/util/pages/rewards/rewardsState';
-
 import { FlexDiv, TitlePlusButton, RewardsPageTitle, RewardOfferingsAndSettings, ButtonWrap } from '@/util/pages/rewards/rewardsStyles';
 import { useMemberAuth } from '../util/global/globalHooks';
+import { GetServerSidePropsContext } from 'next';
 
 interface RewardsProps {
     rewardsData: RewardData[]; // Replace YourDataTypeHere with the actual type of your rewards data
     defaultRewardsData: DefaultRewardData[]; // Replace YourDataTypeHere with the actual type of your default rewards data
     onEditClick?: () => void;  // Make it optional by adding '?'
     originalRewardToggles: boolean[]; 
+    userData: UserData;
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const userCookie = context.req.cookies.user;
+  let userData: UserData = initialData;
+
+  if (userCookie) {
+      userData = JSON.parse(userCookie);
+  } else {
+      // Fetch user data if it's not in the cookie
+      const memberstackId = context.req.cookies.memberstackId; // or however you're identifying the user
+      if (memberstackId) {
+          const fetchedData = await fetchData(memberstackId); // fetchData can return null
+          if (fetchedData) {
+              userData = fetchedData;
+              // fetchData already sets the cookie, so you don't have to do it again here
+          }
+      }
+  }
+
+  if (!userData.userid) {
+      return 'no user data'
+  }
+
   try {
+      const userId = userData.userid;
       // Fetch rewards data
-      const rewardsData = await fetchDataFromURL('http://localhost:5000/current-rewards');
+      const rewardsData = await fetchDataFromURL(`http://localhost:5000/current-rewards?userId=${userId}`);
 
       // Fetch reward offerings data
-      const defaultRewardsData = await fetchDataFromURL('http://localhost:5000/current-outbound-rewards');
+      const defaultRewardsData = await fetchDataFromURL(`http://localhost:5000/current-outbound-rewards?userId=${userId}`);
 
       // Return the fetched data as props
       return {
           props: {
               rewardsData,
               defaultRewardsData,
+              userData
           },
       };
   } catch (error) {
@@ -61,7 +85,7 @@ export async function getServerSideProps() {
 }
 
 
-function Rewards({ rewardsData: initialRewardsData, defaultRewardsData: initialDefaultRewardsData }: RewardsProps) {
+function Rewards({ rewardsData: initialRewardsData, defaultRewardsData: initialDefaultRewardsData, userData }: RewardsProps) {
   const { 
     data, fetchData, toast, 
     hideToast, showToast 
@@ -126,12 +150,6 @@ const {
 
 // ========== Fetching and Updating Data ========== 
 
-useEffect(() => {
-  if (userId) {
-    fetchData(userId);
-  }
-}, [userId]);
-
 
   const saveChanges = () => {
     handleSaveChanges({
@@ -142,7 +160,8 @@ useEffect(() => {
       showToast: showToast, // adjust if your store structure is different
       setOriginalRewardToggles,
       setOriginalDefaultRewardToggles,
-      setHasPendingChanges
+      setHasPendingChanges,
+      userData
     });
   };
 

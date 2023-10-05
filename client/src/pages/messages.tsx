@@ -5,7 +5,7 @@ import Button from '../components/atoms/Button';
 import Colors from '@/constants/Colors';
 import React, { useState, useEffect, useCallback } from 'react';
 import GlobalStyle from '../GlobalStyle';
-import { useStore, AppState } from '../store/store'; // Import your store
+import { useStore, AppState, UserData, initialData, fetchData } from '../store/store'; // Import your store
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
@@ -13,9 +13,12 @@ import io from "socket.io-client";
 import { TriggeredMessageData } from '@/types/TriggeredMessageData';
 import MessageCell from '@/components/molecules/MessageCell';
 import { useMemberAuth } from '../util/global/globalHooks';
+import { GetServerSidePropsContext } from 'next';
+import Cookie from 'js-cookie';
 
 
 interface MessagesProps {
+    userData: UserData;
     triggeredMessagesData: TriggeredMessageData[];
 }
 
@@ -77,10 +80,32 @@ const MessagesPageTitle = styled.div`
     }
  `
 
-export async function getServerSideProps() {
+ export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const userCookie = context.req.cookies.user;
+  let userData: UserData = initialData;
+
+  if (userCookie) {
+      userData = JSON.parse(userCookie);
+  } else {
+      // Fetch user data if it's not in the cookie
+      const memberstackId = context.req.cookies.memberstackId; // or however you're identifying the user
+      if (memberstackId) {
+          const fetchedData = await fetchData(memberstackId); // fetchData can return null
+          if (fetchedData) {
+              userData = fetchedData;
+              // fetchData already sets the cookie, so you don't have to do it again here
+          }
+      }
+  }
+
+  if (!userData.userid) {
+      return 'no user data'
+  }
+
     try {
-        // Fetch rewards data
-        const response = await fetch('http://localhost:5000/triggered-messages');
+        // Fetch messagess data
+        const userId = userData.userid;
+        const response = await fetch(`http://localhost:5000/triggered-messages?userId=${userId}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -90,6 +115,7 @@ export async function getServerSideProps() {
         // Return the fetched data as props
         return {
             props: {
+                userData,
                 triggeredMessagesData,
             }
         };
@@ -103,7 +129,7 @@ export async function getServerSideProps() {
     }
 }
 
-function Messages( { triggeredMessagesData: initialTriggeredMessagesData }: MessagesProps) {
+function Messages( { triggeredMessagesData: initialTriggeredMessagesData, userData }: MessagesProps) {
     const { data, fetchData, toast, showToast, hideToast } = useStore();
 
 const [hasPendingMessageChanges, setHasPendingMessageChanges] = useState(false);
@@ -141,12 +167,6 @@ useEffect(() => {
 }, [triggeredMessagesData]);
 
 useEffect(() => {
-  if (userId) {
-    fetchData(userId);
-  }
-}, [userId]);
-
-useEffect(() => {
     setOriginalTriggeredMessageToggles(triggeredMessagesData.map((triggeredMessage) => triggeredMessage.active));
     setCurrentTriggeredMessageToggles(triggeredMessagesData.map((triggeredMessage) => triggeredMessage.active));
   }, [triggeredMessagesData]);
@@ -170,9 +190,10 @@ async function handleSaveMessageChanges() {
         };
       
         console.log(`Sending updated data: ${JSON.stringify(payload)}`);
+        const userId = userData.userid;
       
         try {
-          const response = await fetch('http://localhost:5000/update-triggered-messages', {
+          const response = await fetch(`http://localhost:5000/update-triggered-messages?userId=${userId}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

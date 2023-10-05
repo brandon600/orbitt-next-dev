@@ -1,6 +1,7 @@
 import React from 'react';
 import { RewardData } from '@/types/RewardData';
 import { DefaultRewardData } from '@/types/DefaultRewardData';
+import { UserData } from '../../../store/store';
 
 interface EditHandlerProps {
     setForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -69,6 +70,7 @@ export const handleDefaultRewardsPendingChange = (
 
 export async function handleSaveChanges({
     rewardsData,
+    userData,
     currentRewardToggles,
     defaultRewardsData,
     currentDefaultRewardToggles,
@@ -78,6 +80,7 @@ export async function handleSaveChanges({
     setHasPendingChanges
   }: {
     rewardsData: RewardData[];
+    userData: UserData;
     currentRewardToggles: boolean[];
     defaultRewardsData: DefaultRewardData[];
     currentDefaultRewardToggles: boolean[];
@@ -99,7 +102,8 @@ export async function handleSaveChanges({
     
       const payload = {
         updatedRewards: updatedRewardsData,
-        updatedDefaultRewards: updatedDefaultRewardsData
+        updatedDefaultRewards: updatedDefaultRewardsData,
+        user: userData
       };
     
       console.log(`Sending updated data: ${JSON.stringify(payload)}`);

@@ -12,7 +12,7 @@ module.exports = (app) => {
                 return res.status(400).send({ message: 'Bad request parameters.' });
             }
         
-            const myquery = { userid: '1680735892067' };
+            const myquery = { userid: user.userid };
             const newvalues = { $set: { companyName: businessName } };
         
             // Using promise approach
