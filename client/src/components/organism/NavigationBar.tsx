@@ -69,7 +69,7 @@ const navItems = [
   position: fixed;
   left: 16px;
   bottom: 32px;
-  z-index: 700; // higher z-index than your navigation
+  z-index: 480; // higher z-index than your navigation
   background-color: ${Colors.neutral700}; // Any color you prefer
   border: none;
   border-radius: 50%;

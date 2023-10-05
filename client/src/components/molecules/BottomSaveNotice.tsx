@@ -9,8 +9,9 @@ import { motion } from 'framer-motion';
 const BottomSaveNoticeContainer = motion(styled.div`
     @media ${StyledMediaQuery.XS} {
         position: fixed;
+        z-index: 490;
         bottom: 0;
-        left: 0;
+        right: 0;
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -24,6 +25,7 @@ const BottomSaveNoticeContainer = motion(styled.div`
     @media ${StyledMediaQuery.L} {
         padding: 32px;
         gap: 24px;
+        width: calc(100vw - 260px);
     }
 
 `)
