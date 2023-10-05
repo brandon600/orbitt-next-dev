@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 const BottomSaveNoticeContainer = motion(styled.div`
     @media ${StyledMediaQuery.XS} {
         position: fixed;
-        z-index: 490;
+        z-index: 491;
         bottom: 0;
         right: 0;
         display: flex;
