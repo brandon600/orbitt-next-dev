@@ -4,13 +4,13 @@ import GlobalStyle from '@/GlobalStyle';
 import NavigationBar from '@/components/organism/NavigationBar';
 import { MemberstackProvider, MemberstackProtected, SignInModal } from "@memberstack/react";
 
-//REACT_APP_PUBLIC_KEY=pk_sb_988015ebe93b146c4b2e
-
 const config = {
-  publicKey: 'pk_sb_988015ebe93b146c4b2e',
+  publicKey: process.env.NEXT_PUBLIC_publicKey || '',
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
+  console.log(process.env.NEXT_PUBLIC_publicKey);
+
   return (
     <MemberstackProvider config={config}>
       <WebSocketProvider>
