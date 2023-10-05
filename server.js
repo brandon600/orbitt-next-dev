@@ -137,7 +137,7 @@ require('./routes/settingsRoutes')(app);
     //Like our main.js file, or main.css file
     app.use(express.static('client/build'));
 
-    ppp.use((err, req, res, next) => {
+    app.use((err, req, res, next) => {
       res.status(500).json({ error: err.stack });
     });
   
