@@ -24,7 +24,13 @@ module.exports = (app) => {
       });
       
     app.get('/customers', async (req, res) => {
-        const rcs = await Customer.find({user: '1680735892067'})
+        const { userId } = req.query;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'userId is required' });
+        }
+        console.log('userid', userId)
+        const rcs = await Customer.find({ user: userId.toString() })
             .populate('visits');
         const realCustomers = Array.from(rcs);
         res.json(realCustomers);
@@ -344,14 +350,16 @@ module.exports = (app) => {
     
 
     app.post('/give-points', async (req, res) => {
-        const { customerId, points, user, transactionDetails } = req.body;
+        const { customerId, points, user, transactionDetails, memberstackId } = req.body;
+      //  const memberstackData = JSON.parse(req.headers['x-memberstack-data']);
         console.log(user)
+        console.log('Memberstack Data:', memberstackId);
 
         try {
             const { customerId, points, user, transactionDetails } = req.body;
             const uniqid = Date.now();
     
-            const customer = await Customer.findOne({ customerid: customerId });
+            const customer = await Customer.findOne({ customerid: customerId, userMemberstackId: memberstackId });
             if (!customer) {
                 return res.status(400).send({ success: false, message: 'Customer not found.' });
             }

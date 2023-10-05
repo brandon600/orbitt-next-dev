@@ -5,7 +5,7 @@ import Button from '../components/atoms/Button';
 import Colors from '@/constants/Colors';
 import React, { FC, useState, useEffect, useCallback } from 'react';
 import GlobalStyle from '../GlobalStyle';
-import { useStore, AppState } from '../store/store'; // Import your store
+import { useStore, AppState, fetchData, UserData, initialData } from '../store/store'; // Import your store
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
@@ -16,6 +16,9 @@ import { Doughnut, Bar } from "react-chartjs-2";
 import PillBar from '@/components/molecules/PillBar';
 import { DropdownOption } from '@/components/atoms/DropdownField';
 import DropdownField from '@/components/atoms/DropdownField';
+import { useMemberAuth } from '../util/global/globalHooks';
+import { GetServerSidePropsContext } from 'next';
+import Cookie from 'js-cookie';
 
   
 type DailyVisit = {
@@ -64,6 +67,7 @@ type DashboardData = {
 };
 
 interface DashboardProps {
+    userData: UserData;
     initialDashboardData: DashboardData | null;
 }
 
@@ -314,9 +318,33 @@ const timelineFilterOptions: DropdownOption[] = [
     { label: "Within Last Year", value: "lastYear" }
   ];
 
-export async function getServerSideProps() {
+  export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const userCookie = context.req.cookies.user;
+    let userData: UserData = initialData;
+
+    if (userCookie) {
+        userData = JSON.parse(userCookie);
+    } else {
+        // Fetch user data if it's not in the cookie
+        const memberstackId = context.req.cookies.memberstackId; // or however you're identifying the user
+        if (memberstackId) {
+            const fetchedData = await fetchData(memberstackId); // fetchData can return null
+            if (fetchedData) {
+                userData = fetchedData;
+                // fetchData already sets the cookie, so you don't have to do it again here
+            }
+        }
+    }
+
+    if (!userData.userid) {
+        return {
+            notFound: true
+        };
+    }
+
     try {
-        const response = await fetch('http://localhost:5000/api/dashboard');
+        const userId = userData.userid;
+        const response = await fetch(`http://localhost:5000/api/dashboard?userId=${userId}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -324,6 +352,7 @@ export async function getServerSideProps() {
 
         return {
             props: {
+                userData: userData,
                 initialDashboardData: dashboardData
             }
         };
@@ -468,23 +497,20 @@ function DoughnutChartComponent({ data }: DoughnutChartComponentProps) {
     );
 }
 
-function Dashboard({ initialDashboardData }: DashboardProps) {
+function Dashboard({ initialDashboardData, userData }: DashboardProps) {
     const [dashboardData, setDashboardData] = useState<DashboardData | null>(initialDashboardData);
     const { data, fetchData, toast, showToast, hideToast } = useStore();
     const [timeFilter, setTimeFilter] = useState('allTime');
     const [barChartData, setBarChartData] = useState<any | null>(null);
     const [activeOption, setActiveOption] = useState<string>('Visits');
     const [doughnutChartData, setDoughnutChartData] = useState<DoughnutChartData | null>(null);
+    const { userId } = useMemberAuth();
 
     
     const storeData = useStore.getState();
     console.log('Store Data:', storeData);
     console.log('Dashboard Data:', dashboardData);
-
-
-    useEffect(() => {
-        fetchData();
-    }, []);
+    console.log(userData)
     
     const companyName = data?.companyName || 'Company Name';
 
@@ -597,7 +623,8 @@ function Dashboard({ initialDashboardData }: DashboardProps) {
     useEffect(() => {
         const fetchDataWithFilter = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/dashboard?timeFilter=${timeFilter}`);
+                const response = await fetch(`http://localhost:5000/api/dashboard?userId=${userData.userid}&timeFilter=${timeFilter}`);
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

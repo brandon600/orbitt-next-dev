@@ -19,6 +19,7 @@ import { VisitType } from '@/components/molecules/CustomerVisit';
 import { VisitData } from '@/types/VisitData';
 import EditCustomerForm from '@/components/organism/EditCustomerForm';
 import Overlay from '@/components/atoms/Overlay';
+import { useMemberAuth } from '../../util/global/globalHooks';
 
 interface CustomerInfoProps {
     customer: CustomerData | null;
@@ -443,6 +444,7 @@ function useBodyScrollLock(isLocked: boolean) {
 
 const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
     const router = useRouter();
+    const { userId } = useMemberAuth();
 
     const handleTransactionClick = () => {
         if (customer) {
@@ -461,8 +463,10 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking }) => {
       } = useStore((state: AppState) => state);
 
       useEffect(() => {
-        fetchData();
-      }, []);
+        if (userId) {
+          fetchData(userId);
+        }
+      }, [userId]);
 
       
       const [localCustomer, setLocalCustomer] = useState<CustomerData>(customer || getDefaultCustomer());

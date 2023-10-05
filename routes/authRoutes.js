@@ -17,9 +17,15 @@ module.exports = (app) => {
     res.send(req.user);
   });
 
-  app.get('/api/users/', (req, res) => {
+  app.post('/api/users/', (req, res) => {
  //   const userId = req.params.userId;
-    User.findOne({userid: '1680735892067'})
+ const memberstackId = req.body.memberstackId;
+
+ if (!memberstackId) {
+  return res.status(400).json({ error: 'memberStackID is required' });
+}
+
+    User.findOne({memberstackId: memberstackId})
       .then(user => {
         if (!user) {
           return res.status(404).json({ error: 'User not found' });

@@ -1,5 +1,7 @@
 // store.ts
 import { create } from 'zustand';
+import { useAuth } from "@memberstack/react"
+import Cookie from 'js-cookie';
 
 export interface UserData {
   userid: string;
@@ -19,7 +21,7 @@ interface Toast {
 
 export interface AppState {
   data: UserData;
-  fetchData: () => Promise<void>;
+  fetchData: (memberstackId: string) => Promise<void>;
 
     // toast state
     toast: Toast;
@@ -29,7 +31,7 @@ export interface AppState {
     hideToast: () => void;
 }
 
-const initialData: UserData = {
+export const initialData: UserData = {
   userid: '',
   messagingPhoneNumber: '',
   // Add initial values for other properties as needed
@@ -41,22 +43,39 @@ const initialState: Toast = {
   type: 'success',
 };
 
+export const fetchData = async (memberstackId: string): Promise<UserData | null> => {
+  try {
+    const response = await fetch('http://localhost:5000/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ memberstackId }), 
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+
+    const data: UserData = await response.json();
+    Cookie.set('user', JSON.stringify(data));
+    return data;
+  } catch (error: any) {
+    console.error('Error fetching data:', error.message);
+    return null;
+  }
+};
+
 export const useStore = create<AppState>((set) => ({
   data: initialData,
 
-  fetchData: async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/users');
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      const data = await response.json();
+  fetchData: async (memberstackId: string) => {
+    const data = await fetchData(memberstackId);
+    if (data) {
       set({ data });
-      console.log(data);
-    } catch (error: any) {
-      console.error('Error fetching data:', error.message);
     }
   },
+
 
    // toast state
    toast: initialState,

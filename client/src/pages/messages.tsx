@@ -12,6 +12,7 @@ import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
 import io from "socket.io-client";
 import { TriggeredMessageData } from '@/types/TriggeredMessageData';
 import MessageCell from '@/components/molecules/MessageCell';
+import { useMemberAuth } from '../util/global/globalHooks';
 
 
 interface MessagesProps {
@@ -110,6 +111,7 @@ const [originalTriggeredMessageToggles, setOriginalTriggeredMessageToggles] = us
 const [currentTriggeredMessageToggles, setCurrentTriggeredMessageToggles] = useState<boolean[]>([]);
 const [triggeredMessagesData, setTriggeredMessagesData] = useState(initialTriggeredMessagesData);
 const [editingIndex, setEditingIndex] = useState<number | null>(null);
+const { userId } = useMemberAuth();
 
 useEffect(() => {
     console.log("Setting up socket connection.");
@@ -139,8 +141,10 @@ useEffect(() => {
 }, [triggeredMessagesData]);
 
 useEffect(() => {
-    fetchData();
-}, []);
+  if (userId) {
+    fetchData(userId);
+  }
+}, [userId]);
 
 useEffect(() => {
     setOriginalTriggeredMessageToggles(triggeredMessagesData.map((triggeredMessage) => triggeredMessage.active));
