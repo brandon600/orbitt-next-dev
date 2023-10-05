@@ -136,6 +136,10 @@ require('./routes/settingsRoutes')(app);
     //Express will serve up production assets
     //Like our main.js file, or main.css file
     app.use(express.static('client/build'));
+
+    ppp.use((err, req, res, next) => {
+      res.status(500).json({ error: err.stack });
+    });
   
     //Express will serve up the index.html file
     //if it doesn't recognize the route
