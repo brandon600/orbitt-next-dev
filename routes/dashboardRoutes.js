@@ -7,9 +7,8 @@ const BlastMessage = mongoose.model('blastmessages');
 
 module.exports = (app) => {
     app.get('/api/dashboard', async (req, res) => {
-        const { timeFilter } = req.query;
+        const { timeFilter, userId } = req.query;
         let dateFilter = {};
-        const { userId } = req.query;
 
         if (!userId) {
             return res.status(400).json({ error: 'userId is required' });

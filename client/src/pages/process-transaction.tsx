@@ -7,10 +7,11 @@ import Button from '../components/atoms/Button';
 import Colors from '@/constants/Colors';
 import GlobalStyle from '../GlobalStyle';
 import Toast from '@/components/atoms/Toast';
-import { useStore, AppState } from '../store/store'; // Import your store
+import { useStore, AppState, UserData, fetchData, initialData } from '../store/store'; // Import your store
 import { AnimatePresence } from 'framer-motion';
 import FoundCustomerModal from '@/components/molecules/FoundCustomerModal';
 import Overlay from '@/components/atoms/Overlay';
+import Cookie from 'js-cookie';
 
 const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
@@ -125,10 +126,36 @@ function useBodyScrollLock(isLocked: boolean) {
     }, [isLocked]);
 }
 
+function getCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+    return null;
+  }
+
 const fetchCustomer = async (phoneNumber: string) => {
+    let userData: UserData = initialData;
+    const userCookie = getCookie('user');
+    if (userCookie) {
+        userData = JSON.parse(userCookie);
+    } else {
+        // Fetch user data if it's not in the cookie
+        const memberstackId = getCookie('memberstackId'); 
+        if (memberstackId) {
+            const fetchedData = await fetchData(memberstackId); // fetchData can return null
+            if (fetchedData) {
+                userData = fetchedData;
+                // fetchData already sets the cookie, so you don't have to do it again here
+            }
+        }
+    }
+
+    if (!userData.userid) {
+        throw new Error('No user data available');
+    }
+
     try {
-        const response = await fetch(`http://localhost:5000/process-transaction?phoneNumber=${phoneNumber}`);
-      
+        const response = await fetch(`http://localhost:5000/process-transaction?userId=${userData.userid}&phoneNumber=${phoneNumber}`);
         if (!response.ok) {
             if (response.status === 404) {
                 throw new Error('Customer not found');
@@ -142,7 +169,6 @@ const fetchCustomer = async (phoneNumber: string) => {
         throw error;
     }
 };
-
 
 /**
  * Formats a phone number to the format: (XXX) XXX-XXXX.
@@ -180,6 +206,8 @@ const ProcessTransaction = () => {
         data, fetchData, toast, 
         hideToast, showToast 
       } = useStore((state: AppState) => state);
+      const savedUserData = JSON.parse(Cookie.get('user') || '{}')
+      console.log(savedUserData);
 
       useBodyScrollLock(isModalOpen);
 

@@ -256,12 +256,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
 
     try {
-        // Fetch rewards data
+        // Fetch customers data
         const userId = userData.userid;
         const fetchCustomers = await fetch(`http://localhost:5000/customers?userId=${userId}`);
-        const fetchBlastMessages = await fetch('http://localhost:5000/blast-messages');
-        const fetchSentMessages = await fetch('http://localhost:5000/sent-messages');
-        const fetchVisits = await fetch('http://localhost:5000/customer-visits');
+        const fetchBlastMessages = await fetch(`http://localhost:5000/blast-messages?userId=${userId}`);
+        const fetchSentMessages = await fetch(`http://localhost:5000/sent-messages?userId=${userId}`);
+        const fetchVisits = await fetch(`http://localhost:5000/customer-visits?userId=${userId}`);
 
         const [customersResponse, blastMessagesResponse, sentMessagesResponse, visitsResponse] = 
             await Promise.all([fetchCustomers, fetchBlastMessages, fetchSentMessages, fetchVisits]);
@@ -334,8 +334,8 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     const [localCustomersData, setLocalCustomersData] = useState<CustomerData[]>(customersData);
     const { userId } = useMemberAuth();
 
-    const savedUserData = JSON.parse(Cookie.get('user') || '{}');
-    console.log(savedUserData)
+   // const savedUserData = JSON.parse(Cookie.get('user') || '{}');
+   // console.log(savedUserData)
     console.log(userData)
 
     const [filters, setFilters] = useState<Record<FilterType, FilterValue>>({

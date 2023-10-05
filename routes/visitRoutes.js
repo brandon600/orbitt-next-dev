@@ -4,7 +4,11 @@ const Visit = mongoose.model('visits');
 
 module.exports = (app) => {
 app.get('/customer-visits', async (req, res) => {
-    const rcs = await Visit.find({user: '1680735892067'})
+  const { userId } = req.query;
+  if (!userId) {
+      return res.status(400).json({ error: 'userId is required' });
+  }
+    const rcs = await Visit.find({user: userId.toString()})
     //.populate('customer);
     .catch(err => console.log(err));
     const realVisits = Array.from(rcs);

@@ -283,11 +283,7 @@ function formatPhoneNumber(number: string) {
 
 const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpen, onClose, customer, mode, reward, pointsGive,
     transactionDetails, }) => {
-    const {
-        userId,
-    } = useAuth();
 
-    console.log(userId);
     const router = useRouter();
     if (!isOpen || !customer) return null;
 
@@ -305,7 +301,6 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
                     points: pointsGive,
                     transactionDetails: transactionDetails,
                     user: data,
-                    memberstackId: userId
                 }),
             });
 

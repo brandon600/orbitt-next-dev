@@ -25,7 +25,6 @@ module.exports = (app) => {
       
     app.get('/customers', async (req, res) => {
         const { userId } = req.query;
-
         if (!userId) {
             return res.status(400).json({ error: 'userId is required' });
         }
@@ -312,6 +311,13 @@ module.exports = (app) => {
     app.get('/process-transaction', async (req, res) => {
     console.log('Phone number:', req.query.phoneNumber);  
 
+    const { userId } = req.query;
+    if (!userId) {
+        return res.status(400).json({ error: 'userId is required' });
+    }
+    console.log('userid', userId);
+    const userIdString = userId.toString();
+
     try {
         // Extract phone number from query
         const phoneNumber = req.query.phoneNumber;
@@ -332,7 +338,7 @@ module.exports = (app) => {
         console.log(phoneNumber1);
 
         const customer = await Customer.findOne({ 
-            user: '1680735892067',
+            user: userIdString,
             areaCodeNumber: areaCode1, 
             phoneNumber1: phoneNumber1 // Fixed the incorrect property name
         });
@@ -351,7 +357,6 @@ module.exports = (app) => {
 
     app.post('/give-points', async (req, res) => {
         const { customerId, points, user, transactionDetails, memberstackId } = req.body;
-      //  const memberstackData = JSON.parse(req.headers['x-memberstack-data']);
         console.log(user)
         console.log('Memberstack Data:', memberstackId);
 
@@ -359,7 +364,7 @@ module.exports = (app) => {
             const { customerId, points, user, transactionDetails } = req.body;
             const uniqid = Date.now();
     
-            const customer = await Customer.findOne({ customerid: customerId, userMemberstackId: memberstackId });
+            const customer = await Customer.findOne({ customerid: customerId, user: user.userid });
             if (!customer) {
                 return res.status(400).send({ success: false, message: 'Customer not found.' });
             }
@@ -448,12 +453,12 @@ module.exports = (app) => {
             const { customerId, rewardId, user } = req.body;
             const uniqid = Date.now();
     
-            const customer = await Customer.findOne({ customerid: customerId });
+            const customer = await Customer.findOne({ customerid: customerId, user: user.userid });
             if (!customer) {
                 return res.status(400).send({ success: false, message: 'Customer not found.' });
             }
     
-            const reward = await Reward.findOne({ rewardid: rewardId });
+            const reward = await Reward.findOne({ rewardid: rewardId, user: user.userid });
             if (!reward) {
                 return res.status(400).send({ success: false, message: 'Reward not found.' });
             }
@@ -566,8 +571,15 @@ module.exports = (app) => {
 
 
           app.get('/customers/:customerid', async (req, res) => {
+            const { userId } = req.query;
+            if (!userId) {
+                return res.status(400).json({ error: 'userId is required' });
+            }
+            console.log('userid', userId);
+            const userIdString = userId.toString();
+
             try {
-                const customer = await Customer.findOne({ user: '1680735892067', customerid: req.params.customerid })
+                const customer = await Customer.findOne({ user: userIdString, customerid: req.params.customerid })
                 .populate('visits')
                 .populate('receivedBlasts')
                 .populate('updates');
@@ -583,8 +595,15 @@ module.exports = (app) => {
 
 
         app.get('/customers/:customerid/ranking', async (req, res) => {
+            const { userId } = req.query;
+            if (!userId) {
+                return res.status(400).json({ error: 'userId is required' });
+            }
+            console.log('userid', userId);
+            const userIdString = userId.toString();
+
           try {
-              const allCustomers = await Customer.find({ user: '1680735892067' }).sort({ totalVisits: -1 });
+              const allCustomers = await Customer.find({ user: userIdString }).sort({ totalVisits: -1 });
               const totalCustomers = allCustomers.length;
       
               const specificCustomerIndex = allCustomers.findIndex(c => c.customerid == req.params.customerid);

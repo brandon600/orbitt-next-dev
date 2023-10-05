@@ -7,7 +7,13 @@ const UpdatedReward = mongoose.model('updatedrewards');
 module.exports = (app) => {
     //Get Reward Offerings
     app.get('/current-rewards/', async (req, res) => {
-        const rcs = await Reward.find({user: '1680735892067'})
+      const { userId } = req.query;
+      if (!userId) {
+          return res.status(400).json({ error: 'userId is required' });
+      }
+      console.log('userid', userId);
+
+        const rcs = await Reward.find({user: userId.toString()})
         .catch(err => console.log(err));;
         const currentRewards = Array.from(rcs);
         res.json(currentRewards);
@@ -15,7 +21,13 @@ module.exports = (app) => {
 
     //Get Default Rewards
     app.get('/current-outbound-rewards/', async (req, res) => {
-    const rcs = await OutboundReward.find({user: '1680735892067'})
+      const { userId } = req.query;
+      if (!userId) {
+          return res.status(400).json({ error: 'userId is required' });
+      }
+      console.log('userid', userId);
+
+    const rcs = await OutboundReward.find({user: userId.toString()})
     .catch(err => console.log(err));;
     const currentOutboundRewards = Array.from(rcs);
     res.json(currentOutboundRewards);
@@ -23,7 +35,13 @@ module.exports = (app) => {
 
       //Get Reward Offerings
       app.get('/current-active-rewards/', async (req, res) => {
-        const rcs = await Reward.find({user: '1680735892067', rewardActive: true})
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: 'userId is required' });
+        }
+        console.log('userid', userId);
+
+        const rcs = await Reward.find({user: userId.toString(), rewardActive: true})
         .catch(err => console.log(err));;
         const currentRewards = Array.from(rcs);
         res.json(currentRewards);
@@ -63,7 +81,8 @@ module.exports = (app) => {
 
 
     app.put('/update-active-rewards/', async (req, res) => {
-      const { updatedRewards, updatedDefaultRewards } = req.body;
+      const { updatedRewards, updatedDefaultRewards, user } = req.body;
+      const userIdString = user.userid;
     
       const rewardsTrueArray = updatedRewards
         .filter(reward => reward.rewardActive === true)
@@ -82,11 +101,11 @@ module.exports = (app) => {
         .map(defaultReward => defaultReward._id);
     
       try {
-        await Reward.updateMany({ _id: { $in: rewardsTrueArray } }, { $set: { rewardActive: true } });
-        await Reward.updateMany({ _id: { $in: rewardsFalseArray } }, { $set: { rewardActive: false } });
+        await Reward.updateMany({ _id: { $in: rewardsTrueArray }, user: userIdString }, { $set: { rewardActive: true } });
+        await Reward.updateMany({ _id: { $in: rewardsFalseArray }, user: userIdString }, { $set: { rewardActive: false } });
     
-        await OutboundReward.updateMany({ _id: { $in: defaultRewardsTrueArray } }, { $set: { rewardActive: true } });
-        await OutboundReward.updateMany({ _id: { $in: defaultRewardsFalseArray } }, { $set: { rewardActive: false } });
+        await OutboundReward.updateMany({ _id: { $in: defaultRewardsTrueArray }, user: userIdString }, { $set: { rewardActive: true } });
+        await OutboundReward.updateMany({ _id: { $in: defaultRewardsFalseArray }, user: userIdString }, { $set: { rewardActive: false } });
     
         console.log('Successfully updated rewards and default rewards');
         res.status(200).json({ message: 'Successfully updated all rewards and default rewards' });

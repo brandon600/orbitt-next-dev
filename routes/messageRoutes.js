@@ -13,21 +13,36 @@ const client = require('twilio')(db.accountSid, db.authToken)
 
 module.exports = (app) => {
       app.get('/triggered-messages/', async (req, res) => {
-        const rcs = await TriggeredMessage.find({user: '1680735892067'})
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: 'userId is required' });
+        }
+        console.log('userid', userId);
+        const rcs = await TriggeredMessage.find({user: userId.toString()})
         .catch(err => console.log(err));;
         const currentTriggeredMessages = Array.from(rcs);
         res.json(currentTriggeredMessages);
       });
 
       app.get('/blast-messages/', async (req, res) => {
-        const rcs = await BlastMessage.find({user: '1680735892067'})
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: 'userId is required' });
+        }
+        console.log('userid', userId);
+        const rcs = await BlastMessage.find({user: userId.toString()})
         .catch(err => console.log(err));;
         const currentBlastMessages = Array.from(rcs);
         res.json(currentBlastMessages);
       });
 
       app.get('/sent-messages/', async (req, res) => {
-        const rcs = await SentMessage.find({user: '1680735892067'})
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: 'userId is required' });
+        }
+        console.log('userid', userId);
+        const rcs = await SentMessage.find({user: userId.toString()})
         .catch(err => console.log(err));;
         const currentSentMessages = Array.from(rcs);
         res.json(currentSentMessages);
@@ -38,6 +53,13 @@ module.exports = (app) => {
         const { updatedTriggeredMessages } = req.body;
         console.log(updatedTriggeredMessages)
 
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: 'userId is required' });
+        }
+        console.log('userid', userId);
+        const userIdString = userId.toString();
+
         const triggeredMessagesTrueArray = updatedTriggeredMessages
         .filter(triggeredMessage => triggeredMessage.active === true)
         .map(triggeredMessage => triggeredMessage._id);
@@ -47,8 +69,8 @@ module.exports = (app) => {
           .map(triggeredMessage => triggeredMessage._id);
 
         try {
-          await TriggeredMessage.updateMany({ _id: { $in: triggeredMessagesTrueArray } }, { $set: { active: true } });
-          await TriggeredMessage.updateMany({ _id: { $in: triggeredMessagesFalseArray } }, { $set: { active: false } });
+          await TriggeredMessage.updateMany({ _id: { $in: triggeredMessagesTrueArray }, user: userIdString }, { $set: { active: true } });
+          await TriggeredMessage.updateMany({ _id: { $in: triggeredMessagesFalseArray }, user: userIdString }, { $set: { active: false } });
           console.log('Successfully updated triggered messages');
           res.status(200).json({ message: 'Successfully updated all triggered messages' });
       
@@ -98,7 +120,8 @@ module.exports = (app) => {
       try {
           // Fetch customers based on their IDs to get phone numbers.
           const customersToSend = await Customer.find({
-              customerid: { $in: customerIds }
+              customerid: { $in: customerIds },
+              user: user.userid
           });
 
           const objectIdArray = customersToSend.map(customer => customer._id);
@@ -154,7 +177,7 @@ module.exports = (app) => {
           });
   
           // Append the blast message to the customer's record
-          await Customer.updateMany({ customerid: { $in: customerIds } }, {
+          await Customer.updateMany({ customerid: { $in: customerIds }, user: user.userid }, {
               $push: { receivedBlasts: newBlastMessage }
           });
   
