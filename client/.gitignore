@@ -2,3 +2,4 @@ node_modules
 /.next/
 
 keys_dev.js
+node_modules

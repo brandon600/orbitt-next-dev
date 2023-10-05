@@ -47,6 +47,7 @@ app.use(cors(corsOptions));
 
 //DB Config
 const db = require('./config/keys');
+const { constants } = require('fs');
 
 //Map global promise
 mongoose.Promise = global.Promise
