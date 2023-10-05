@@ -9,7 +9,7 @@
   },
   "scripts": {
     "client-install": "cd client && npm install",
-    "start": "npm run server",
+    "start": "nodemon server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
