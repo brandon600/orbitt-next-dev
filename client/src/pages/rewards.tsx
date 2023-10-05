@@ -1,4 +1,3 @@
-import DataDisplay from '../components/DataDisplay';
 import Text from '../components/subatomic/Text';
 import styled from 'styled-components';
 import StyledMediaQuery from '../constants/StyledMediaQuery';
@@ -26,6 +25,7 @@ import { handleRewardsPendingChange, handleDefaultRewardsPendingChange, handleSa
 import { useRewardsState } from '@/util/pages/rewards/rewardsState';
 
 import { FlexDiv, TitlePlusButton, RewardsPageTitle, RewardOfferingsAndSettings, ButtonWrap } from '@/util/pages/rewards/rewardsStyles';
+import { useMemberAuth } from '../util/global/globalHooks';
 
 interface RewardsProps {
     rewardsData: RewardData[]; // Replace YourDataTypeHere with the actual type of your rewards data
@@ -66,6 +66,7 @@ function Rewards({ rewardsData: initialRewardsData, defaultRewardsData: initialD
     data, fetchData, toast, 
     hideToast, showToast 
   } = useStore((state: AppState) => state);
+  const { userId } = useMemberAuth();
 
 
   // ========== State Variables ==========
@@ -126,8 +127,10 @@ const {
 // ========== Fetching and Updating Data ========== 
 
 useEffect(() => {
-  fetchData();
-}, []);
+  if (userId) {
+    fetchData(userId);
+  }
+}, [userId]);
 
 
   const saveChanges = () => {

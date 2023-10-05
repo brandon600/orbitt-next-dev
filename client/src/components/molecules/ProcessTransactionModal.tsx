@@ -10,6 +10,8 @@ import { useRouter } from 'next/router';
 import { RewardData } from '@/types/RewardData';
 import { useStore, AppState } from '../../store/store'; // Import your store
 import { motion } from 'framer-motion';
+import { useMemberstack } from "@memberstack/react";
+import { useAuth } from "@memberstack/react";
 
 const ModalWrapper = styled.div`
     position: fixed;
@@ -281,6 +283,11 @@ function formatPhoneNumber(number: string) {
 
 const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpen, onClose, customer, mode, reward, pointsGive,
     transactionDetails, }) => {
+    const {
+        userId,
+    } = useAuth();
+
+    console.log(userId);
     const router = useRouter();
     if (!isOpen || !customer) return null;
 
@@ -297,7 +304,8 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
                     customerId: customer?.customerid,
                     points: pointsGive,
                     transactionDetails: transactionDetails,
-                    user: data
+                    user: data,
+                    memberstackId: userId
                 }),
             });
 

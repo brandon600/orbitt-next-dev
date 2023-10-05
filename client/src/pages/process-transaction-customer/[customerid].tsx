@@ -24,6 +24,7 @@ import Overlay from '@/components/atoms/Overlay';
 import InputField from '@/components/atoms/InputField';
 import Textarea from '@/components/atoms/Textarea';
 import { useStore, AppState } from '../../store/store'; // Import your store
+import { useMemberAuth } from '../../util/global/globalHooks';
 
 interface ProcessTransactionCustomerProps {
     customer: CustomerData | null;
@@ -443,6 +444,7 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
     const [transactionDetails, setTransactionDetails] = useState<string>('');
     const { data, fetchData, toast, showToast, hideToast } = useStore();
     useBodyScrollLock(isModalOpen);
+    const { userId } = useMemberAuth();
 
     const router = useRouter();
     const handleGoBack = () => {
@@ -450,8 +452,10 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
     }
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (userId) {
+          fetchData(userId);
+        }
+      }, [userId]);
 
     const handleActivePillChange = (activeLabel: string) => {
         setActiveOption(activeLabel);

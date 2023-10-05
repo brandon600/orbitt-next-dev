@@ -15,6 +15,7 @@ import { CustomerData } from '@/types/CustomerData';
 import { BlastMessageData } from '@/types/BlastMessageData';
 import { SentMessageData } from '@/types/SentMessageData';
 import { VisitData } from '@/types/VisitData';
+import { UserData, initialData, fetchData } from '../store/store';
 import CustomerCells from '@/components/organism/CustomerCells';
 import SearchBar from '@/components/atoms/SearchBar';
 import { CustomerFilter, FilterType, FILTER_CONFIGS, FilterValue } from '@/components/molecules/CustomerFilter';
@@ -24,12 +25,16 @@ import Overlay from '@/components/atoms/Overlay';
 import SMSBlastModal from '@/components/organism/SMSBlastModal';
 import AddCustomerForm from '@/components/organism/AddCustomerForm';
 import { SMSIcon } from '@/components/subatomic/Icons/SMSIcon';
+import { useMemberAuth } from '../util/global/globalHooks';
+import { GetServerSidePropsContext } from 'next';
+import Cookie from 'js-cookie';
 
 interface CustomerProps {
     customersData: CustomerData[];
     receivedBlastsData: BlastMessageData[];
     visitsData: VisitData[];
     sentMessagesData: SentMessageData[];
+    userData: UserData;
 }
 
 const TitlePlusButton = styled.div`
@@ -228,10 +233,32 @@ const HideShowFilters = styled.div`
     }
 `
 
- export async function getServerSideProps() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const userCookie = context.req.cookies.user;
+    let userData: UserData = initialData;
+
+    if (userCookie) {
+        userData = JSON.parse(userCookie);
+    } else {
+        // Fetch user data if it's not in the cookie
+        const memberstackId = context.req.cookies.memberstackId; // or however you're identifying the user
+        if (memberstackId) {
+            const fetchedData = await fetchData(memberstackId); // fetchData can return null
+            if (fetchedData) {
+                userData = fetchedData;
+                // fetchData already sets the cookie, so you don't have to do it again here
+            }
+        }
+    }
+
+    if (!userData.userid) {
+        return 'no user data'
+    }
+
     try {
         // Fetch rewards data
-        const fetchCustomers = await fetch('http://localhost:5000/customers');
+        const userId = userData.userid;
+        const fetchCustomers = await fetch(`http://localhost:5000/customers?userId=${userId}`);
         const fetchBlastMessages = await fetch('http://localhost:5000/blast-messages');
         const fetchSentMessages = await fetch('http://localhost:5000/sent-messages');
         const fetchVisits = await fetch('http://localhost:5000/customer-visits');
@@ -251,6 +278,7 @@ const HideShowFilters = styled.div`
             // Return the fetched data as props
             return {
                 props: {
+                    userData,
                     customersData,
                     receivedBlastsData,
                     sentMessagesData,
@@ -290,7 +318,7 @@ const HideShowFilters = styled.div`
         return mostCommonAreaCode;
     }
 
-function Customers( { customersData, receivedBlastsData, visitsData, sentMessagesData }: CustomerProps) {
+function Customers( { customersData, receivedBlastsData, visitsData, sentMessagesData, userData }: CustomerProps) {
     const { 
         data, fetchData, toast, 
         hideToast, showToast 
@@ -304,6 +332,11 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     const [isAddCustomerFormOpen, setIsAddCustomerFormOpen] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
     const [localCustomersData, setLocalCustomersData] = useState<CustomerData[]>(customersData);
+    const { userId } = useMemberAuth();
+
+    const savedUserData = JSON.parse(Cookie.get('user') || '{}');
+    console.log(savedUserData)
+    console.log(userData)
 
     const [filters, setFilters] = useState<Record<FilterType, FilterValue>>({
         [FilterType.POINTS]: { value: '1', active: false },
@@ -335,9 +368,13 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     }, []);
 
 
+    /*
     useEffect(() => {
-        fetchData();
-      }, []);
+        if (userId) {
+          fetchData(userId);
+        }
+      }, [userId]);
+      */
   
     useEffect(() => {
         console.log('Updated selectedCustomers:', selectedCustomers);

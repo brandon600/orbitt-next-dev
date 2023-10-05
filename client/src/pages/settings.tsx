@@ -12,6 +12,7 @@ import { EditIcon } from '@/components/subatomic/Icons/EditIcon';
 import Textarea from '../components/atoms/Textarea';
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
+import { useMemberAuth } from '../util/global/globalHooks';
 
 interface ProgressBarProps {
     value: number;
@@ -380,6 +381,7 @@ const Settings: React.FC<SettingsProps> = () => {
     const [businessTC, setBusinessTC] = useState<string>(data.termsConditions || '');
     const [newBusinessTC, setNewBusinessTC] = useState<string>('');
     const [isEditingBusinessTC, setEditingBusinessTC] = useState<boolean>(false);
+    const { userId } = useMemberAuth();
 
 
     useEffect(() => {
@@ -405,8 +407,10 @@ const Settings: React.FC<SettingsProps> = () => {
     }, [data.termsConditions]);
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (userId) {
+          fetchData(userId);
+        }
+      }, [userId]);
 
 
     const handleEditBusinessName = () => {
@@ -496,8 +500,10 @@ const Settings: React.FC<SettingsProps> = () => {
     };
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (userId) {
+          fetchData(userId);
+        }
+      }, [userId]);
 
     const handleTabChange = (tabName: string) => {
         setActiveTab(tabName);

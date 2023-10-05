@@ -9,6 +9,13 @@ module.exports = (app) => {
     app.get('/api/dashboard', async (req, res) => {
         const { timeFilter } = req.query;
         let dateFilter = {};
+        const { userId } = req.query;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'userId is required' });
+        }
+
+        const userIdString = userId.toString();
 
 
         switch(timeFilter) {
@@ -36,15 +43,12 @@ module.exports = (app) => {
                 break;
         }
 
-    
-        const userId = '1680735892067';  // Retrieve this from JWT/session as needed
-
         try {
             let response = {};
 
             if (timeFilter === 'lastWeek' || timeFilter === 'last2Weeks') {
                 const visitsInWeekCursor = await Visit.aggregate([
-                    { $match: { ...dateFilter, user: userId } },
+                    { $match: { ...dateFilter, user: userIdString } },
                     {
                         $addFields: {
                             convertedDate: {
@@ -104,7 +108,7 @@ module.exports = (app) => {
                 response.dailyVisits = pastDays.reverse();  // As we initialized from today to 7 days ago, we reverse to get in chronological order
             }  else if (timeFilter === 'lastMonth') {
                 const visitsInMonthCursor = await Visit.aggregate([
-                    { $match: { ...dateFilter, user: userId } },
+                    { $match: { ...dateFilter, user: userIdString } },
                     {
                         $addFields: {
                             convertedDate: {
@@ -168,7 +172,7 @@ module.exports = (app) => {
 
             } else if (timeFilter === 'last3Months') {
                 const visitsInMonthsCursor = await Visit.aggregate([
-                    { $match: { ...dateFilter, user: userId } },
+                    { $match: { ...dateFilter, user: userIdString } },
                     {
                         $addFields: {
                             convertedDate: {
@@ -224,7 +228,7 @@ module.exports = (app) => {
                 response.monthlyVisits = pastMonths.reverse();
             } else if (timeFilter === 'last6Months') {
                 const visitsInMonthsCursor = await Visit.aggregate([
-                    { $match: { ...dateFilter, user: userId } },
+                    { $match: { ...dateFilter, user: userIdString } },
                     {
                         $addFields: {
                             convertedDate: {
@@ -281,7 +285,7 @@ module.exports = (app) => {
             } else if (timeFilter === 'lastYear' || timeFilter === 'allTime') {
                 const dateFilter2 = { date: { $gte: (Date.now() - 365 * 24 * 60 * 60 * 1000).toString() } };
                 const visitsInMonthsCursor = await Visit.aggregate([
-                    { $match: { ...dateFilter2, user: userId } },
+                    { $match: { ...dateFilter2, user: userIdString } },
                     {
                         $addFields: {
                             convertedDate: {
@@ -340,17 +344,17 @@ module.exports = (app) => {
             
     
             // This part is common for all time filters
-            const totalCustomers = await Customer.countDocuments({ ...dateFilter, user: userId });
-            const totalVisits = await Visit.countDocuments({ ...dateFilter, user: userId });
-            const rewardsRedeemed = await Visit.countDocuments({ ...dateFilter, visitType: 'Reward', user: userId });
+            const totalCustomers = await Customer.countDocuments({ ...dateFilter, user: userIdString });
+            const totalVisits = await Visit.countDocuments({ ...dateFilter, user: userIdString });
+            const rewardsRedeemed = await Visit.countDocuments({ ...dateFilter, visitType: 'Reward', user: userIdString });
             
             const totalStarsCursor = await Customer.aggregate([
-                { $match: { ...dateFilter, user: userId } },
+                { $match: { ...dateFilter, user: userIdString } },
                 { $group: { _id: null, totalStars: { $sum: "$starsEarned" } } }
             ]);
             
             const totalPointsGiven = totalStarsCursor[0]?.totalStars || 0;
-            const smsBlastsSent = await BlastMessage.countDocuments({ ...dateFilter, user: userId });
+            const smsBlastsSent = await BlastMessage.countDocuments({ ...dateFilter, user: userIdString });
     
             // Merge the results into the response object
             response = {
