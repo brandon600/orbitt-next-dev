@@ -155,7 +155,7 @@ const fetchCustomer = async (phoneNumber: string) => {
     }
 
     try {
-        const response = await fetch(`http://localhost:5000/process-transaction?userId=${userData.userid}&phoneNumber=${phoneNumber}`);
+        const response = await fetch(`/process-transaction?userId=${userData.userid}&phoneNumber=${phoneNumber}`);
         if (!response.ok) {
             if (response.status === 404) {
                 throw new Error('Customer not found');

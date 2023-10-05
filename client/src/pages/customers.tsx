@@ -258,10 +258,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     try {
         // Fetch customers data
         const userId = userData.userid;
-        const fetchCustomers = await fetch(`http://localhost:5000/customers?userId=${userId}`);
-        const fetchBlastMessages = await fetch(`http://localhost:5000/blast-messages?userId=${userId}`);
-        const fetchSentMessages = await fetch(`http://localhost:5000/sent-messages?userId=${userId}`);
-        const fetchVisits = await fetch(`http://localhost:5000/customer-visits?userId=${userId}`);
+        const fetchCustomers = await fetch(`/customers?userId=${userId}`);
+        const fetchBlastMessages = await fetch(`/blast-messages?userId=${userId}`);
+        const fetchSentMessages = await fetch(`/sent-messages?userId=${userId}`);
+        const fetchVisits = await fetch(`/customer-visits?userId=${userId}`);
 
         const [customersResponse, blastMessagesResponse, sentMessagesResponse, visitsResponse] = 
             await Promise.all([fetchCustomers, fetchBlastMessages, fetchSentMessages, fetchVisits]);

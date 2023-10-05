@@ -291,7 +291,7 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
     
     const handleGivePoints = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/give-points`, {
+            const response = await fetch(`/give-points`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -323,7 +323,7 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
     const handleRedeemReward = async () => {
         if (!reward) return;  // Safety check
         try {
-            const response = await fetch(`http://localhost:5000/redeem-reward`, {
+            const response = await fetch(`/redeem-reward`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

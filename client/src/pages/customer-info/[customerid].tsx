@@ -391,8 +391,8 @@ export async function getServerSideProps(context: any) {
 
     try {
         const userId = userData.userid;
-        const customerResponse = await fetch(`http://localhost:5000/customers/${customerid}?userId=${userData.userid}`);
-        const rankingResponse = await fetch(`http://localhost:5000/customers/${customerid}/ranking?userId=${userData.userid}`);
+        const customerResponse = await fetch(`/customers/${customerid}?userId=${userData.userid}`);
+        const rankingResponse = await fetch(`/customers/${customerid}/ranking?userId=${userData.userid}`);
 
         if (!customerResponse.ok || !rankingResponse.ok) {
             throw new Error('Failed to fetch data');

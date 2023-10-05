@@ -438,7 +438,7 @@ useEffect(() => {
     // Make POST request to your Express server
 
     try {
-      const response = await fetch('http://localhost:5000/edit-customer', {
+      const response = await fetch('/edit-customer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

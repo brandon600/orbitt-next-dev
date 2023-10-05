@@ -16,7 +16,19 @@ export const useWebSocket = () => {
 };
 
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }) => {
-  const socket = io('http://localhost:5000');
+  let socketServerURL;
+
+  if (process.env.NODE_ENV === 'development') {
+    socketServerURL = process.env.WEBSOCKET_URL; // Using local WebSocket URL
+  } else {
+    socketServerURL = 'https://orbitt-next-a50c5a1d02bc.herokuapp.com/'; // Replace with your production WebSocket URL
+  }
+
+  if (!socketServerURL) {
+    throw new Error("WebSocket server URL not provided!");
+}
+const socket = io(socketServerURL);
+
 
   useEffect(() => {
     return () => {

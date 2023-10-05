@@ -109,7 +109,7 @@ export async function handleSaveChanges({
       console.log(`Sending updated data: ${JSON.stringify(payload)}`);
     
       try {
-        const response = await fetch('http://localhost:5000/update-active-rewards', {
+        const response = await fetch('/update-active-rewards', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

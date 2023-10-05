@@ -423,7 +423,7 @@ const AddCustomerForm: React.FC<AddCustomerFormProps> = ({ onClose }) => {
     // Make POST request to your Express server
 
     try {
-      const response = await fetch('http://localhost:5000/add-customer', {
+      const response = await fetch('/add-customer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

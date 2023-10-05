@@ -45,7 +45,7 @@ const initialState: Toast = {
 
 export const fetchData = async (memberstackId: string): Promise<UserData | null> => {
   try {
-    const response = await fetch('http://localhost:5000/api/users', {
+    const response = await fetch('/api/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

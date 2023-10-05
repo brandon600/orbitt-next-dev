@@ -60,10 +60,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   try {
       const userId = userData.userid;
       // Fetch rewards data
-      const rewardsData = await fetchDataFromURL(`http://localhost:5000/current-rewards?userId=${userId}`);
+      const rewardsData = await fetchDataFromURL(`/current-rewards?userId=${userId}`);
 
       // Fetch reward offerings data
-      const defaultRewardsData = await fetchDataFromURL(`http://localhost:5000/current-outbound-rewards?userId=${userId}`);
+      const defaultRewardsData = await fetchDataFromURL(`/current-outbound-rewards?userId=${userId}`);
 
       // Return the fetched data as props
       return {

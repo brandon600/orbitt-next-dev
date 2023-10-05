@@ -344,7 +344,7 @@ const timelineFilterOptions: DropdownOption[] = [
 
     try {
         const userId = userData.userid;
-        const response = await fetch(`http://localhost:5000/api/dashboard?userId=${userId}`);
+        const response = await fetch(`/api/dashboard?userId=${userId}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -623,7 +623,7 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
     useEffect(() => {
         const fetchDataWithFilter = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/dashboard?userId=${userData.userid}&timeFilter=${timeFilter}`);
+                const response = await fetch(`/api/dashboard?userId=${userData.userid}&timeFilter=${timeFilter}`);
 
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

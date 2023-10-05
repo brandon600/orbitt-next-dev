@@ -257,7 +257,7 @@ useEffect(() => {
         };
       
         try {
-          const response = await fetch('http://localhost:5000/update-triggered-message-content', {
+          const response = await fetch('/update-triggered-message-content', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

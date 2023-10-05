@@ -441,7 +441,7 @@ const Settings: React.FC<SettingsProps> = () => {
         };
     
         try {
-          const response = await fetch('http://localhost:5000/update-company-name', {
+          const response = await fetch('/update-company-name', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -475,7 +475,7 @@ const Settings: React.FC<SettingsProps> = () => {
         };
     
         try {
-          const response = await fetch('http://localhost:5000/update-terms-conditions', {
+          const response = await fetch('/update-terms-conditions', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

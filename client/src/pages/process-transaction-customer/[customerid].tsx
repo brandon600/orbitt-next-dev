@@ -410,13 +410,13 @@ export async function getServerSideProps(context: any) {
     const { customerid } = context.params;
     const userId = userData.userid;
     try {
-        const customerResponse = await fetch(`http://localhost:5000/customers/${customerid}?userId=${userId}`);
+        const customerResponse = await fetch(`/customers/${customerid}?userId=${userId}`);
         if (!customerResponse.ok) {
             throw new Error('Failed to fetch data');
         }
         const customer: CustomerData = await customerResponse.json();
 
-        const rewardsResponse = await fetch(`http://localhost:5000/current-active-rewards?userId=${userId}`);
+        const rewardsResponse = await fetch(`/current-active-rewards?userId=${userId}`);
 
         if (!rewardsResponse.ok) {
             throw new Error('Network response was not ok');

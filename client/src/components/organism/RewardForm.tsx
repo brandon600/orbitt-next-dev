@@ -185,7 +185,7 @@ const RewardForm: React.FC<RewardFormProps> = ({ onClose }) => {
     // Make POST request to your Express server
 
     try {
-      const response = await fetch('http://localhost:5000/add-reward', {
+      const response = await fetch('/add-reward', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

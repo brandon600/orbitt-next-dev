@@ -106,7 +106,7 @@ const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomer
         console.log(data)
 
         try {
-            const response = await fetch('http://localhost:5000/send-blast-message', {
+            const response = await fetch('/send-blast-message', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

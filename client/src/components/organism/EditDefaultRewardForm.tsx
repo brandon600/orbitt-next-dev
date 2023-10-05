@@ -192,7 +192,7 @@ type EditDefaultRewardFormProps = {
       };
   
       try {
-        const response = await fetch('http://localhost:5000/update-default-reward', {
+        const response = await fetch('/update-default-reward', {
           method: 'PUT',  // Typically, updates are done via PUT
           headers: {
             'Content-Type': 'application/json',

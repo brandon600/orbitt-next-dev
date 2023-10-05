@@ -236,7 +236,7 @@ type EditRewardFormProps = {
       };
   
       try {
-        const response = await fetch('http://localhost:5000/update-reward', {
+        const response = await fetch('/update-reward', {
           method: 'PUT',  // Typically, updates are done via PUT
           headers: {
             'Content-Type': 'application/json',
