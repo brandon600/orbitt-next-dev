@@ -519,7 +519,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking, userData
         if (userId) {
           fetchData(userId);
         }
-      }, [userId]);
+      }, [fetchData, userId]);
 
 
     if (!customer) {

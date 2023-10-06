@@ -482,7 +482,7 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
         if (userId) {
           fetchData(userId);
         }
-      }, [userId]);
+      }, [fetchData, userId]);
 
     const handleActivePillChange = (activeLabel: string) => {
         setActiveOption(activeLabel);

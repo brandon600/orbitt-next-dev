@@ -47,7 +47,7 @@ const socket = io(apiUrl);
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [socket]);
 
   return (
     <WebSocketContext.Provider value={{ socket }}>

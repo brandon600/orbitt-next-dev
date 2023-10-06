@@ -395,7 +395,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         if (userId) {
           fetchData(userId);
         }
-      }, [userId]);
+      }, [fetchData, userId]);
 
   
     useEffect(() => {
