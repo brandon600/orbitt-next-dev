@@ -386,7 +386,10 @@ export async function getServerSideProps(context: any) {
     }
   
     if (!userData.userid) {
-        return 'no user data'
+        return {
+            error: "no user data",
+            notFound: true
+        }
     }
 
     try {
@@ -511,6 +514,13 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking, userData
             socket.disconnect();
         };
     }, []);
+
+    useEffect(() => {
+        if (userId) {
+          fetchData(userId);
+        }
+      }, [userId]);
+
 
     if (!customer) {
         return <p>Loading...</p>;

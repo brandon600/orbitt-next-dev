@@ -54,7 +54,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   if (!userData.userid) {
-      return 'no user data'
+      return {
+        error: "no user data",
+        notFound: true
+      }
   }
 
   try {
@@ -175,6 +178,13 @@ const {
       setHasPendingChanges
     );
   };
+
+  useEffect(() => {
+    if (userId) {
+      fetchData(userId);
+    }
+  }, [userId]);
+
   
     return (
         <FlexDiv>

@@ -99,7 +99,10 @@ const MessagesPageTitle = styled.div`
   }
 
   if (!userData.userid) {
-      return 'no user data'
+      return {
+        error: "no user data",
+        notFound: true
+      }
   }
 
   console.log(userCookie)
@@ -179,6 +182,13 @@ useEffect(() => {
       socket.disconnect();
     };
 }, [triggeredMessagesData]);
+
+useEffect(() => {
+  if (userId) {
+    fetchData(userId);
+  }
+}, [userId]);
+
 
 useEffect(() => {
     setOriginalTriggeredMessageToggles(triggeredMessagesData.map((triggeredMessage) => triggeredMessage.active));

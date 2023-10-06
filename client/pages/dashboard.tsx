@@ -338,6 +338,7 @@ const timelineFilterOptions: DropdownOption[] = [
 
     if (!userData.userid) {
         return {
+            error: "no user data",
             notFound: true
         };
     }
@@ -628,6 +629,13 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
             socket.off("dashboard-updated"); // stop listening to this specific event
         };
     }, []);
+
+    useEffect(() => {
+        if (userId) {
+          fetchData(userId);
+        }
+      }, [userId]);
+
 
 
     useEffect(() => {

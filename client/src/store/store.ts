@@ -46,6 +46,8 @@ const initialState: Toast = {
 export const fetchData = async (memberstackId: string): Promise<UserData | null> => {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    console.log('API Base URL:', apiUrl);  // Add this line
+
     const response = await fetch(`${apiUrl}/api/users`, {
       method: 'POST',
       headers: {
@@ -59,7 +61,11 @@ export const fetchData = async (memberstackId: string): Promise<UserData | null>
     }
 
     const data: UserData = await response.json();
+    console.log('Fetched Data:', data);  // Add this line
     Cookie.set('user', JSON.stringify(data));
+    console.log('User Cookie:', Cookie.get('user'));  // Add this line
+
+
     return data;
   } catch (error: any) {
     console.error('Error fetching data:', error.message);
