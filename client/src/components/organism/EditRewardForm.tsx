@@ -187,32 +187,32 @@ type EditRewardFormProps = {
   
     const { showToast } = useStore((state: AppState) => ({ showToast: state.showToast }));
 
+    const checkForChanges = () => {
+      if (
+          newRewardName !== rewardName ||
+          newRewardValue !== rewardValue ||
+          newRewardCost !== rewardCost ||
+          newRewardTerms !== rewardTerms
+      ) {
+          setHasChanged(true);
+      } else {
+          setHasChanged(false);
+      }
+  
+      if (
+          newRewardName.trim() === "" ||
+          newRewardValue.trim() === "" ||
+          newRewardCost.trim() === "" // Add any other required field checks here
+      ) {
+          setFieldsValid(false);
+      } else {
+          setFieldsValid(true);
+      }
+  };
+
     useEffect(() => {
       checkForChanges();
-  }, [newRewardName, newRewardValue, newRewardCost, newRewardTerms]);
-
-  const checkForChanges = () => {
-    if (
-        newRewardName !== rewardName ||
-        newRewardValue !== rewardValue ||
-        newRewardCost !== rewardCost ||
-        newRewardTerms !== rewardTerms
-    ) {
-        setHasChanged(true);
-    } else {
-        setHasChanged(false);
-    }
-
-    if (
-        newRewardName.trim() === "" ||
-        newRewardValue.trim() === "" ||
-        newRewardCost.trim() === "" // Add any other required field checks here
-    ) {
-        setFieldsValid(false);
-    } else {
-        setFieldsValid(true);
-    }
-};
+  }, [checkForChanges, newRewardName, newRewardValue, newRewardCost, newRewardTerms]);
   
     const handleUpdate = async (e: React.FormEvent) => {
       e.preventDefault();

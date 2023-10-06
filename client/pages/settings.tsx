@@ -410,7 +410,7 @@ const Settings: React.FC<SettingsProps> = () => {
         if (userId) {
           fetchData(userId);
         }
-      }, [userId]);
+      }, [fetchData, userId]);
 
 
     const handleEditBusinessName = () => {
@@ -505,7 +505,7 @@ const Settings: React.FC<SettingsProps> = () => {
         if (userId) {
           fetchData(userId);
         }
-      }, [userId]);
+      }, [fetchData, userId]);
 
     const handleTabChange = (tabName: string) => {
         setActiveTab(tabName);

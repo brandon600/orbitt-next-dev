@@ -634,7 +634,7 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
         if (userId) {
           fetchData(userId);
         }
-      }, [userId]);
+      }, [fetchData, userId]);
 
 
 
@@ -656,7 +656,7 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
         };
     
         fetchDataWithFilter();
-    }, [timeFilter, showToast]);
+    }, [userData.userid, timeFilter, showToast]);
 
 
     const handleActivePillChange = (activeLabel: string) => {

@@ -187,7 +187,7 @@ useEffect(() => {
   if (userId) {
     fetchData(userId);
   }
-}, [userId]);
+}, [fetchData, userId]);
 
 
 useEffect(() => {
