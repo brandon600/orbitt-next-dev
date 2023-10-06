@@ -3,6 +3,8 @@ import { WebSocketProvider } from '../src/WebSocketContext'; // Adjust the impor
 import GlobalStyle from '@/GlobalStyle';
 import NavigationBar from '@/components/organism/NavigationBar';
 import { MemberstackProvider, MemberstackProtected, SignInModal } from "@memberstack/react";
+import { useEffect } from 'react';
+
 
 const config = {
   publicKey: process.env.NEXT_PUBLIC_PUBLIC_KEY || '',

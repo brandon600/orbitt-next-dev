@@ -18,6 +18,7 @@ import { CancelIcon } from '../subatomic/Icons/CancelIcon';
 import Overlay from '../atoms/Overlay';
 import { AnimatePresence } from 'framer-motion';
 import { MenuIcon } from '../subatomic/Icons/MenuIcon';
+import { useAuth } from '@memberstack/react';
 
 type SlideoutNavigationProps = {
   isOpen: boolean;
@@ -173,6 +174,10 @@ const NavMenuClose = styled.div`
   }
 `
 
+const SignOut = styled.div`
+  display: flex;
+`
+
 
 interface NavigationBarProps {}
 
@@ -208,6 +213,8 @@ const NavigationBar: React.FC<NavigationBarProps> = () => {
     const initialActiveItem = navItems.find(item => item.href === currentPage)?.id || ''; // e.g., 'dashboard'
     const [activePage, setActivePage] = useState<string>(initialActiveItem);
     const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
+
+    const { userId, isLoggedIn, signOut } = useAuth(); 
 
     const handleTabClick = (page: string, href: string) => {
       console.log('tab clicked');
@@ -248,6 +255,9 @@ const NavigationBar: React.FC<NavigationBarProps> = () => {
               />
             </Link>
           ))}
+          <SignOut onClick={signOut}>
+            <Text text='Sign Out' />
+          </SignOut>
         </SlideoutNavigation>
         <AnimatePresence>
         {/* Conditionally render the Overlay only for smaller screens and if hasMounted */}
