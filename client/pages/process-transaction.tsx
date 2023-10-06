@@ -214,6 +214,7 @@ const ProcessTransaction = () => {
 
       const handleSearchCustomer = async () => {
         try {
+            console.log(phoneNumber)
             const customerData = await fetchCustomer(phoneNumber);
             setCustomer(customerData);
             setIsModalOpen(true); // Show modal when customer is found
