@@ -17,7 +17,7 @@ const next = require('next');
 
 
 const dev = process.env.NODE_ENV !== 'production';
-const nextApp = next({ dev });
+const nextApp = next({ dev, dir: './client' });
 const handle = nextApp.getRequestHandler();
 
 nextApp.prepare().then(() => {
@@ -74,14 +74,25 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //Method Override Middleware
-app.use(methodOverride('_method'))
+//app.use(methodOverride('_method'))
 
-//Express Session Middleware
+/*
+app.use((req, res, next) => {
+  console.log('Before session middleware: ', req.session);
+  next();
+});
+
 app.use(session({
   secret: 'secret',
   resave: true,
   saveUninitialized: true
 }));
+
+app.use((req, res, next) => {
+  console.log('After session middleware: ', req.session);
+  next();
+});
+
 
 app.use(
   cookieSession({
@@ -90,9 +101,11 @@ app.use(
   })
 );
 
+*/
+
 //Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 //Flash Middleware
 app.use(flash());

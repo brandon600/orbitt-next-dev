@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import Text from '../../components/subatomic/Text';
-import Button from '../../components/atoms/Button';
+import Text from '../../src/components/subatomic/Text';
+import Button from '../../src/components/atoms/Button';
 import styled from 'styled-components';
-import StyledMediaQuery from '../../constants/StyledMediaQuery';
+import StyledMediaQuery from '../../src/constants/StyledMediaQuery';
 import Colors from '@/constants/Colors';
-import GlobalStyle from '../../GlobalStyle'
-import { useStore, AppState, UserData, fetchData, initialData } from '../../store/store';
+import GlobalStyle from '../../src/GlobalStyle'
+import { useStore, AppState, UserData, fetchData, initialData } from '../../src/store/store';
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
@@ -19,7 +19,7 @@ import { VisitType } from '@/components/molecules/CustomerVisit';
 import { VisitData } from '@/types/VisitData';
 import EditCustomerForm from '@/components/organism/EditCustomerForm';
 import Overlay from '@/components/atoms/Overlay';
-import { useMemberAuth } from '../../util/global/globalHooks';
+import { useMemberAuth } from '../../src/util/global/globalHooks';
 
 interface CustomerInfoProps {
     customer: CustomerData | null;

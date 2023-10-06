@@ -1,11 +1,11 @@
-import Text from '../components/subatomic/Text';
+import Text from '../src/components/subatomic/Text';
 import styled from 'styled-components';
-import StyledMediaQuery from '../constants/StyledMediaQuery';
-import Button from '../components/atoms/Button';
+import StyledMediaQuery from '../src/constants/StyledMediaQuery';
+import Button from '../src/components/atoms/Button';
 import Colors from '@/constants/Colors';
 import React, { useState, useEffect, useCallback } from 'react';
-import GlobalStyle from '../GlobalStyle';
-import { useStore, AppState } from '../store/store'; // Import your store
+import GlobalStyle from '../src/GlobalStyle';
+import { useStore, AppState } from '../src/store/store'; // Import your store
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
@@ -15,7 +15,7 @@ import { CustomerData } from '@/types/CustomerData';
 import { BlastMessageData } from '@/types/BlastMessageData';
 import { SentMessageData } from '@/types/SentMessageData';
 import { VisitData } from '@/types/VisitData';
-import { UserData, initialData, fetchData } from '../store/store';
+import { UserData, initialData, fetchData } from '../src/store/store';
 import CustomerCells from '@/components/organism/CustomerCells';
 import SearchBar from '@/components/atoms/SearchBar';
 import { CustomerFilter, FilterType, FILTER_CONFIGS, FilterValue } from '@/components/molecules/CustomerFilter';
@@ -25,7 +25,7 @@ import Overlay from '@/components/atoms/Overlay';
 import SMSBlastModal from '@/components/organism/SMSBlastModal';
 import AddCustomerForm from '@/components/organism/AddCustomerForm';
 import { SMSIcon } from '@/components/subatomic/Icons/SMSIcon';
-import { useMemberAuth } from '../util/global/globalHooks';
+import { useMemberAuth } from '../src/util/global/globalHooks';
 import { GetServerSidePropsContext } from 'next';
 import Cookie from 'js-cookie';
 
