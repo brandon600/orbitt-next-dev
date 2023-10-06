@@ -16,7 +16,34 @@ export const useWebSocket = () => {
 };
 
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }) => {
-  let socketServerURL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+  if (!apiUrl) {
+    throw new Error("API_BASE_URL is not defined");
+}
+let socket: Socket | undefined;
+
+if (typeof window !== 'undefined') {
+    // Only try to create the WebSocket when we are on the client side.
+    socket = io(apiUrl);
+}
+
+  useEffect(() => {
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
+
+  return (
+    <WebSocketContext.Provider value={{ socket }}>
+      {children}
+    </WebSocketContext.Provider>
+  );
+};
+
+
+
+
+
 /*
   if (process.env.NODE_ENV === 'development') {
     socketServerURL = process.env.NEXT_PUBLIC_WEBSOCKET_URL; // Using local WebSocket URL
@@ -33,25 +60,3 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 //const socket = io(socketServerURL);
 //const socket = io('http://localhost:5000');
 //console.log("Socket Server URL:", socketServerURL);
-
-const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-if (!apiUrl) {
-    throw new Error("API_BASE_URL is not defined");
-}
-
-const socket = io(apiUrl);
-
-
-
-  useEffect(() => {
-    return () => {
-      socket.disconnect();
-    };
-  }, [socket]);
-
-  return (
-    <WebSocketContext.Provider value={{ socket }}>
-      {children}
-    </WebSocketContext.Provider>
-  );
-};
