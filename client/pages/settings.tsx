@@ -1,18 +1,18 @@
-import Text from '../components/subatomic/Text';
+import Text from '../src/components/subatomic/Text';
 import styled from 'styled-components';
-import StyledMediaQuery from '../constants/StyledMediaQuery';
-import Button from '../components/atoms/Button';
+import StyledMediaQuery from '../src/constants/StyledMediaQuery';
+import Button from '../src/components/atoms/Button';
 import Colors from '@/constants/Colors';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import GlobalStyle from '../GlobalStyle';
-import { useStore, AppState } from '../store/store'; // Import your store
-import PillBar from '../components/molecules/PillBar';
-import InputField from '../components/atoms/InputField';
+import GlobalStyle from '../src/GlobalStyle';
+import { useStore, AppState } from '../src/store/store'; // Import your store
+import PillBar from '../src/components/molecules/PillBar';
+import InputField from '../src/components/atoms/InputField';
 import { EditIcon } from '@/components/subatomic/Icons/EditIcon';
-import Textarea from '../components/atoms/Textarea';
+import Textarea from '../src/components/atoms/Textarea';
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
-import { useMemberAuth } from '../util/global/globalHooks';
+import { useMemberAuth } from '../src/util/global/globalHooks';
 
 interface ProgressBarProps {
     value: number;

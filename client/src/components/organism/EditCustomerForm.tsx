@@ -9,10 +9,12 @@ import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Colors from '../../constants/Colors';
 import { CancelIcon } from '../subatomic/Icons/CancelIcon';
 import { motion } from 'framer-motion';
-import { useStore, AppState } from '../../store/store'; // Import your store
+import { useStore, AppState, fetchData } from '../../store/store'; // Import your store
 import { on } from 'events';
 import { DropdownOption } from '../atoms/DropdownField';
 import { CustomerData } from '../../types/CustomerData';
+import { useMemberAuth } from '@/util/global/globalHooks';
+import Cookie from 'js-cookie';
 
 interface EditCustomerFormProps {
   onClose: () => void;
@@ -400,6 +402,9 @@ const EditCustomerForm: React.FC<EditCustomerFormProps> = ({ onClose, customer }
 
   const [isNewCustomerFirstNameValid, setNewCustomerFirstNameValid] = useState<boolean>(false);
   const [isNewCustomerPhoneNumberValid, setNewCustomerPhoneNumberValid] = useState<boolean>(false);
+  const { userId } = useMemberAuth();
+  const savedUserData = JSON.parse(Cookie.get('user') || '{}');
+  console.log(savedUserData)
 
   const { showToast, data } = useStore((state: AppState) => ({ 
     showToast: state.showToast, 
@@ -431,7 +436,7 @@ useEffect(() => {
         newBirthdayYear: newCustomerBirthdayYear,
         customerid: customer.customerid
       },
-      user: data, // example global state data
+      user: savedUserData, // example global state data
       // include any other relevant state data
     };
   

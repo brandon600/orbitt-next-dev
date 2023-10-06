@@ -124,6 +124,7 @@ module.exports = (app) => {
     
         // Generate unique ID based on timestamp
         const uniqid = Date.now();
+        console.log('req.body', req.body)
     
         // Define filter and update operations
         const filter = { rewardid: rewardDetails.id, user: user.userid };

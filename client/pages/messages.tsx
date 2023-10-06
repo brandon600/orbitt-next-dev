@@ -1,18 +1,18 @@
-import Text from '../components/subatomic/Text';
+import Text from '../src/components/subatomic/Text';
 import styled from 'styled-components';
-import StyledMediaQuery from '../constants/StyledMediaQuery';
-import Button from '../components/atoms/Button';
+import StyledMediaQuery from '../src/constants/StyledMediaQuery';
+import Button from '../src/components/atoms/Button';
 import Colors from '@/constants/Colors';
 import React, { useState, useEffect, useCallback } from 'react';
-import GlobalStyle from '../GlobalStyle';
-import { useStore, AppState, UserData, initialData, fetchData } from '../store/store'; // Import your store
+import GlobalStyle from '../src/GlobalStyle';
+import { useStore, AppState, UserData, initialData, fetchData } from '../src/store/store'; // Import your store
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
 import io from "socket.io-client";
 import { TriggeredMessageData } from '@/types/TriggeredMessageData';
 import MessageCell from '@/components/molecules/MessageCell';
-import { useMemberAuth } from '../util/global/globalHooks';
+import { useMemberAuth } from '../src/util/global/globalHooks';
 import { GetServerSidePropsContext } from 'next';
 import Cookie from 'js-cookie';
 
@@ -102,6 +102,9 @@ const MessagesPageTitle = styled.div`
       return 'no user data'
   }
 
+  console.log(userCookie)
+  console.log(userData)
+
     try {
         // Fetch messagess data
         const userId = userData.userid;
@@ -124,6 +127,7 @@ const MessagesPageTitle = styled.div`
         console.error('Error fetching data:', error);
         return {
             props: {
+                userData,
                 triggeredMessagesData: []
             }
         };

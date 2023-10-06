@@ -1,11 +1,11 @@
-import Text from '../components/subatomic/Text';
+import Text from '../src/components/subatomic/Text';
 import styled from 'styled-components';
-import StyledMediaQuery from '../constants/StyledMediaQuery';
-import Button from '../components/atoms/Button';
+import StyledMediaQuery from '../src/constants/StyledMediaQuery';
+import Button from '../src/components/atoms/Button';
 import Colors from '@/constants/Colors';
 import React, { FC, useState, useEffect, useCallback } from 'react';
-import GlobalStyle from '../GlobalStyle';
-import { useStore, AppState, fetchData, UserData, initialData } from '../store/store'; // Import your store
+import GlobalStyle from '../src/GlobalStyle';
+import { useStore, AppState, fetchData, UserData, initialData } from '../src/store/store'; // Import your store
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
@@ -16,7 +16,7 @@ import { Doughnut, Bar } from "react-chartjs-2";
 import PillBar from '@/components/molecules/PillBar';
 import { DropdownOption } from '@/components/atoms/DropdownField';
 import DropdownField from '@/components/atoms/DropdownField';
-import { useMemberAuth } from '../util/global/globalHooks';
+import { useMemberAuth } from '../src/util/global/globalHooks';
 import { GetServerSidePropsContext } from 'next';
 import Cookie from 'js-cookie';
 

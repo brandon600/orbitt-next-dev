@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import InputField from '@/components/atoms/InputField';
-import Text from '../components/subatomic/Text';
+import Text from '../src/components/subatomic/Text';
 import styled from 'styled-components';
-import StyledMediaQuery from '../constants/StyledMediaQuery';
-import Button from '../components/atoms/Button';
+import StyledMediaQuery from '../src/constants/StyledMediaQuery';
+import Button from '../src/components/atoms/Button';
 import Colors from '@/constants/Colors';
-import GlobalStyle from '../GlobalStyle';
+import GlobalStyle from '../src/GlobalStyle';
 import Toast from '@/components/atoms/Toast';
-import { useStore, AppState, UserData, fetchData, initialData } from '../store/store'; // Import your store
+import { useStore, AppState, UserData, fetchData, initialData } from '../src/store/store'; // Import your store
 import { AnimatePresence } from 'framer-motion';
 import FoundCustomerModal from '@/components/molecules/FoundCustomerModal';
 import Overlay from '@/components/atoms/Overlay';

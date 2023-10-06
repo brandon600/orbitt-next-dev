@@ -16,38 +16,14 @@ const { Server } = require("socket.io");
 const next = require('next');
 
 
+const dev = process.env.NODE_ENV !== 'production';
+const nextApp = next({ dev, dir: './client' });
+const handle = nextApp.getRequestHandler();
 
-const app = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: {
-  origin: "http://localhost:3000",
-  methods: ["GET", "POST", "PUT", "DELETE"]
-} });
+nextApp.prepare().then(() => {
+  const app = express();
 
-
-// Socket.io connection
-io.on('connection', (socket) => {
-    console.log('New user connected');
-
-    socket.on('message', (data) => {
-        // Handle incoming messages here
-        console.log(data);
-    });
-
-    socket.on('disconnect', () => {
-        console.log('User disconnected');
-    });
-});
-
-const corsOptions = {
-  origin: 'http://localhost:3000', // Replace with the actual origin of your frontend
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Enable cookies and sessions for cross-origin requests if needed
-};
-
-app.use(cors(corsOptions));
-
-//DB Config
+  //DB Config
 const db = require('./config/keys');
 const { constants } = require('fs');
 
@@ -55,7 +31,6 @@ const { constants } = require('fs');
 mongoose.Promise = global.Promise
 
 //Connect to mongoose
-//mongoose.connect(db.mongoURI, {
 mongoose.connect(db.mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -63,7 +38,7 @@ mongoose.connect(db.mongoURI, {
     .then(() => console.log(db))
     .catch(err => console.log(err));
 
-//Load Models
+    //Load Models
 require('./models/Customer');
 require('./models/User');
 require('./models/Reward');
@@ -86,6 +61,39 @@ const SentMessage = mongoose.model('sentmessages');
 const Visit = mongoose.model('visits');
 const UpdatedCustomer = mongoose.model('updatedcustomers');
 
+const corsOptions = {
+  origin: db.localLink, // Replace with the actual origin of your frontend
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Enable cookies and sessions for cross-origin requests if needed
+  };
+  
+  app.use(cors(corsOptions));
+
+//Body parser middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+//Method Override Middleware
+//app.use(methodOverride('_method'))
+
+/*
+app.use((req, res, next) => {
+  console.log('Before session middleware: ', req.session);
+  next();
+});
+
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}));
+
+app.use((req, res, next) => {
+  console.log('After session middleware: ', req.session);
+  next();
+});
+
+
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -93,27 +101,11 @@ app.use(
   })
 );
 
-
-//Passport Config
-require('./config/passport')(passport);
-
-//Body parser middleware
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-//Method Override Middleware
-app.use(methodOverride('_method'))
-
-//Express Session Middleware
-app.use(session({
-  secret: 'secret',
-  resave: true,
-  saveUninitialized: true
-}));
+*/
 
 //Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 //Flash Middleware
 app.use(flash());
@@ -132,32 +124,43 @@ require('./routes/visitRoutes')(app);
 require('./routes/dashboardRoutes')(app);
 require('./routes/settingsRoutes')(app);
 
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+      return handle(req, res);
+  });
+}
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, { cors: {
+  origin: db.localLink,
+  methods: ["GET", "POST", "PUT", "DELETE"]
+}});
+
+// Socket.io connection
+io.on('connection', (socket) => {
+console.log('New user connected');
+
+socket.on('message', (data) => {
+    // Handle incoming messages here
+    console.log(data);
+});
+
+socket.on('disconnect', () => {
+    console.log('User disconnected');
+});
+});
+
+ // Error handling middleware (Example)
+ app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
 
 
-  if (process.env.NODE_ENV === 'production') {
-    //Express will serve up production assets
-    //Like our main.js file, or main.css file
-    app.use(express.static('client/build'));
-
-    app.use((err, req, res, next) => {
-      res.status(500).json({ error: err.stack });
-    });
-  
-    //Express will serve up the index.html file
-    //if it doesn't recognize the route
-  
-    const path = require('path');
-    app.get('*', (req, res) => {
-        const index = path.join(__dirname, 'client', 'build', 'index.html');
-        res.sendFile(index);
-    });
-  }
-  
-//const PORT = process.env.PORT || 5000;
-  
 const serverPort = 5000;
-
 const PORT = process.env.PORT || serverPort;
 httpServer.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
+});
+
 });
