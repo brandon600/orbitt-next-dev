@@ -391,13 +391,12 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     }, []);
 
 
-    /*
     useEffect(() => {
         if (userId) {
           fetchData(userId);
         }
       }, [userId]);
-      */
+
   
     useEffect(() => {
         console.log('Updated selectedCustomers:', selectedCustomers);

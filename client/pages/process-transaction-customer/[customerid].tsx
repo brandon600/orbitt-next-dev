@@ -404,7 +404,10 @@ export async function getServerSideProps(context: any) {
     }
 
     if (!userData.userid) {
-        return 'no user data'
+        return {
+            error: "no user data",
+            notFound: true
+        }
     }
 
     const { customerid } = context.params;
