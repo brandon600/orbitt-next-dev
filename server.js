@@ -73,40 +73,6 @@ const corsOptions = {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//Method Override Middleware
-//app.use(methodOverride('_method'))
-
-/*
-app.use((req, res, next) => {
-  console.log('Before session middleware: ', req.session);
-  next();
-});
-
-app.use(session({
-  secret: 'secret',
-  resave: true,
-  saveUninitialized: true
-}));
-
-app.use((req, res, next) => {
-  console.log('After session middleware: ', req.session);
-  next();
-});
-
-
-app.use(
-  cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: ['dfgrshdfxfdshergfdsvccgdfcxfbv']
-  })
-);
-
-*/
-
-//Passport middleware
-//app.use(passport.initialize());
-//app.use(passport.session());
-
 //Flash Middleware
 app.use(flash());
 
@@ -148,7 +114,17 @@ socket.on('message', (data) => {
 socket.on('disconnect', () => {
     console.log('User disconnected');
 });
+
+socket.on('error', (error) => {
+  console.error('Socket Error:', error);
 });
+
+});
+
+setInterval(() => {
+  io.emit('time', new Date().toTimeString());
+}, 1000);
+
 
  // Error handling middleware (Example)
  app.use((err, req, res, next) => {
@@ -164,3 +140,45 @@ httpServer.listen(PORT, () => {
 });
 
 });
+
+
+
+
+
+
+
+
+
+//Method Override Middleware
+//app.use(methodOverride('_method'))
+
+/*
+app.use((req, res, next) => {
+  console.log('Before session middleware: ', req.session);
+  next();
+});
+
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}));
+
+app.use((req, res, next) => {
+  console.log('After session middleware: ', req.session);
+  next();
+});
+
+
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: ['dfgrshdfxfdshergfdsvccgdfcxfbv']
+  })
+);
+
+*/
+
+//Passport middleware
+//app.use(passport.initialize());
+//app.use(passport.session());

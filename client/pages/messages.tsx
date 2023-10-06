@@ -166,6 +166,10 @@ useEffect(() => {
       setTriggeredMessagesData(updatedTriggeredMessagesData);
     });
 
+    socket.on('error', (error) => {
+      console.error('Socket Error:', error);
+  });
+
     socket.on("disconnect", () => {
       console.log("Disconnected from the server");
     });

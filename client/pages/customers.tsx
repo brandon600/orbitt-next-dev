@@ -237,6 +237,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const userCookie = context.req.cookies.user;
     let userData: UserData = initialData;
 
+    console.log("User cookie:", context.req.cookies.user);
+console.log("Memberstack ID cookie:", context.req.cookies.memberstackId);
+
+
     if (userCookie) {
         userData = JSON.parse(userCookie);
     } else {
@@ -252,8 +256,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
 
     if (!userData.userid) {
-        return 'no user data'
+        return {
+            props: {
+                error: "no user data",
+                customersData: [],
+                receivedBlastsData: [],
+                sentMessagesData: [],
+                visitsData: []
+            }
+        }
     }
+    
 
     try {
         // Fetch customers data
@@ -365,6 +378,10 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     
         socket.on("disconnect", () => {
           console.log("Disconnected from the server");
+        });
+
+        socket.on('error', (error) => {
+            console.error('Socket Error:', error);
         });
       
         return () => {

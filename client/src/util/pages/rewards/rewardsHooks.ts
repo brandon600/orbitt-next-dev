@@ -81,6 +81,7 @@ export const useSockets = (initialRewards: any[], initialDefaultRewards: any[]):
         socket.on("reward-added", (addedReward: RewardData) => {
             setRewardsData(prevRewards => [...prevRewards, addedReward]);
         });
+        
     
 
         socket.on("reward-updated", (updatedReward) => {
@@ -101,6 +102,10 @@ export const useSockets = (initialRewards: any[], initialDefaultRewards: any[]):
                 return defaultReward;
             });
             setDefaultRewardsData(updatedDefaultRewardsData);
+        });
+
+        socket.on('error', (error) => {
+            console.error('Socket Error:', error);
         });
 
         socket.on("disconnect", () => {

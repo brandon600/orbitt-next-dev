@@ -502,6 +502,10 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking, userData
         socket.on("customer-edited", (updatedCustomer: CustomerData) => {
             setLocalCustomer(updatedCustomer);
         });
+
+        socket.on('error', (error) => {
+            console.error('Socket Error:', error);
+        });
     
         return () => {
             socket.disconnect();

@@ -619,6 +619,10 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
             setDashboardData(updatedDashboardData);
         });
 
+        socket.on('error', (error) => {
+            console.error('Socket Error:', error);
+        });
+
         return () => {
             // Cleanup: Disconnect socket when component is unmounted
             socket.off("dashboard-updated"); // stop listening to this specific event
