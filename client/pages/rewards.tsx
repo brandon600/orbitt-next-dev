@@ -122,7 +122,7 @@ const {
           setCurrentRewardToggles, 
           setHasPendingChanges
       );
-  }, [setHasPendingChanges, currentRewardToggles, originalRewardToggles]);
+  }, [setHasPendingChanges, setCurrentDefaultRewardToggles, currentRewardToggles, originalRewardToggles]);
   
   const onDefaultRewardToggleChange = useCallback((index: number, newValue: boolean) => {
       handleDefaultRewardsPendingChange(
@@ -133,7 +133,7 @@ const {
           setCurrentDefaultRewardToggles, 
           setHasPendingChanges
       );
-  }, [setCurrentDefaultRewardToggles, currentDefaultRewardToggles, originalDefaultRewardToggles]);
+  }, [setCurrentDefaultRewardToggles, setHasPendingChanges, currentDefaultRewardToggles, originalDefaultRewardToggles]);
 
   //Overlay
   const {
