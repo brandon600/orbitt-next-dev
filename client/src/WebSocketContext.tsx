@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, ReactNode, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 interface WebSocketContextProps {
@@ -16,22 +16,26 @@ export const useWebSocket = () => {
 };
 
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }) => {
+  const [socket, setSocket] = useState<Socket | null>(null);
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL
   if (!apiUrl) {
     throw new Error("API_BASE_URL is not defined");
 }
-let socket: Socket | undefined;
 
-if (typeof window !== 'undefined') {
-    // Only try to create the WebSocket when we are on the client side.
-    socket = io(apiUrl);
+useEffect(() => {
+  if (typeof window !== 'undefined') {
+      const newSocket = io(apiUrl);
+      setSocket(newSocket);
+      return () => {
+          newSocket.disconnect();
+      };
+  }
+}, [apiUrl]);
+
+if (!socket) {
+  // You can return null or some kind of loading state here
+  return null;
 }
-
-  useEffect(() => {
-    return () => {
-      socket.disconnect();
-    };
-  }, [socket]);
 
   return (
     <WebSocketContext.Provider value={{ socket }}>
