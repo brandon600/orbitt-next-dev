@@ -473,6 +473,7 @@ function useBodyScrollLock(isLocked: boolean) {
 const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking, userData }) => {
     const router = useRouter();
     const { userId } = useMemberAuth();
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
     const handleTransactionClick = () => {
         if (customer) {

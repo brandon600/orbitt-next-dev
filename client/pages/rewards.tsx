@@ -122,7 +122,7 @@ const {
           setCurrentRewardToggles, 
           setHasPendingChanges
       );
-  }, [setHasPendingChanges, setCurrentDefaultRewardToggles, currentRewardToggles, originalRewardToggles]);
+  }, [setHasPendingChanges, setCurrentRewardToggles, currentRewardToggles, originalRewardToggles]);
   
   const onDefaultRewardToggleChange = useCallback((index: number, newValue: boolean) => {
       handleDefaultRewardsPendingChange(

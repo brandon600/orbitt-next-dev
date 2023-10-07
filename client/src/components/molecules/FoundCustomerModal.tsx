@@ -202,6 +202,8 @@ const FoundCustomerModal: React.FC<FoundCustomerModalProps> = ({ isOpen, onClose
     const router = useRouter();
     if (!isOpen || !customer) return null;
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
     const handleProcessTransaction = () => {
         console.log('customer', customer);
         console.log('customer.customerId', customer.customerid);
