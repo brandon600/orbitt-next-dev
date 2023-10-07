@@ -12,6 +12,7 @@ import { AnimatePresence } from 'framer-motion';
 import FoundCustomerModal from '@/components/molecules/FoundCustomerModal';
 import Overlay from '@/components/atoms/Overlay';
 import Cookie from 'js-cookie';
+import { useMemberAuth } from '../src/util/global/globalHooks';
 
 const FlexDiv = styled.div`
 @media ${StyledMediaQuery.XS} {
@@ -127,20 +128,36 @@ function useBodyScrollLock(isLocked: boolean) {
 }
 
 function getCookie(name: string): string | null {
+    console.log('being called!!')
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
     return null;
   }
 
-const fetchCustomer = async (phoneNumber: string) => {
+  const trySomething = () => {
+    const { data: userData } = useStore();
+    console.log('being called!!!')
+    console.log(userData);
+
+  }
+
+const fetchCustomer = async (phoneNumber: string, userData: UserData) => {
+    console.log('being called!!!')
+    console.log(userData);
+    console.log(userData.userid)
+
+    /*
     let userData: UserData = initialData;
     const userCookie = getCookie('user');
+    console.log(userCookie);
     if (userCookie) {
         userData = JSON.parse(userCookie);
+        console.log(userData);
     } else {
         // Fetch user data if it's not in the cookie
         const memberstackId = getCookie('memberstackId'); 
+        console.log(memberstackId)
         if (memberstackId) {
             const fetchedData = await fetchData(memberstackId); // fetchData can return null
             if (fetchedData) {
@@ -149,12 +166,14 @@ const fetchCustomer = async (phoneNumber: string) => {
             }
         }
     }
+        */
 
     if (!userData.userid) {
         throw new Error('No user data available');
     }
 
     try {
+        console.log(userData.userid)
         const response = await fetch(`/process-transaction?userId=${userData.userid}&phoneNumber=${phoneNumber}`);
         if (!response.ok) {
             if (response.status === 404) {
@@ -208,13 +227,24 @@ const ProcessTransaction = () => {
       } = useStore((state: AppState) => state);
       const savedUserData = JSON.parse(Cookie.get('user') || '{}')
       console.log(savedUserData);
+      const { userId } = useMemberAuth();
+
+      useEffect(() => {
+        if (userId) {
+          fetchData(userId);
+        }
+      }, [fetchData, userId]);
 
       useBodyScrollLock(isModalOpen);
 
+      const userData = data
 
-      const handleSearchCustomer = async () => {
+
+
+      const handleSearchCustomer = async (userData: UserData) => {
+        console.log(phoneNumber)
         try {
-            const customerData = await fetchCustomer(phoneNumber);
+            const customerData = await fetchCustomer(phoneNumber, userData);
             setCustomer(customerData);
             setIsModalOpen(true); // Show modal when customer is found
         } catch (error) {
@@ -282,7 +312,7 @@ const ProcessTransaction = () => {
                     sizeVariant='large'
                     label='Search For Customer'
                     buttonWidthVariant='fill'
-                    onClick={handleSearchCustomer}
+                    onClick={() => handleSearchCustomer(userData)}
                     type='submit'
                     disabled={
                         !isPhoneNumberValid

@@ -61,9 +61,10 @@ const SentMessage = mongoose.model('sentmessages');
 const Visit = mongoose.model('visits');
 const UpdatedCustomer = mongoose.model('updatedcustomers');
 
+//https://orbitt-nextjs.vercel.app
 //http://localhost:5000
 const corsOptions = {
-  origin: 'https://orbitt-nextjs.vercel.app', // Replace with the actual origin of your frontend
+  origin: 'http://localhost:3000', // Replace with the actual origin of your frontend
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // Enable cookies and sessions for cross-origin requests if needed
   };
