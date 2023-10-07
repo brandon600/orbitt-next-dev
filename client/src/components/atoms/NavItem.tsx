@@ -109,6 +109,7 @@ const NavItemSVG = styled.div`
 const NavItemLabel = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
+        text-decoration: none;
 `
 
 const useWindowWidth = () => {

@@ -639,7 +639,7 @@ const Settings: React.FC<SettingsProps> = () => {
                             </SMSPhoneNumberTextContainer>
                             <InputField
                                 ref={businessNameRef}
-                                label="Company Name"
+                                label="Phone Number"
                                 value={inputSMSNumber}
                                 onChange={setNewBusinessName}
                                 disabled={true}
