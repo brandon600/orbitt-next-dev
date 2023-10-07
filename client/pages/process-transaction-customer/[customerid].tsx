@@ -469,20 +469,20 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
     const [pointsGive, setPointsGive] = useState<string>('');
     const [pointsGiveValid, setPointsGiveValid] = useState<boolean>(false);
     const [transactionDetails, setTransactionDetails] = useState<string>('');
+    const { userId } = useMemberAuth();
     const { data, fetchData, toast, showToast, hideToast } = useStore();
     useBodyScrollLock(isModalOpen);
-    const { userId } = useMemberAuth();
-
-    const router = useRouter();
-    const handleGoBack = () => {
-        router.back();
-    }
 
     useEffect(() => {
         if (userId) {
           fetchData(userId);
         }
       }, [fetchData, userId]);
+
+    const router = useRouter();
+    const handleGoBack = () => {
+        router.back();
+    }
 
     const handleActivePillChange = (activeLabel: string) => {
         setActiveOption(activeLabel);

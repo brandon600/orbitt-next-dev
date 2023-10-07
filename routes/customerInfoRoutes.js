@@ -311,7 +311,7 @@ module.exports = (app) => {
     app.get('/process-transaction', async (req, res) => {
     console.log('Phone number:', req.query.phoneNumber);  
 
-    const { userId } = req.query;
+    const { userId, phoneNumber } = req.query;
     if (!userId) {
         return res.status(400).json({ error: 'userId is required' });
     }
@@ -320,7 +320,6 @@ module.exports = (app) => {
 
     try {
         // Extract phone number from query
-        const phoneNumber = req.query.phoneNumber;
         console.log('Phone number:', phoneNumber);
         
 
@@ -347,7 +346,7 @@ module.exports = (app) => {
             return res.status(404).json({ message: 'Customer not found' });
         }
 
-        res.status(200).json(customer);
+        res.status(200).json({ customer });
     } catch (error) {
         console.error('Error searching for customer:', error);
         res.status(500).json({ message: 'Internal server error' });

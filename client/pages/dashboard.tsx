@@ -338,8 +338,10 @@ const timelineFilterOptions: DropdownOption[] = [
 
     if (!userData.userid) {
         return {
-            error: "no user data",
-            notFound: true
+            props: {
+                error: "no user data", // Move the "error" key under "props"
+                notFound: true
+            }
         };
     }
 
@@ -362,6 +364,7 @@ const timelineFilterOptions: DropdownOption[] = [
         console.error('Error fetching dashboard data:', error);
         return {
             props: {
+                error: 'Error fetching dashboard data',
                 initialDashboardData: null
             }
         };
