@@ -7,7 +7,7 @@ function HomePage() {
   // Redirect to the '/dashboard' page when the component mounts
   useEffect(() => {
     router.push('/dashboard');
-  }, []); // The empty dependency array ensures this effect runs only once when the component mounts
+  }, [router]); // The empty dependency array ensures this effect runs only once when the component mounts
 
   return <div>Redirecting to Dashboard...</div>;
 }

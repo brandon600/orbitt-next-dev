@@ -1,5 +1,5 @@
 // components/RewardForm.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import InputField from '../atoms/InputField';
 import DropdownField from '../atoms/DropdownField';
 import Text from '../subatomic/Text';
@@ -187,28 +187,29 @@ type EditRewardFormProps = {
   
     const { showToast } = useStore((state: AppState) => ({ showToast: state.showToast }));
 
-    const checkForChanges = () => {
-      if (
-          newRewardName !== rewardName ||
-          newRewardValue !== rewardValue ||
-          newRewardCost !== rewardCost ||
-          newRewardTerms !== rewardTerms
-      ) {
-          setHasChanged(true);
-      } else {
-          setHasChanged(false);
-      }
-  
-      if (
-          newRewardName.trim() === "" ||
-          newRewardValue.trim() === "" ||
-          newRewardCost.trim() === "" // Add any other required field checks here
-      ) {
-          setFieldsValid(false);
-      } else {
-          setFieldsValid(true);
-      }
-  };
+
+  const checkForChanges = useCallback(() => {
+    if (
+      newRewardName !== rewardName ||
+      newRewardValue !== rewardValue ||
+      newRewardCost !== rewardCost ||
+      newRewardTerms !== rewardTerms
+  ) {
+      setHasChanged(true);
+  } else {
+      setHasChanged(false);
+  }
+
+  if (
+      newRewardName.trim() === "" ||
+      newRewardValue.trim() === "" ||
+      newRewardCost.trim() === "" // Add any other required field checks here
+  ) {
+      setFieldsValid(false);
+  } else {
+      setFieldsValid(true);
+  }
+  }, []);
 
     useEffect(() => {
       checkForChanges();

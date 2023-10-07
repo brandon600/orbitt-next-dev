@@ -135,17 +135,12 @@ function getCookie(name: string): string | null {
     return null;
   }
 
-  const trySomething = () => {
-    const { data: userData } = useStore();
-    console.log('being called!!!')
-    console.log(userData);
 
-  }
-
-const fetchCustomer = async (phoneNumber: string, userData: UserData) => {
+  const fetchCustomer = async (phoneNumber: string, userData: UserData) => {
     console.log('being called!!!')
     console.log(userData);
     console.log(userData.userid)
+    
 
     /*
     let userData: UserData = initialData;
@@ -173,20 +168,31 @@ const fetchCustomer = async (phoneNumber: string, userData: UserData) => {
     }
 
     try {
-        console.log(userData.userid)
-        const response = await fetch(`/process-transaction?userId=${userData.userid}&phoneNumber=${phoneNumber}`);
+        const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        console.log(apiUrl)
+        console.log(userData.userid);
+        const response = await fetch(`${apiUrl}/process-transaction?userId=${userData.userid}&phoneNumber=${phoneNumber}`);
+        console.log('Server Response:', response);
+    
         if (!response.ok) {
-            if (response.status === 404) {
-                throw new Error('Customer not found');
-            }
+            console.error('Error fetching customer:', response.status, response.statusText);
             throw new Error('Error fetching customer');
         }
-  
-        return await response.json();
+    
+        const responseText = await response.text(); // Get the response text
+        console.log('Response Text:', responseText);
+    
+        const customerData = JSON.parse(responseText); // Attempt to parse JSON
+    
+        if (!customerData) {
+            throw new Error('Empty customer data received');
+        }
+    
+        return customerData;
     } catch (error) {
         console.error('Error fetching customer:', error);
         throw error;
-    }
+    }  
 };
 
 /**
@@ -240,24 +246,28 @@ const ProcessTransaction = () => {
       const userData = data
 
 
-
       const handleSearchCustomer = async (userData: UserData) => {
         console.log(phoneNumber)
-        try {
-            const customerData = await fetchCustomer(phoneNumber, userData);
-            setCustomer(customerData);
-            setIsModalOpen(true); // Show modal when customer is found
-        } catch (error) {
-            const err = error as Error; // Type assertion
-    
-            if (err.message === 'Customer not found') {
-                console.error('Error:', err);
-                showToast(`Error: No Customer found.`, 'error');
+        console.log(userData)
+            if (userData) {
+                try {
+                    const customerData = await fetchCustomer(phoneNumber, userData);
+                    setCustomer(customerData);
+                    setIsModalOpen(true); // Show modal when customer is found
+                } catch (error) {
+                    const err = error as Error; // Type assertion
+            
+                    if (err.message === 'Customer not found') {
+                        console.error('Error:', err);
+                        showToast(`Error: No Customer found.`, 'error');
+                    } else {
+                        // Handle other errors as needed
+                        showToast(`Error: Something wrong happened!`, 'error');
+                    }
+                }
             } else {
-                // Handle other errors as needed
-                showToast(`Error: Something wrong happened!`, 'error');
+                console.log('user data not found')
             }
-        }
     };
 
     const handleCloseModal = () => {

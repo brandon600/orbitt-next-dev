@@ -309,6 +309,58 @@ module.exports = (app) => {
 
 
     app.get('/process-transaction', async (req, res) => {
+        console.log('server route accessed')
+        console.log('Phone number:', req.query.phoneNumber);
+    
+        const { userId, phoneNumber } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: 'userId is required' });
+        }
+        console.log('userid', userId);
+        const userIdString = userId.toString();
+    
+        try {
+            // Extract phone number from query
+            console.log('Phone number:', phoneNumber);
+    
+            // Validate phone number
+            if (!phoneNumber) {
+                return res.status(400).json({ message: 'Phone number is required' });
+            }
+    
+            // Clean up phone number
+            const cleanedInput = phoneNumber.replace(/\D/g, "");
+            const areaCode1 = cleanedInput.slice(0, 3);
+            const phoneNumber1 = cleanedInput.slice(3, 10);
+    
+            console.log('Cleaned Phone Number:', cleanedInput);
+            console.log('Area Code:', areaCode1);
+            console.log('Phone Number:', phoneNumber1);
+    
+            const customer = await Customer.findOne({
+      //          user: userIdString,
+                user: '1680564912096',
+                areaCodeNumber: areaCode1,
+                phoneNumber1: phoneNumber1 // Fixed the incorrect property name
+            });
+    
+            if (!customer) {
+                console.log('Customer not found');
+                return res.status(404).json({ message: 'Customer not found' });
+            }
+    
+            console.log('Customer found:', customer);
+    
+            res.status(200).json(customer);
+        } catch (error) {
+            console.error('Error searching for customer:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    });
+    
+
+    /*
+    app.get('/process-transaction', async (req, res) => {
     console.log('Phone number:', req.query.phoneNumber);  
 
     const { userId, phoneNumber } = req.query;
@@ -352,12 +404,12 @@ module.exports = (app) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+*/
     
 
     app.post('/give-points', async (req, res) => {
         const { customerId, points, user, transactionDetails, memberstackId } = req.body;
         console.log(user)
-        console.log('Memberstack Data:', memberstackId);
 
         try {
             const { customerId, points, user, transactionDetails } = req.body;
