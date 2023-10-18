@@ -359,54 +359,6 @@ module.exports = (app) => {
     });
     
 
-    /*
-    app.get('/process-transaction', async (req, res) => {
-    console.log('Phone number:', req.query.phoneNumber);  
-
-    const { userId, phoneNumber } = req.query;
-    if (!userId) {
-        return res.status(400).json({ error: 'userId is required' });
-    }
-    console.log('userid', userId);
-    const userIdString = userId.toString();
-
-    try {
-        // Extract phone number from query
-        console.log('Phone number:', phoneNumber);
-        
-
-        // Validate phone number
-        if (!phoneNumber) {
-            return res.status(400).json({ message: 'Phone number is required' });
-        }
-
-        // Clean up phone number
-        const cleanedInput = phoneNumber.replace(/\D/g, "");
-        const areaCode1 = cleanedInput.slice(0, 3);
-        const phoneNumber1 = cleanedInput.slice(3, 10);
-
-        console.log(areaCode1);
-        console.log(phoneNumber1);
-
-        const customer = await Customer.findOne({ 
-            user: userIdString,
-            areaCodeNumber: areaCode1, 
-            phoneNumber1: phoneNumber1 // Fixed the incorrect property name
-        });
-
-        if (!customer) {
-            return res.status(404).json({ message: 'Customer not found' });
-        }
-
-        res.status(200).json({ customer });
-    } catch (error) {
-        console.error('Error searching for customer:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-});
-*/
-    
-
     app.post('/give-points', async (req, res) => {
         const { customerId, points, user, transactionDetails, memberstackId } = req.body;
         console.log(user)
@@ -427,6 +379,7 @@ module.exports = (app) => {
             customer.rewardNumber = updatedPoints;
             customer.starsEarned = updatedStarsEarned
             customer.totalVisits = customer.totalVisits + 1;
+            customer.lastTransactionDate = uniqid;
             await customer.save();
     
             const visit = new Visit({
@@ -522,6 +475,7 @@ module.exports = (app) => {
             const updatedPoints = currentPoints - reward.rewardCost;
             customer.rewardNumber = updatedPoints;
             customer.totalVisits = customer.totalVisits + 1;
+            customer.lastTransactionDate = uniqid;
             await customer.save();
     
             const visit = new Visit({

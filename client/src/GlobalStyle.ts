@@ -4,40 +4,40 @@ import { createGlobalStyle } from 'styled-components';
 const GlobalStyle = createGlobalStyle`
 @font-face {
   font-family: 'Avenir';
-  src: url('../public/Avenir-Book.woff2') format('woff2'),
-       url('../public/Avenir-Book.woff') format('woff');
+  src: url('/Avenir-Book.woff2') format('woff2'),
+       url('/Avenir-Book.woff') format('woff');
   font-weight: 350;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Avenir';
-  src: url('../public/Avenir-Roman.woff2') format('woff2'),
-       url('../public/Avenir-Roman.woff') format('woff');
+  src: url('/Avenir-Roman.woff2') format('woff2'),
+       url('/Avenir-Roman.woff') format('woff');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Avenir';
-  src: url('../public/Avenir-Medium.woff2') format('woff2'),
-       url('../public/Avenir-Medium.woff') format('woff');
+  src: url('/Avenir-Medium.woff2') format('woff2'),
+       url('/Avenir-Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Avenir';
-  src: url('../public/Avenir-Heavy.woff2') format('woff2'),
-       url('../public/Avenir-Heavy.woff') format('woff');
-  font-weight: 500;
+  src: url('/Avenir-Heavy.woff2') format('woff2'),
+       url('/Avenir-Heavy.woff') format('woff');
+  font-weight: 800;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Avenir';
-  src: url('../public/Avenir-Black.woff2') format('woff2'),
-       url('../public/Avenir-Black.woff') format('woff');
+  src: url('/Avenir-Black.woff2') format('woff2'),
+       url('/Avenir-Black.woff') format('woff');
   font-weight: 900;
   font-style: normal;
 }
