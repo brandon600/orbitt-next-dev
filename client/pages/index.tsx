@@ -9,7 +9,7 @@ function HomePage() {
     router.push('/dashboard');
   }, [router]); // The empty dependency array ensures this effect runs only once when the component mounts
 
-  return <div>Redirecting to Dashboard...</div>;
+  return <div>Redirecting you to the Dashboard...</div>;
 }
 
 export default HomePage;
