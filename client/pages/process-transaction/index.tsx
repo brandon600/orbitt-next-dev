@@ -1,115 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import InputField from '@/components/atoms/InputField';
-import Text from '../src/components/subatomic/Text';
+import Text from '../../src/components/subatomic/Text';
 import styled from 'styled-components';
-import StyledMediaQuery from '../src/constants/StyledMediaQuery';
-import Button from '../src/components/atoms/Button';
+import StyledMediaQuery from '../../src/constants/StyledMediaQuery';
+import Button from '../../src/components/atoms/Button';
 import Colors from '@/constants/Colors';
-import GlobalStyle from '../src/GlobalStyle';
+import GlobalStyle from '../../src/GlobalStyle';
 import Toast from '@/components/atoms/Toast';
-import { useStore, AppState, UserData, fetchData, initialData } from '../src/store/store'; // Import your store
+import { useStore, AppState, UserData, fetchData, initialData } from '../../src/store/store'; // Import your store
 import { AnimatePresence } from 'framer-motion';
 import FoundCustomerModal from '@/components/molecules/FoundCustomerModal';
 import Overlay from '@/components/atoms/Overlay';
 import Cookie from 'js-cookie';
-import { useMemberAuth } from '../src/util/global/globalHooks';
-
-const FlexDiv = styled.div`
-@media ${StyledMediaQuery.XS} {
-    display: flex;
-    flex-direction: column;
-    padding: 24px 16px;
-    width: 100vw;
-    height: 100vh;
-    box-sizing: border-box;
-    background: ${Colors.primary100};
-    min-height: 100vh;
-}
-
-@media ${StyledMediaQuery.S} {
-    padding: 120px 24px 24px 24px;
-    align-items: center;
-}
-
-@media ${StyledMediaQuery.L} {
-    margin-left: 260px;
-    width: calc(100vw - 260px);
-}
-`
-
-const ProcessTransactionContainer = styled.div`
-@media ${StyledMediaQuery.XS} {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 24px;
-}
-
-@media ${StyledMediaQuery.S} {
-    gap: 32px;
-    width: 442px;
-}
-`
-
-const TitlePlusSubhead = styled.div`
-@media ${StyledMediaQuery.XS} {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-@media ${StyledMediaQuery.S} {
-    gap: 8px;
-}
-`
-
-const Title = styled.div`
-@media ${StyledMediaQuery.XS} {
-    display: flex;
-    color: ${Colors.neutral600};
-    p {
-        font-size: 32px;
-        line-height: 39px;
-        font-weight: 800;
-    }
-}
-
-@media ${StyledMediaQuery.S} {
-    p {
-        text-align: center;
-        font-size: 48px;
-        line-height: 58px;
-    }
-}
-`
-
-const Subhead = styled.div`
-@media ${StyledMediaQuery.XS} {
-    display: flex;
-    color: ${Colors.neutral400};
-    p {
-        font-size: 16px;
-        line-height: 19px;
-        font-weight: 500;
-    }
-}
-
-@media ${StyledMediaQuery.S} {
-    p {
-        text-align: center;
-        font-size: 20px;
-        line-height: 24px;
-    }
-}
-`
-
-const FieldAndButton = styled.div`
-@media ${StyledMediaQuery.XS} {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-`
+import { useMemberAuth } from '../../src/util/global/globalHooks';
+import { FlexDiv, ProcessTransactionContainer, TitlePlusSubhead, Title, Subhead, FieldAndButton } from './styles';
 
 function useBodyScrollLock(isLocked: boolean) {
     useEffect(() => {
