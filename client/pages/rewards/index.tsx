@@ -1,7 +1,7 @@
-import Text from '../src/components/subatomic/Text';
+import Text from '../../src/components/subatomic/Text';
 import styled from 'styled-components';
-import StyledMediaQuery from '../src/constants/StyledMediaQuery';
-import Button from '../src/components/atoms/Button';
+import StyledMediaQuery from '../../src/constants/StyledMediaQuery';
+import Button from '../../src/components/atoms/Button';
 import RewardTableHead from '@/components/atoms/RewardTableHead';
 import DefaultRewards from '@/components/organism/DefaultRewards';
 import RewardOfferings from '@/components/organism/RewardOfferings';
@@ -11,8 +11,8 @@ import Overlay from '@/components/atoms/Overlay';
 import RewardForm from '@/components/organism/RewardForm';
 import EditRewardForm from '@/components/organism/EditRewardForm';
 import EditDefaultRewardForm from '@/components/organism/EditDefaultRewardForm';
-import GlobalStyle from '../src/GlobalStyle';
-import { useStore, AppState, UserData, initialData, fetchData } from '../src/store/store'; // Import your store
+import GlobalStyle from '../../src/GlobalStyle';
+import { useStore, AppState, UserData, initialData, fetchData } from '../../src/store/store'; // Import your store
 import { getServers } from 'dns';
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
@@ -20,11 +20,11 @@ import { RewardData }  from '@/types/RewardData';
 import { DefaultRewardData } from '@/types/DefaultRewardData';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
 import io from "socket.io-client";
-import { useSockets, useRewardToggles, useDefaultRewardToggles, useRewardsHandlers, useBodyScrollLock } from '@/util/pages/rewards/rewardsHooks';
-import { handleRewardsPendingChange, handleDefaultRewardsPendingChange, handleSaveChanges, handleCancelChangesFunc, fetchDataFromURL } from '@/util/pages/rewards/rewardsFunctions';
-import { useRewardsState } from '@/util/pages/rewards/rewardsState';
-import { FlexDiv, TitlePlusButton, RewardsPageTitle, RewardOfferingsAndSettings, ButtonWrap } from '@/util/pages/rewards/rewardsStyles';
-import { useMemberAuth } from '../src/util/global/globalHooks';
+import { useSockets, useRewardToggles, useDefaultRewardToggles, useRewardsHandlers, useBodyScrollLock } from './hooks';
+import { handleRewardsPendingChange, handleDefaultRewardsPendingChange, handleSaveChanges, handleCancelChangesFunc, fetchDataFromURL } from './functions';
+import { useRewardsState } from './state';
+import { FlexDiv, TitlePlusButton, RewardsPageTitle, RewardOfferingsAndSettings, ButtonWrap } from './styles';
+import { useMemberAuth } from '../../src/util/global/globalHooks';
 import { GetServerSidePropsContext } from 'next';
 
 interface RewardsProps {
@@ -112,6 +112,7 @@ const {
     const { rewardsData, defaultRewardsData } = useSockets(initialRewardsData, initialDefaultRewardsData);
     const { originalRewardToggles, currentRewardToggles, setOriginalRewardToggles, setCurrentRewardToggles } = useRewardToggles(rewardsData);
     const { originalDefaultRewardToggles, currentDefaultRewardToggles, setOriginalDefaultRewardToggles, setCurrentDefaultRewardToggles } = useDefaultRewardToggles(defaultRewardsData);
+    useBodyScrollLock(isOverlayOpen);
 
     const onRewardToggleChange = useCallback((index: number, newValue: boolean) => {
       handleRewardsPendingChange(

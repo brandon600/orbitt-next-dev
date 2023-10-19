@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { RewardData }  from '@/types/RewardData';
 import { DefaultRewardData } from '@/types/DefaultRewardData';
 import { Dispatch, SetStateAction } from 'react';
-import { genericEditHandler, genericFormCloseHandler } from './rewardsFunctions';
+import { genericEditHandler, genericFormCloseHandler } from './functions';
 
 type UseRewardsHandlersProps = {
     setIsEditFormOpen: Dispatch<SetStateAction<boolean>>;

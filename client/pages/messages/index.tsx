@@ -1,84 +1,27 @@
-import Text from '../src/components/subatomic/Text';
+import Text from '../../src/components/subatomic/Text';
 import styled from 'styled-components';
-import StyledMediaQuery from '../src/constants/StyledMediaQuery';
-import Button from '../src/components/atoms/Button';
+import StyledMediaQuery from '../../src/constants/StyledMediaQuery';
+import Button from '../../src/components/atoms/Button';
 import Colors from '@/constants/Colors';
 import React, { useState, useEffect, useCallback } from 'react';
-import GlobalStyle from '../src/GlobalStyle';
-import { useStore, AppState, UserData, initialData, fetchData } from '../src/store/store'; // Import your store
+import GlobalStyle from '../../src/GlobalStyle';
+import { useStore, AppState, UserData, initialData, fetchData } from '../../src/store/store'; // Import your store
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
 import io from "socket.io-client";
 import { TriggeredMessageData } from '@/types/TriggeredMessageData';
 import MessageCell from '@/components/molecules/MessageCell';
-import { useMemberAuth } from '../src/util/global/globalHooks';
+import { useMemberAuth } from '../../src/util/global/globalHooks';
 import { GetServerSidePropsContext } from 'next';
 import Cookie from 'js-cookie';
+import { FlexDiv, MessagesPageTitle, MessageCellsContainer } from './styles';
 
 
 interface MessagesProps {
     userData: UserData;
     triggeredMessagesData: TriggeredMessageData[];
 }
-
-const FlexDiv = styled.div`
-@media ${StyledMediaQuery.XS} {
-    display: flex;
-    gap: 40px;
-    flex-direction: column;
-    padding: 24px 16px;
-    width: 100vw;
-    box-sizing: border-box;
-    background: ${Colors.primary100};
-    min-height: 100vh;
-}
-
-@media ${StyledMediaQuery.S} {
-  padding: 24px;
-}
-
-@media ${StyledMediaQuery.L} {
-  margin-left: 260px;
-  width: calc(100vw - 260px);
-}
-`
-
-const MessagesPageTitle = styled.div`
- @media ${StyledMediaQuery.XS} {
-    display: flex;
-    color: ${Colors.neutral700};
-    p {
-        font-size: 32px;
-        line-height: 39px;
-        font-weight: 800;
-    }
- }
- @media ${StyledMediaQuery.S} {
-    color: ${Colors.neutral700};
-    p {
-        font-size: 40px;
-        line-height: 48px;
-    }
- }
-
- @media ${StyledMediaQuery.L} {
-    color: ${Colors.neutral700};
-    p {
-        font-size: 48px;
-        line-height: 58px;
-    }
- }
- `
-
- const MessageCellsContainer = styled.div`
-    @media ${StyledMediaQuery.XS} {
-        display: flex;
-        flex-direction: column;
-        gap: 64px;
-        width: 100%;
-    }
- `
 
  export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userCookie = context.req.cookies.user;

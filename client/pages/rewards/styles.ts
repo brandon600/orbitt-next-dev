@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import Colors from '../../../constants/Colors';
-import StyledMediaQuery from '../../../constants/StyledMediaQuery';
+import Colors from '../../src/constants/Colors';
+import StyledMediaQuery from '../../src/constants/StyledMediaQuery';
 
 
 const FlexDiv = styled.div`
