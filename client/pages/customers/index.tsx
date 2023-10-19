@@ -19,7 +19,7 @@ import { UserData, initialData, fetchData } from '../../src/store/store';
 import CustomerCells from '@/components/organism/CustomerCells';
 import SearchBar from '@/components/atoms/SearchBar';
 import { CustomerFilter, FilterType, FILTER_CONFIGS, FilterValue } from '@/components/molecules/CustomerFilter';
-import { useUniqueAreaCodes } from '@/util/pages/customers/customersHooks';
+import { useUniqueAreaCodes } from './hooks';
 import { CustomerFilters }  from '@/components/organism/CustomerFilters';
 import Overlay from '@/components/atoms/Overlay';
 import SMSBlastModal from '@/components/organism/SMSBlastModal';
