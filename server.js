@@ -181,9 +181,86 @@ async function findBirthdayUsersAndCustomers() {
 }
 
 
+const SIXTY_DAYS_IN_MS = 60 * 24 * 60 * 60 * 1000; // 60 days in milliseconds
+
+async function sendMessageToAtRiskCustomer(user, customer, messageTemplate) {
+    const messageText = `Hi ${customer.firstName}! ${messageTemplate.textMessageCustomText}`;
+    const sendNumber = `1${customer.areaCodeNumber}${customer.phoneNumber1}`;
+
+    try {
+        await client.messages.create({
+            body: messageText,
+            from: `+${user.messagingPhoneNumber}`,
+            to: sendNumber
+        });
+
+        const sentMessage = new SentMessage({
+            _id: new mongoose.Types.ObjectId(),
+            messageNumberId: messageTemplate.messageNumberId,
+            user: user.userid,
+            date: Date.now(),
+            messageTitle: messageTemplate.messageTitle,
+            messageContent: messageText,
+            messageDelay: 0,
+            userClass: user,
+            userMemberstackId: user.memberstackId,
+            customersReceived: [customer]
+        });
+        await sentMessage.save();
+    } catch (error) {
+        console.error("Error sending message:", error);
+    }
+}
+
+async function findAtRiskUsersAndCustomers() {
+    try {
+        const users = await User.find();
+        const currentDate = new Date();
+        const sixtyDaysAgo = new Date(currentDate - SIXTY_DAYS_IN_MS);
+
+        for (const user of users) {
+            const triggeredMessage = await TriggeredMessage.findOne({ messageNumberId: 3, user: user.userid });
+
+            if (triggeredMessage && triggeredMessage.active) {
+                const customers = await Customer.find({ user: user.userid });
+
+                const atRiskCustomers = customers.filter(customer => {
+                    const lastTransactionDate = new Date(parseInt(customer.lastTransactionDate));
+                    return lastTransactionDate < sixtyDaysAgo && !customer.atRisk;
+                });
+
+                for (const customer of atRiskCustomers) {
+                    await Customer.updateOne(
+                        { customerid: customer.customerid },
+                        { $set: { atRisk: true } }
+                    );
+
+                    await sendMessageToAtRiskCustomer(user, customer, triggeredMessage);
+                }
+
+                const numberOfMessagesSent = atRiskCustomers.length;
+
+                await User.updateOne(
+                    { userid: user.userid },
+                    {
+                        $inc: {
+                            totalMessagesSent: numberOfMessagesSent,
+                            monthlyMessagesLeft: -numberOfMessagesSent
+                        }
+                    }
+                );
+            }
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+
 cron.schedule('0 9 * * *', async () => {
     findBirthdayUsersAndCustomers();
-    //findAtRiskUsersAndCustomers();
+    findAtRiskUsersAndCustomers();
  });
 
 
