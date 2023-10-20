@@ -142,16 +142,17 @@ function formatDateFromMilliseconds(milliseconds: string): string {
 }
 
 
-function generateVisitInfoText(visit: VisitData): string {
+
+function generateVisitInfoText(visit: VisitData, realCusName: string): string {
     switch (visit.visitType) {
         case 'New User':
-            return `${visit.customerName} signed up on ${formatDateFromMilliseconds(visit.date)}`;
+            return `${realCusName} signed up on ${formatDateFromMilliseconds(visit.date)}`;
         case 'Reward':
-            return `${visit.customerName} redeemed a reward on ${formatDateFromMilliseconds(visit.date)}`;
+            return `${realCusName} redeemed a reward on ${formatDateFromMilliseconds(visit.date)}`;
         case 'Purchase':
-            return `${visit.customerName} made a purchase on ${formatDateFromMilliseconds(visit.date)}`;
+            return `${realCusName} made a purchase on ${formatDateFromMilliseconds(visit.date)}`;
         case 'Birthday':
-            return `${visit.customerName} received a birthday reward on ${formatDateFromMilliseconds(visit.date)}`;
+            return `${realCusName} received a birthday reward on ${formatDateFromMilliseconds(visit.date)}`;
         default:
             return visit.visitid;  // fallback to provided infoText
     }
@@ -348,7 +349,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({ customer, ranking, userData
                         <CustomerVisit
                             key={visit.visitid} // Assuming each visit has a unique 'id'
                             visitTypeVariant={visit.visitType as VisitType}
-                            visitInfoText={generateVisitInfoText(visit)}
+                            visitInfoText={generateVisitInfoText(visit, localCustomer.firstName)}
                         />
                     ))}
                 </CustomerVisitCells>
