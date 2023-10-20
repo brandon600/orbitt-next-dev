@@ -3,12 +3,10 @@
   "version": "1.0.0",
   "description": "Starter kit for creating React/Redux and Express apps",
   "main": "server.js",
-  "engines": {
     "engines": {
       "node": "20.5.1",
       "npm": "9.8.0"
-    }
-  },
+    },
   "scripts": {
     "client-install": "cd client && npm install",
     "heroku-postbuild": "cd client && npm install && npm run build",
@@ -16,7 +14,8 @@
     "server": "node server.js",
     "server2": "nodemon server.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "client2": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client2\""
   },
   "author": "Brandon Rodriguez",
   "license": "MIT",
