@@ -19,7 +19,7 @@ import { UserData, initialData, fetchData } from '../../src/store/store';
 import CustomerCells from '@/components/organism/CustomerCells';
 import SearchBar from '@/components/atoms/SearchBar';
 import { CustomerFilter, FilterType, FILTER_CONFIGS, FilterValue } from '@/components/molecules/CustomerFilter';
-import { useUniqueAreaCodes } from './hooks';
+import { useUniqueAreaCodes } from '../../src/pagesource/customers/hooks';
 import { CustomerFilters }  from '@/components/organism/CustomerFilters';
 import Overlay from '@/components/atoms/Overlay';
 import SMSBlastModal from '@/components/organism/SMSBlastModal';
@@ -28,7 +28,7 @@ import { SMSIcon } from '@/components/subatomic/Icons/SMSIcon';
 import { useMemberAuth } from '../../src/util/global/globalHooks';
 import { GetServerSidePropsContext } from 'next';
 import Cookie from 'js-cookie';
-import { TitlePlusButton, PageTitle, FlexDiv, FlexContainer, AddCusButtonWrapper, ButtonWrapper, BlastIconButton, TableAndSearch, SearchAndFilters, HideShowFilters, LabelPlusCells, SelectedCustomersLabel } from './styles';
+import { TitlePlusButton, PageTitle, FlexDiv, FlexContainer, AddCusButtonWrapper, ButtonWrapper, BlastIconButton, TableAndSearch, SearchAndFilters, HideShowFilters, LabelPlusCells, SelectedCustomersLabel } from '../../src/pagesource/customers/styles';
 
 interface CustomerProps {
     customersData: CustomerData[];

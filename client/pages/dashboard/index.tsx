@@ -19,7 +19,7 @@ import DropdownField from '@/components/atoms/DropdownField';
 import { useMemberAuth } from '../../src/util/global/globalHooks';
 import { GetServerSidePropsContext } from 'next';
 import Cookie from 'js-cookie';
-import { FlexDiv, DashboardContent, PageTitle, DataCards, DataCardsRow, ScrollableContainer, PillsPlusDataCards, DataCardsDataCharts, Div, DataCharts, DataBarChatContainer, DoughnutContainer, DropdownContainer } from './styles';
+import { FlexDiv, DashboardContent, PageTitle, DataCards, DataCardsRow, ScrollableContainer, PillsPlusDataCards, DataCardsDataCharts, Div, DataCharts, DataBarChatContainer, DoughnutContainer, DropdownContainer } from '../../src/pagesource/dashboard/styles';
 
   
 type DailyVisit = {

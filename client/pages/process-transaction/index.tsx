@@ -13,7 +13,7 @@ import FoundCustomerModal from '@/components/molecules/FoundCustomerModal';
 import Overlay from '@/components/atoms/Overlay';
 import Cookie from 'js-cookie';
 import { useMemberAuth } from '../../src/util/global/globalHooks';
-import { FlexDiv, ProcessTransactionContainer, TitlePlusSubhead, Title, Subhead, FieldAndButton } from './styles';
+import { FlexDiv, ProcessTransactionContainer, TitlePlusSubhead, Title, Subhead, FieldAndButton } from '../../src/pagesource/process-transaction/styles';
 
 function useBodyScrollLock(isLocked: boolean) {
     useEffect(() => {

@@ -25,7 +25,7 @@ import InputField from '@/components/atoms/InputField';
 import Textarea from '@/components/atoms/Textarea';
 import { useStore, AppState, UserData, initialData, fetchData } from '../../../src/store/store'; // Import your store
 import { useMemberAuth } from '../../../src/util/global/globalHooks';
-import { FlexDiv, PTCContent, PTCTopContent, PTCBackButton, PTCAllCustomerInfo, PTCTopCustomerInfo, TopCustomerInfoName, TopCustomerInfoCI, TCINumber, TCIBirthday, PTCCustomerPointInfo, CustomerPointInfoAvailable, CustomerPointInfoVisits, PTCBottomContent, PTCFieldsAndButton, PTCFields, PTCOption } from './styles';
+import { FlexDiv, PTCContent, PTCTopContent, PTCBackButton, PTCAllCustomerInfo, PTCTopCustomerInfo, TopCustomerInfoName, TopCustomerInfoCI, TCINumber, TCIBirthday, PTCCustomerPointInfo, CustomerPointInfoAvailable, CustomerPointInfoVisits, PTCBottomContent, PTCFieldsAndButton, PTCFields, PTCOption } from '../../../src/pagesource/process-transaction-customer/customerid/styles';
 
 interface ProcessTransactionCustomerProps {
     customer: CustomerData | null;
