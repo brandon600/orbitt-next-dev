@@ -1,7 +1,7 @@
 import React from 'react';
 import { RewardData } from '@/types/RewardData';
 import { DefaultRewardData } from '@/types/DefaultRewardData';
-import { UserData } from '../../src/store/store';
+import { UserData } from '../../store/store';
 
 interface EditHandlerProps {
     setForm: React.Dispatch<React.SetStateAction<boolean>>;

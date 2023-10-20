@@ -15,7 +15,7 @@ import MessageCell from '@/components/molecules/MessageCell';
 import { useMemberAuth } from '../../src/util/global/globalHooks';
 import { GetServerSidePropsContext } from 'next';
 import Cookie from 'js-cookie';
-import { FlexDiv, MessagesPageTitle, MessageCellsContainer } from './styles';
+import { FlexDiv, MessagesPageTitle, MessageCellsContainer } from '../../src/pagesource/messages/styles';
 
 
 interface MessagesProps {

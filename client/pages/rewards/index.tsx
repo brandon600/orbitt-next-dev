@@ -20,10 +20,10 @@ import { RewardData }  from '@/types/RewardData';
 import { DefaultRewardData } from '@/types/DefaultRewardData';
 import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
 import io from "socket.io-client";
-import { useSockets, useRewardToggles, useDefaultRewardToggles, useRewardsHandlers, useBodyScrollLock } from './hooks';
-import { handleRewardsPendingChange, handleDefaultRewardsPendingChange, handleSaveChanges, handleCancelChangesFunc, fetchDataFromURL } from './functions';
-import { useRewardsState } from './state';
-import { FlexDiv, TitlePlusButton, RewardsPageTitle, RewardOfferingsAndSettings, ButtonWrap } from './styles';
+import { useSockets, useRewardToggles, useDefaultRewardToggles, useRewardsHandlers, useBodyScrollLock } from '../../src/pagesource/rewards/hooks';
+import { handleRewardsPendingChange, handleDefaultRewardsPendingChange, handleSaveChanges, handleCancelChangesFunc, fetchDataFromURL } from '../../src/pagesource/rewards/functions';
+import { useRewardsState } from '../../src/pagesource/rewards/state';
+import { FlexDiv, TitlePlusButton, RewardsPageTitle, RewardOfferingsAndSettings, ButtonWrap } from '../../src/pagesource/rewards/styles';
 import { useMemberAuth } from '../../src/util/global/globalHooks';
 import { GetServerSidePropsContext } from 'next';
 

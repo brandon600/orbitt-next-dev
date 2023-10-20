@@ -13,7 +13,7 @@ import Textarea from '../../src/components/atoms/Textarea';
 import { AnimatePresence } from 'framer-motion';
 import Toast from '@/components/atoms/Toast';
 import { useMemberAuth } from '../../src/util/global/globalHooks';
-import { FlexDiv, PageTitle, PillTitle, NoFlexDiv, CompanyNameContainer, InputPlusEdit, CompanyNameEdit, BottomButtonFlex, BottomButtonDiv, SMSContentContainer, CreditsPlusButton, SMSCreditsRemaining, SMSCreditsTitle, SMSCreditsBarContainerNotice, SMSCreditsBarContainer, SMSCreditsBar, SMSCreditsBarFill, SMSCreditsBarCount, SMSNoticeText, SMSButtonsContainer, SMSPhoneNumber, SMSPhoneNumberTextContainer, SMSPhoneNumberTitle, SMSPhoneNumberSubtitle, TermsConditionsContainer, TextAreaContainer, TermsConditionsButton } from './styles';
+import { FlexDiv, PageTitle, PillTitle, NoFlexDiv, CompanyNameContainer, InputPlusEdit, CompanyNameEdit, BottomButtonFlex, BottomButtonDiv, SMSContentContainer, CreditsPlusButton, SMSCreditsRemaining, SMSCreditsTitle, SMSCreditsBarContainerNotice, SMSCreditsBarContainer, SMSCreditsBar, SMSCreditsBarFill, SMSCreditsBarCount, SMSNoticeText, SMSButtonsContainer, SMSPhoneNumber, SMSPhoneNumberTextContainer, SMSPhoneNumberTitle, SMSPhoneNumberSubtitle, TermsConditionsContainer, TextAreaContainer, TermsConditionsButton } from '../../src/pagesource/settings/styles';
 
 interface ProgressBarProps {
     value: number;

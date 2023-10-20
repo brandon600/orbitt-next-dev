@@ -19,7 +19,7 @@ import { VisitData } from '@/types/VisitData';
 import EditCustomerForm from '@/components/organism/EditCustomerForm';
 import Overlay from '@/components/atoms/Overlay';
 import { useMemberAuth } from '../../../src/util/global/globalHooks';
-import { FlexDiv, TopSection, TopNavigation, BackIconDiv, TopButtonDiv, TopCustomerInfo, CustomerInfoDiv, BottomSection, CustomerStatistics, CustomerStatisticsLabel, DataCards, DataCardsRow, EditCustomerButton, CustomerRecentActivity, RecentActivityLabel, CustomerVisitCells, TopButtons, TCIName, TCINumber, TCIBirthday } from './styles';
+import { FlexDiv, TopSection, TopNavigation, BackIconDiv, TopButtonDiv, TopCustomerInfo, CustomerInfoDiv, BottomSection, CustomerStatistics, CustomerStatisticsLabel, DataCards, DataCardsRow, EditCustomerButton, CustomerRecentActivity, RecentActivityLabel, CustomerVisitCells, TopButtons, TCIName, TCINumber, TCIBirthday } from '../../../src/pagesource/customer-info/customerid/styles';
 
 interface CustomerInfoProps {
     customer: CustomerData | null;
