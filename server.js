@@ -61,6 +61,8 @@ const SentMessage = mongoose.model('sentmessages');
 const Visit = mongoose.model('visits');
 const UpdatedCustomer = mongoose.model('updatedcustomers');
 
+const client = require('twilio')(db.accountSid, db.authToken)
+
 //http://localhost:3000
 //https://orbitt-next-dev.vercel.app
 
@@ -92,6 +94,101 @@ require('./routes/messageRoutes')(app);
 require('./routes/visitRoutes')(app);
 require('./routes/dashboardRoutes')(app);
 require('./routes/settingsRoutes')(app);
+
+
+
+const getCurrentDate = () => {
+  const today = new Date();
+  const todayMonth = String(today.getMonth() + 1).padStart(2, '0');
+  const todayDay = String(today.getDate()).padStart(2, '0');
+  return `${todayMonth}-${todayDay}`;
+};
+
+const sendMessageToCustomer = async (user, customer, messageTemplate) => {
+  const messageText = `Hi ${customer.firstName}! ${messageTemplate.textMessageCustomText}`;
+  const sendNumber = `1${customer.areaCodeNumber}${customer.phoneNumber1}`;
+
+  try {
+    await client.messages.create({
+      body: messageText,
+      from: `+${user.messagingPhoneNumber}`,
+      to: sendNumber
+    });
+
+    const sentMessage = new SentMessage({
+      _id: new mongoose.Types.ObjectId(),
+      messageNumberId: messageTemplate.messageNumberId,
+      user: user.userid,
+      date: Date.now(),
+      messageTitle: messageTemplate.messageTitle,
+      messageContent: messageText,
+      messageDelay: 0,
+      userClass: user,
+      userMemberstackId: user.memberstackId,
+      customersReceived: [customer]
+    });
+    await sentMessage.save();
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
+};
+
+
+async function findBirthdayUsersAndCustomers() {
+  try {
+    const users = await User.find();
+    const currentDate = getCurrentDate();
+
+    for (const user of users) {
+      const customers = await Customer.find({ user: user.userid });
+      const birthdayMessageTemplate = await TriggeredMessage.findOne({ messageNumberId: 4, user: user.userid });
+      const birthdayReward = await OutboundReward.findOne({ rewardName: 'Birthday Reward', user: user.userid });
+
+      const rewardValue = birthdayReward.rewardActive ? birthdayReward.rewardValue : 0;
+
+      console.log(`User ${user.companyName} has ${customers.length} customers.`);
+
+      if (birthdayMessageTemplate.active) {
+        const birthdayCustomers = customers.filter(customer => `${customer.birthdayMonth}-${customer.birthdayDay}` === currentDate);
+
+        for (const customer of birthdayCustomers) {
+          const updateQuery = { customerid: customer.customerid };
+          const updatedValues = { 
+            $set: { 
+              rewardNumber: customer.rewardNumber + rewardValue,
+              active: false,
+              starsEarned: customer.starsEarned + rewardValue 
+            }
+          };
+          await Customer.updateOne(updateQuery, updatedValues);
+
+          await sendMessageToCustomer(user, customer, birthdayMessageTemplate);
+        }
+
+        const userUpdateQuery = { userid: user.userid };
+        const userUpdatedValues = { 
+          $set: {
+            totalMessagesSent: user.totalMessagesSent + birthdayCustomers.length,
+            monthlyMessagesLeft: user.monthlyMessagesLeft - birthdayCustomers.length 
+          }
+        };
+        await User.updateOne(userUpdateQuery, userUpdatedValues);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+cron.schedule('0 9 * * *', async () => {
+    findBirthdayUsersAndCustomers();
+    //findAtRiskUsersAndCustomers();
+ });
+
+
+
+
 
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
