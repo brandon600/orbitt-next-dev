@@ -162,19 +162,30 @@ const BlastIconButton = motion(styled.div`
         display: flex;
         position: fixed;
         z-index: 101;
-        bottom: 16px;
+        bottom: 118px;
         left: 16px;
         width: 72px;
         height: 72px;
         justify-content: center;
         align-items: center;
-        border-radius: 40px;
+        border-radius: 50%;
         background: ${Colors.success700};
         box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.32);
 
         svg {
             width: 48px;
             height: 48px;
+        }
+    }
+
+    @media ${StyledMediaQuery.S} {
+        width: 88px;
+        height: 88px;
+        left: 24px;
+
+        svg {
+            width: 56px;
+            height: 56px;
         }
     }
 
@@ -185,6 +196,10 @@ const BlastIconButton = motion(styled.div`
 
 const HideShowFilters = styled.div`
     @media ${StyledMediaQuery.XS} {
+        display: none;
+    }
+    
+    @media ${StyledMediaQuery.S} {
         display: flex;
         padding-bottom: 0px;
         align-items: flex-start;
