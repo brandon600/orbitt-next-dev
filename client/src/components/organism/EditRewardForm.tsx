@@ -209,7 +209,7 @@ type EditRewardFormProps = {
   } else {
       setFieldsValid(true);
   }
-  }, []);
+  }, [newRewardCost, newRewardName, newRewardTerms, newRewardValue, rewardCost, rewardName, rewardTerms, rewardValue]);
 
     useEffect(() => {
       checkForChanges();

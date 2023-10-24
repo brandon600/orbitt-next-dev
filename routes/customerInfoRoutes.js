@@ -380,8 +380,6 @@ module.exports = (app) => {
     
 
     app.post('/give-points', async (req, res) => {
-        const { customerId, points, user, transactionDetails, memberstackId } = req.body;
-        console.log(user)
 
         try {
             const { customerId, points, user, transactionDetails } = req.body;
@@ -393,7 +391,7 @@ module.exports = (app) => {
             }
             
             const currentPoints = customer.rewardNumber;
-            const updatedPoints = currentPoints + correctPoints; 
+            const updatedPoints = currentPoints + parseInt(points); 
             const updatedStarsEarned = customer.starsEarned + parseInt(points);
     
             customer.rewardNumber = updatedPoints;
