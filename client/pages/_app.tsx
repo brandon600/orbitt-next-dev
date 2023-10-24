@@ -8,6 +8,9 @@ import { MemberstackProvider, MemberstackProtected, SignInModal } from "@members
 import { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useStore } from '../src/store/store';
+import dynamic from 'next/dynamic';
+
+const ProgressBar = dynamic(() => import('../src/components/molecules/ProgressBar'), { ssr: false });
 
 
 const config = {
@@ -24,6 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <MemberstackProvider config={config}>
       <WebSocketProvider>
+        <ProgressBar />
         <AnimatePresence>
             {isLogoutModalOpen && (
               <>
