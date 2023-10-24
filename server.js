@@ -23,8 +23,8 @@ const handle = nextApp.getRequestHandler();
 nextApp.prepare().then(() => {
   const app = express();
 
-console.log('PROD_URL:', process.env.PROD_URL);
-console.log('db.localLink:', db.localLink);
+//console.log('PROD_URL:', process.env.PROD_URL);
+//console.log('db.localLink:', db.localLink);
 
 
   //DB Config
