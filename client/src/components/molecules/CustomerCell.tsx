@@ -292,6 +292,10 @@ const CustomerCell: React.FC<CustomerCellProps> = ({
 
     const [isChecked, setIsChecked] = useState(isSelected);
 
+    useEffect(() => {
+        setIsChecked(isSelected);
+    }, [isSelected]);
+
     const router = useRouter();
   
     const handleClick = () => {

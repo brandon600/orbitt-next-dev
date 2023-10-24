@@ -13,6 +13,8 @@ interface CustomerCellsProps {
   customersData: CustomerData[]; // An array of RewardData objects
   onCustomerSelection: (customerId: string, isSelected: boolean) => void;
   selectedCustomers: string[];
+  onSelectAllCustomers: (isSelected: boolean) => void;
+  areAllCustomersSelected: boolean;
  // onEditClick: (reward: CustomerData) => void;
 }
 
@@ -48,7 +50,7 @@ const CustomerCellsList = styled.div`
     }
 `
 
-const CustomerCells: React.FC<CustomerCellsProps> = ({ customersData, onCustomerSelection, selectedCustomers }) => {
+const CustomerCells: React.FC<CustomerCellsProps> = ({ onSelectAllCustomers, areAllCustomersSelected, customersData, onCustomerSelection, selectedCustomers }) => {
     console.log(customersData)
     if (!customersData) {
         // Handle the case when rewardsData is not defined (e.g., still loading)
@@ -65,6 +67,8 @@ const CustomerCells: React.FC<CustomerCellsProps> = ({ customersData, onCustomer
                 label6='Sign-Up'
                 label7='Last Visit'
                 label8='View'
+                onSelectAllCustomers={onSelectAllCustomers}
+                areAllCustomersSelected={areAllCustomersSelected}
             />
         <CustomerCellsList>
             {customersData.map((customer, index) => (
