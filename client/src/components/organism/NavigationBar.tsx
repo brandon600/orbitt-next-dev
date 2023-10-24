@@ -12,6 +12,7 @@ import { RewardIcon } from '../subatomic/Icons/RewardIcon';
 import { MailIcon } from '../subatomic/Icons/MailIcon';
 import { SettingsIcon } from '../subatomic/Icons/SettingsIcon';
 import { ProcessTransactionIcon } from '../subatomic/Icons/ProcessTransactionIcon';
+import { LogoutIcon } from '../subatomic/Icons/LogoutIcon';
 import { useRouter } from 'next/router';
 import GlobalStyle  from '../../GlobalStyle';
 import { CancelIcon } from '../subatomic/Icons/CancelIcon';
@@ -19,11 +20,11 @@ import Overlay from '../atoms/Overlay';
 import { AnimatePresence } from 'framer-motion';
 import { MenuIcon } from '../subatomic/Icons/MenuIcon';
 import { useAuth } from '@memberstack/react';
+import { useStore } from '../../store/store';
 
 type SlideoutNavigationProps = {
   isOpen: boolean;
 };
-
 
 const navItems = [
     {
@@ -106,17 +107,16 @@ const NavigationBarContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
         width: 280px;
         height: 100vh;
         position: fixed;
         top: 0;
         left: 0;
         padding: 12px;
-        flex-direction: column;
         background: ${Colors.neutral100};
         box-sizing: border-box;
-        z-index: 1000;
-        gap: 0px;
+        z-index: 501;
     }
 
     @media ${StyledMediaQuery.S} {
@@ -129,14 +129,22 @@ const NavigationBarContainer = styled.div`
         display: flex;
         padding: 24px;
         background: ${Colors.shades100};
-        gap: 12px;
+        z-index: 499;
     }
 `
 
-const ActiveNavItem = styled.div`
-  color: gold; // or any highlight color you want for the active item
-  font-weight: bold; // make it stand out
-`;
+const NavigationTopLinks = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 0px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        gap: 12px;
+    }
+`
 
 const SlideoutNavigation = styled(NavigationBarContainer)<SlideoutNavigationProps>`
   transform: translateX(${props => (props.isOpen ? '0' : '-100%')});
@@ -172,6 +180,14 @@ const NavMenuClose = styled.div`
     @media ${StyledMediaQuery.L} {
       display: none;
   }
+`
+
+const CloseTopLinks = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
 `
 
 const SignOut = styled.div`
@@ -215,6 +231,7 @@ const NavigationBar: React.FC<NavigationBarProps> = () => {
     const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
 
     const { userId, isLoggedIn, signOut } = useAuth(); 
+    const { openLogoutModal } = useStore();
 
     const handleTabClick = (page: string, href: string) => {
       console.log('tab clicked');
@@ -226,8 +243,14 @@ const NavigationBar: React.FC<NavigationBarProps> = () => {
         setIsNavOpen(false);
       }
   };
-  
 
+  const handleSignOutClick = () => {
+    openLogoutModal();
+    if (windowSize < 1280) {
+      setIsNavOpen(false);
+    }
+  };
+  
     const toggleNav = () => {
       setIsNavOpen(prev => !prev);
     };
@@ -240,23 +263,31 @@ const NavigationBar: React.FC<NavigationBarProps> = () => {
         <FloatingButton onClick={toggleNav}>
           <MenuIcon fill={Colors.shades100} />
         </FloatingButton>
-        
         <SlideoutNavigation isOpen={isNavOpen}>
-          <NavMenuClose onClick={toggleNav}>
-              <CancelIcon fill={Colors.neutral600} />
-          </NavMenuClose>
-          {navItems.map(item => (
-            <Link key={item.id} href={item.href} onClick={() => handleTabClick(item.id, item.href)}>
-              <NavItem
-                label={item.label}
-                isActive={activePage === item.id}
-                fill={activePage === item.id ? Colors.shades100 : Colors.neutral600}
-                SvgComponent={item.svgComponent}
+          <CloseTopLinks>
+            <NavMenuClose onClick={toggleNav}>
+                <CancelIcon fill={Colors.neutral600} />
+            </NavMenuClose>
+            <NavigationTopLinks>
+              {navItems.map(item => (
+                <Link key={item.id} href={item.href} onClick={() => handleTabClick(item.id, item.href)}>
+                  <NavItem
+                    label={item.label}
+                    isActive={activePage === item.id}
+                    fill={activePage === item.id ? Colors.shades100 : Colors.neutral600}
+                    SvgComponent={item.svgComponent}
+                  />
+                </Link>
+              ))}
+            </NavigationTopLinks>
+          </CloseTopLinks>
+          <SignOut onClick={handleSignOutClick}>
+            <NavItem
+                label='Logout'
+                isActive={false}
+                fill={Colors.neutral600}
+                SvgComponent={LogoutIcon}
               />
-            </Link>
-          ))}
-          <SignOut onClick={signOut}>
-            <Text text='Sign Out' />
           </SignOut>
         </SlideoutNavigation>
         <AnimatePresence>
