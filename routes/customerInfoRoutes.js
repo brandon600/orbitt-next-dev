@@ -307,6 +307,25 @@ module.exports = (app) => {
         }
     });
 
+    app.get('/default-points', async (req, res) => {
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: 'userId is required' });
+        }
+        console.log('userid', userId);
+    
+        try {
+            const purchaseReward = await OutboundReward.findOne({ rewardNumberId: 1, user: userId.toString() });
+            if (!purchaseReward) {
+                return res.status(404).json({ error: 'Data not found' });
+            }
+            res.json(purchaseReward);
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    });    
+
 
     app.get('/process-transaction', async (req, res) => {
         console.log('server route accessed')
@@ -336,10 +355,11 @@ module.exports = (app) => {
             console.log('Cleaned Phone Number:', cleanedInput);
             console.log('Area Code:', areaCode1);
             console.log('Phone Number:', phoneNumber1);
+            console.log('User ID:', userIdString)
     
             const customer = await Customer.findOne({
-      //          user: userIdString,
-                user: '1680564912096',
+                user: userIdString,
+      //          user: '1680564912096',
                 areaCodeNumber: areaCode1,
                 phoneNumber1: phoneNumber1 // Fixed the incorrect property name
             });
@@ -371,9 +391,9 @@ module.exports = (app) => {
             if (!customer) {
                 return res.status(400).send({ success: false, message: 'Customer not found.' });
             }
-    
+            
             const currentPoints = customer.rewardNumber;
-            const updatedPoints = currentPoints + parseInt(points); 
+            const updatedPoints = currentPoints + correctPoints; 
             const updatedStarsEarned = customer.starsEarned + parseInt(points);
     
             customer.rewardNumber = updatedPoints;
