@@ -265,6 +265,7 @@ interface ProcessTransactionModalProps {
     reward?: RewardData;
     pointsGive?: string;
     transactionDetails?: string;
+    defaultPointsGive?: string;
 }
 
 function formatPhoneNumber(number: string) {
@@ -282,15 +283,24 @@ function formatPhoneNumber(number: string) {
 }
 
 const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpen, onClose, customer, mode, reward, pointsGive,
-    transactionDetails, }) => {
+    transactionDetails, defaultPointsGive }) => {
 
     const router = useRouter();
     if (!isOpen || !customer) return null;
 
     const { data, fetchData, toast, showToast, hideToast } = useStore.getState(); // Directly access Zustand state
+
+    let actualPoints: string;
+
+    if (!pointsGive || pointsGive === '') {
+        actualPoints = defaultPointsGive ? String(defaultPointsGive) : '0';
+    } else {
+        actualPoints = String(pointsGive);
+    }
     
     const handleGivePoints = async () => {
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        console.log(pointsGive);
         try {
             const response = await fetch(`${apiUrl}/give-points`, {
                 method: 'POST',
@@ -299,7 +309,7 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
                 },
                 body: JSON.stringify({
                     customerId: customer?.customerid,
-                    points: pointsGive,
+                    points: actualPoints,
                     transactionDetails: transactionDetails,
                     user: data,
                 }),
@@ -365,14 +375,9 @@ const ProcessTransactionModal: React.FC<ProcessTransactionModalProps> = ({ isOpe
     const formattedNumber = formatPhoneNumber(customer.fullPhoneNumber);
 
     let content;
-    let pointsGiveNumber
+    let pointsGiveNumber = Number(actualPoints);
 
     if (mode === 'givePoints') {
-        if (pointsGive === undefined) {
-            pointsGiveNumber = 1
-        } else {
-            pointsGiveNumber = parseInt(pointsGive)
-        }
         content = (
         <ContentDiv>
         <PTMMidConent>

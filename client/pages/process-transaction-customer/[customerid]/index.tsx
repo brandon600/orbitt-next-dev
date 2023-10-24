@@ -12,6 +12,7 @@ import BottomSaveNotice from '@/components/molecules/BottomSaveNotice';
 import io from "socket.io-client";
 import { CustomerData } from '@/types/CustomerData';
 import { RewardData } from '@/types/RewardData';
+import { DefaultRewardData } from '@/types/DefaultRewardData';
 import { IOSBackIcon } from '@/components/subatomic/Icons/IOSBackIcon';
 import DataCard from '@/components/atoms/DataCard';
 import CustomerVisit from '@/components/molecules/CustomerVisit';
@@ -30,6 +31,7 @@ import { FlexDiv, PTCContent, PTCTopContent, PTCBackButton, PTCAllCustomerInfo, 
 interface ProcessTransactionCustomerProps {
     customer: CustomerData | null;
     rewardsData: RewardData[];
+    defaultRewardData: DefaultRewardData | null;
 }
 
 function useBodyScrollLock(isLocked: boolean) {
@@ -83,6 +85,12 @@ export async function getServerSideProps(context: any) {
         const customer: CustomerData = await customerResponse.json();
 
         const rewardsResponse = await fetch(`${apiUrl}/current-active-rewards?userId=${userId}`);
+        const defaultRewardResponse = await fetch(`${apiUrl}/default-points?userId=${userId}`);
+        
+        if (!defaultRewardResponse.ok) {
+            throw new Error('Failed to fetch default points');
+        }
+        const defaultRewardData = await defaultRewardResponse.json();
 
         if (!rewardsResponse.ok) {
             throw new Error('Network response was not ok');
@@ -93,6 +101,7 @@ export async function getServerSideProps(context: any) {
             props: {
                 customer,
                 rewardsData,
+                defaultRewardData
             },
         };
     } catch (error) {
@@ -101,6 +110,7 @@ export async function getServerSideProps(context: any) {
             props: {
                 customer: null,
                 rewardsData: [],
+                defaultRewardData: null
             },
         };
     }
@@ -122,7 +132,7 @@ function formatPhoneNumber(number: string) {
 }
 
 
-const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({ customer, rewardsData }) => {
+const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({ customer, rewardsData, defaultRewardData }) => {
     const [activeOption, setActiveOption] = useState<string>('Give Points');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState<'givePoints' | 'redeemReward' | undefined>('givePoints');
@@ -172,7 +182,16 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
     }
 
     console.log(rewardsData);
+    console.log(defaultRewardData);
     const sortedRewardsData = [...rewardsData].sort((a, b) => a.rewardCost - b.rewardCost);
+
+    let defaultPointsGive = '';
+
+    if (defaultRewardData?.rewardActive === true) {
+        defaultPointsGive = defaultRewardData?.rewardValue.toString()
+    } else {
+        defaultPointsGive = '0';
+    }
 
     return (
         <FlexDiv>
@@ -185,6 +204,7 @@ const ProcessTransactionCustomer: React.FC<ProcessTransactionCustomerProps> = ({
                        mode={modalMode}
                        reward={selectedReward}
                        pointsGive={pointsGive}
+                       defaultPointsGive={defaultPointsGive}
                        transactionDetails={transactionDetails}
                 />}
             </AnimatePresence>
