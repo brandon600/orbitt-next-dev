@@ -71,8 +71,8 @@ const client = require('twilio')(db.accountSid, db.authToken)
 //https://orbitt-next-dev.vercel.app
 
 const corsOptions = {
- // origin: db.localLink, // Replace with the actual origin of your frontend
-  origin: 'https://orbitt-next-dev.vercel.app',
+    origin: db.localLink, // Replace with the actual origin of your frontend
+ // origin: 'https://orbitt-next-dev.vercel.app',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // Enable cookies and sessions for cross-origin requests if needed
   };
