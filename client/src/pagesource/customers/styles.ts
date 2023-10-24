@@ -152,7 +152,7 @@ const LabelPlusCells = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 20px;
         width: 100%;
     }
 `

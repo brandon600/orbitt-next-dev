@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
 import Text from '../subatomic/Text'
+import Checkbox from '../atoms/Checkbox';
 
 interface CustomerTableHeadProps {
     label1: string;
@@ -29,11 +30,14 @@ interface CustomerTableHeadComponentProps {
     label6?: CustomerTableHeadProps['label6'];
     label7?: CustomerTableHeadProps['label7'];
     label8?: CustomerTableHeadProps['label8'];
+    onSelectAllCustomers: (isSelected: boolean) => void;
+    areAllCustomersSelected: boolean;
   }
   
-const CustomerTableHeadContainer = styled.div<CustomerTableHeadComponentProps>`
+const CustomerTableHeadContainer = styled.div`
 @media ${StyledMediaQuery.XS} {
   display: flex;
+  align-items: center;
   gap: 12px;
   flex-direction: row;
   width: 100%;
@@ -216,13 +220,38 @@ const CustomerTableViewLabel = styled.div<CustomerTableHeadCellProps>`
   }
 `
 
+const CustomerTableNameCheck = styled.div`
+@media ${StyledMediaQuery.XS} {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 0 0;
+}
 
-  const RewardTableHead: React.FC<CustomerTableHeadComponentProps> = ({ label1, label2, label3, label4, label5, label6, label7, label8, ...rest }) => {
+@media ${StyledMediaQuery.S} {
+  gap: 16px;
+}
+`
+
+
+const CustomerTableHead: React.FC<CustomerTableHeadComponentProps> = ({ label1, label2, label3, label4, label5, label6, label7, label8, onSelectAllCustomers,
+    areAllCustomersSelected, ...rest }) => {
+
+      const handleSelectAllCustomers = (isChecked: boolean) => {
+        onSelectAllCustomers(isChecked);
+      };
+      
     return (
       <CustomerTableHeadContainer>
-        <CustomerTableNameLabel>
-          <Text text={label1} />
-        </CustomerTableNameLabel>
+        <CustomerTableNameCheck>
+          <Checkbox
+            checked={areAllCustomersSelected}
+            onChange={handleSelectAllCustomers}
+          />
+          <CustomerTableNameLabel>
+            <Text text={label1} />
+          </CustomerTableNameLabel>
+        </CustomerTableNameCheck>
         <CustomerTablePhoneNumberLabel>
           <Text text={label2} />
         </CustomerTablePhoneNumberLabel>
@@ -248,4 +277,4 @@ const CustomerTableViewLabel = styled.div<CustomerTableHeadCellProps>`
     );
   };
   
-  export default RewardTableHead;
+  export default CustomerTableHead;

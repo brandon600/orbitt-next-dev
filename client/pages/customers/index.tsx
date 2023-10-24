@@ -242,6 +242,17 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
             return filterFunction(customer, filterConfig); // <-- Change here, pass the entire filterConfig
         });
     });
+
+    const handleSelectAllCustomers = (isSelected: boolean) => {
+        if (isSelected) {
+          const allCustomerIds = filteredCustomers.map(customer => customer._id);
+          setSelectedCustomers(allCustomerIds);
+        } else {
+          setSelectedCustomers([]);
+        }
+      };
+
+      const areAllCustomersSelected = filteredCustomers.length > 0 && selectedCustomers.length === filteredCustomers.length;
     
     return (
         <FlexDiv>
@@ -335,6 +346,8 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                         customersData={filteredCustomers}
                         onCustomerSelection={handleCustomerSelection}
                         selectedCustomers={selectedCustomers}
+                        onSelectAllCustomers={handleSelectAllCustomers}
+                        areAllCustomersSelected={areAllCustomersSelected}
                     />
                 </LabelPlusCells>
             </TableAndSearch>
