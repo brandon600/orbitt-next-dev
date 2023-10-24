@@ -23,6 +23,10 @@ const handle = nextApp.getRequestHandler();
 nextApp.prepare().then(() => {
   const app = express();
 
+console.log('PROD_URL:', process.env.PROD_URL);
+console.log('db.localLink:', db.localLink);
+
+
   //DB Config
 const db = require('./config/keys');
 const { constants } = require('fs');
@@ -38,7 +42,7 @@ mongoose.connect(db.mongoURI, {
     .then(() => console.log(db))
     .catch(err => console.log(err));
 
-    //Load Models
+//Load Models
 require('./models/Customer');
 require('./models/User');
 require('./models/Reward');
