@@ -153,6 +153,26 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     const [localCustomersData, setLocalCustomersData] = useState<CustomerData[]>(customersData);
     const { userId } = useMemberAuth();
 
+    const [bottomValue, setBottomValue] = useState("118px");
+
+    useEffect(() => {
+    const updateBottomValue = () => {
+        if (window.innerWidth < 720) { // XS
+        setBottomValue("118px");
+        } else if (window.innerWidth > 719) { // S
+        setBottomValue("148px");
+        }
+    };
+
+    updateBottomValue(); // Set the initial value
+
+    window.addEventListener('resize', updateBottomValue);
+
+    return () => {
+        window.removeEventListener('resize', updateBottomValue);
+    };
+    }, []);
+
    // const savedUserData = JSON.parse(Cookie.get('user') || '{}');
    // console.log(savedUserData)
     console.log(userData)
@@ -293,7 +313,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                     <BlastIconButton
                         onClick={toggleBlastModal}
                         initial={{ bottom: "0px", opacity: 0 }}  // initial state (hidden to the right)
-                        animate={{ bottom: "16px", opacity: 1 }}  // end state (appears from the right)
+                        animate={{ bottom: bottomValue, opacity: 1 }}  // end state (appears from the right)
                         exit={{ bottom: "0px", opacity: 0 }}  // exit state (disappears to the right)
                         transition={{ duration: 0.4, ease: [0.88, 0, 0.16, 1] }} // animation takes 400ms with easeInOut easing
                     >
