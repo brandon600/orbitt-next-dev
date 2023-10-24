@@ -96,8 +96,8 @@ const NavItemSVG = styled.div`
     }
 
     @media ${StyledMediaQuery.S} {
-        width: 24px;
-        height: 24px;
+        width: 32px;
+        height: 32px;
     }
 
     @media ${StyledMediaQuery.L} {

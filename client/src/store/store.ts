@@ -19,6 +19,12 @@ interface Toast {
   type: 'success' | 'error' | 'info';
 }
 
+interface ModalState {
+  isLogoutModalOpen: boolean;
+  openLogoutModal: () => void;
+  closeLogoutModal: () => void;
+}
+
 export interface AppState {
   data: UserData;
   fetchData: (memberstackId: string) => Promise<void>;
@@ -29,6 +35,11 @@ export interface AppState {
     // actions
     showToast: (message: string, type?: 'success' | 'error' | 'info') => void;
     hideToast: () => void;
+
+    // Modal state
+    isLogoutModalOpen: boolean;
+    openLogoutModal: () => void;
+    closeLogoutModal: () => void;
 }
 
 export const initialData: UserData = {
@@ -76,13 +87,16 @@ export const fetchData = async (memberstackId: string): Promise<UserData | null>
 export const useStore = create<AppState>((set) => ({
   data: initialData,
 
+  isLogoutModalOpen: false,
+  openLogoutModal: () => set({ isLogoutModalOpen: true }),
+  closeLogoutModal: () => set({ isLogoutModalOpen: false }),
+
   fetchData: async (memberstackId: string) => {
     const data = await fetchData(memberstackId);
     if (data) {
       set({ data });
     }
   },
-
 
    // toast state
    toast: initialState,
