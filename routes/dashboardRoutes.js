@@ -5,16 +5,41 @@ const Customer = mongoose.model('customers');
 const Visit = mongoose.model('visits');
 const BlastMessage = mongoose.model('blastmessages');
 
+
+const modelsMapping = {
+    'Transactions': Visit,     
+    'Customers': Customer,
+    'Sign-Ups': Customer,               
+    'Rewards Redeemed': Visit,     
+    'Total Points Given': Visit,
+    'Surveys Completed': Visit,     
+  };
+  
+
 module.exports = (app) => {
     app.get('/api/dashboard', async (req, res) => {
-        const { timeFilter, userId } = req.query;
+        const { timeFilter, userId, activeOption } = req.query;
         let dateFilter = {};
 
         if (!userId) {
-            return res.status(400).json({ error: 'userId is required' });
+            return res.status(400).send({ message: 'Bad Request: Missing required fields.' });
         }
 
         const userIdString = userId.toString();
+
+
+
+        console.log('Active Option:', activeOption);
+        const Model = modelsMapping[activeOption];
+        console.log('Model:', Model);
+
+      
+        if (!Model) {
+        console.error('Model not found for activeOption:', activeOption);
+   //     return res.status(400).json({ error: 'Invalid activeOption' });
+        } else {
+            console.log('Model found for activeOption:', activeOption);
+        }
 
 
         switch(timeFilter) {
@@ -42,11 +67,11 @@ module.exports = (app) => {
                 break;
         }
 
+
         try {
             let response = {};
-
             if (timeFilter === 'lastWeek' || timeFilter === 'last2Weeks') {
-                const visitsInWeekCursor = await Visit.aggregate([
+                const visitsInWeekCursor = await Model.aggregate([
                     { $match: { ...dateFilter, user: userIdString } },
                     {
                         $addFields: {
@@ -106,7 +131,7 @@ module.exports = (app) => {
     
                 response.dailyVisits = pastDays.reverse();  // As we initialized from today to 7 days ago, we reverse to get in chronological order
             }  else if (timeFilter === 'lastMonth') {
-                const visitsInMonthCursor = await Visit.aggregate([
+                const visitsInMonthCursor = await Model.aggregate([
                     { $match: { ...dateFilter, user: userIdString } },
                     {
                         $addFields: {
@@ -170,7 +195,7 @@ module.exports = (app) => {
                 response.weeklyVisits = pastWeeks.reverse();
 
             } else if (timeFilter === 'last3Months') {
-                const visitsInMonthsCursor = await Visit.aggregate([
+                const visitsInMonthsCursor = await Model.aggregate([
                     { $match: { ...dateFilter, user: userIdString } },
                     {
                         $addFields: {
@@ -226,7 +251,7 @@ module.exports = (app) => {
             
                 response.monthlyVisits = pastMonths.reverse();
             } else if (timeFilter === 'last6Months') {
-                const visitsInMonthsCursor = await Visit.aggregate([
+                const visitsInMonthsCursor = await Model.aggregate([
                     { $match: { ...dateFilter, user: userIdString } },
                     {
                         $addFields: {
@@ -283,7 +308,7 @@ module.exports = (app) => {
                 response.monthlyVisits = pastMonths.reverse();
             } else if (timeFilter === 'lastYear' || timeFilter === 'allTime') {
                 const dateFilter2 = { date: { $gte: (Date.now() - 365 * 24 * 60 * 60 * 1000).toString() } };
-                const visitsInMonthsCursor = await Visit.aggregate([
+                const visitsInMonthsCursor = await Model.aggregate([
                     { $match: { ...dateFilter2, user: userIdString } },
                     {
                         $addFields: {
