@@ -49,7 +49,7 @@ type DashboardData = {
     totalCustomers?: number;
     totalVisits?: number;
     rewardsRedeemed?: number;
-    totalPointsGiven?: number;
+    totalPoints?: number;
     smsBlastsSent?: number;
     dailyCustomers?: number;
     dailyVisits?: {
@@ -503,6 +503,8 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
         }
     }, [barChartData]);
 
+    console.log(dashboardData?.totalPoints)
+
     return (
         <FlexDiv>
             <GlobalStyle />
@@ -561,7 +563,7 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
                     />
                     <DataCard
                         label='Points Given'
-                        number1={dashboardData?.totalPointsGiven?.toString()}
+                        number1={dashboardData?.totalPoints?.toString()}
                         number2=''
                     />
                 </DataCardsRow>
