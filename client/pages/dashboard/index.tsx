@@ -104,6 +104,7 @@ const timelineFilterOptions: DropdownOption[] = [
   export async function getServerSideProps(context: GetServerSidePropsContext) {
     const userCookie = context.req.cookies.user;
     let userData: UserData = initialData;
+    const defaultActiveOption = 'Transactions';
 
     if (userCookie) {
         userData = JSON.parse(userCookie);
@@ -131,7 +132,7 @@ const timelineFilterOptions: DropdownOption[] = [
     try {
         const userId = userData.userid;
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const response = await fetch(`${apiUrl}/api/dashboard?userId=${userId}`);
+        const response = await fetch(`${apiUrl}/api/dashboard?userId=${userId}&activeOption=${defaultActiveOption}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -290,7 +291,7 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
     const { data, fetchData, toast, showToast, hideToast } = useStore();
     const [timeFilter, setTimeFilter] = useState('allTime');
     const [barChartData, setBarChartData] = useState<any | null>(null);
-    const [activeOption, setActiveOption] = useState<string>('Visits');
+    const [activeOption, setActiveOption] = useState<string>('Transactions');
     const [doughnutChartData, setDoughnutChartData] = useState<DoughnutChartData | null>(null);
     const { userId } = useMemberAuth();
 
@@ -389,8 +390,6 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
     
 
 
-
-
     useEffect(() => {
         const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL
         if (!apiUrl) {
@@ -425,15 +424,16 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
 
 
     useEffect(() => {
+        console.log(activeOption)
         const fetchDataWithFilter = async () => {
             try {
                 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-                const response = await fetch(`${apiUrl}/api/dashboard?userId=${userData.userid}&timeFilter=${timeFilter}`);
+                const response = await fetch(`${apiUrl}/api/dashboard?userId=${userData.userid}&timeFilter=${timeFilter}&activeOption=${activeOption}`);
 
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                const updatedData = await response.json();
+                const updatedData = await response.json()
                 setDashboardData(updatedData);
             } catch (error) {
                 console.error('Error fetching dashboard data with filter:', error);
@@ -442,7 +442,7 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
         };
     
         fetchDataWithFilter();
-    }, [userData.userid, timeFilter, showToast]);
+    }, [userData?.userid, timeFilter, showToast, activeOption]);
 
 
     const handleActivePillChange = (activeLabel: string) => {
