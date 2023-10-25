@@ -374,22 +374,32 @@ module.exports = (app) => {
             const totalCustomers = await Customer.countDocuments({ ...dateFilter, user: userIdString });
             const totalVisits = await Visit.countDocuments({ ...dateFilter, user: userIdString });
             const rewardsRedeemed = await Visit.countDocuments({ ...dateFilter, visitType: 'Reward', user: userIdString });
-            
-            const totalStarsCursor = await Customer.aggregate([
-                { $match: { ...dateFilter, user: userIdString } },
-                { $group: { _id: null, totalStars: { $sum: "$starsEarned" } } }
-            ]);
-            
-            const totalPointsGiven = totalStarsCursor[0]?.totalStars || 0;
             const smsBlastsSent = await BlastMessage.countDocuments({ ...dateFilter, user: userIdString });
+            const totalPointsValue = await Visit.aggregate([
+                {
+                  $match: {
+                    ...dateFilter,
+                    user: userIdString,
+                    visitType: { $in: ['New User', 'Reward'] }
+                  }
+                },
+                {
+                  $group: {
+                    _id: null,
+                    totalPointsValue: { $sum: "$currentRewardsEarned" }
+                  }
+                }
+              ]);
+
+              const totalPoints = totalPointsValue[0] ? totalPointsValue[0].totalPointsValue : 0;
     
             // Merge the results into the response object
             response = {
                 ...response,
                 totalCustomers,
                 totalVisits,
+                totalPoints,
                 rewardsRedeemed,
-                totalPointsGiven,
                 smsBlastsSent
             };
     
