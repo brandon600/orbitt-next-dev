@@ -147,14 +147,8 @@ module.exports = (app) => {
                     response.dailyVisits = pastDays.map(day => ({ ...day, value: day.count })).reverse();
                 }
             } else if (timeFilter === 'lastMonth') {
-                let additionalMatchCriteriaLastMonth = {};
-    
-                if (activeOption === 'Rewards Redeemed') {
-                    additionalMatchCriteriaLastMonth = { visitType: 'Reward' };
-                }
-            
                 const aggregationPipeline = [
-                    { $match: { ...dateFilter, user: userIdString, ...additionalMatchCriteria, ...additionalMatchCriteriaLastMonth } },
+                    { $match: { ...dateFilter, user: userIdString, ...additionalMatchCriteria } },
                     { $addFields: projectFields },
                     {
                         $group: {
@@ -215,14 +209,8 @@ module.exports = (app) => {
                 }
 
             } else if (timeFilter === 'last3Months') {
-                let additionalMatchCriteriaLast3Months = {};
-
-                if (activeOption === 'Rewards Redeemed') {
-                    additionalMatchCriteriaLast3Months = { visitType: 'Reward' };
-                }
-            
                 const aggregationPipeline = [
-                    { $match: { ...dateFilter, user: userIdString, ...additionalMatchCriteria, ...additionalMatchCriteriaLast3Months } },
+                    { $match: { ...dateFilter, user: userIdString, ...additionalMatchCriteria } },
                     { $addFields: projectFields },
                     {
                         $group: {
@@ -275,20 +263,24 @@ module.exports = (app) => {
                     response.monthlyVisits = pastMonths.map(month => ({ ...month, value: month.count })).reverse();
                 }
             } else if (timeFilter === 'last6Months') {
-                let additionalMatchCriteriaLast6Months = {};
-
-                if (activeOption === 'Rewards Redeemed') {
-                    additionalMatchCriteriaLast6Months = { visitType: 'Reward' };
-                }
-            
-                const visitsInMonthsCursor = await Model.aggregate([
-                    { $match: { ...dateFilter, user: userIdString, ...additionalMatchCriteriaLast6Months } },
-                    { $addFields: { convertedDate: { $toDate: { $toDouble: "$date" } } } },
-                    { $group: { _id: { year: { $year: "$convertedDate" }, month: { $month: "$convertedDate" } }, totalRewards: { $sum: "$totalRewards" }, count: { $sum: 1 } } },
+                const aggregationPipeline = [
+                    { $match: { user: userIdString, ...dateFilter, ...additionalMatchCriteria } },
+                    { $addFields: projectFields },
+                    {
+                        $group: {
+                            _id: {
+                                year: { $year: "$convertedDate" },
+                                month: { $month: "$convertedDate" }
+                            },
+                            totalRewards: { $sum: "$totalRewards" },
+                            count: { $sum: 1 }
+                        }
+                    },
                     { $sort: { '_id.year': 1, '_id.month': 1 } }
-                ]);
+                ];
             
-                const monthlyVisits = visitsInMonthsCursor.map(entry => ({
+                const results = await Model.aggregate(aggregationPipeline).exec();
+                const monthlyVisits = results.map(entry => ({
                     year: entry._id.year,
                     month: entry._id.month,
                     totalRewards: entry.totalRewards,
@@ -325,8 +317,16 @@ module.exports = (app) => {
                     response.monthlyVisits = pastMonths.map(month => ({ ...month, value: month.count })).reverse();
                 }
             } else if (timeFilter === 'lastYear' || timeFilter === 'allTime') {
+
+                dateFilter2 = { date: { $gte: (Date.now() - 365 * 24 * 60 * 60 * 1000).toString() } };
+
+
+
+                /*
+
+                Code for if we want to truly show the all time calendar on the graph. Sticking with showing just the
+                last 12 months on both allTime and lastYear for now.
                 let dateFilter2 = {};
-                let additionalMatchCriteriaLastYearAllTime = {};
             
                 if (timeFilter === 'lastYear') {
                     dateFilter2 = { date: { $gte: (Date.now() - 365 * 24 * 60 * 60 * 1000).toString() } };
@@ -335,9 +335,11 @@ module.exports = (app) => {
                 if (activeOption === 'Rewards Redeemed') {
                     additionalMatchCriteriaLastYearAllTime = { visitType: 'Reward' };
                 }
+
+                */
             
                 const aggregationPipeline = [
-                    { $match: { ...dateFilter2, user: userIdString, ...additionalMatchCriteria, ...additionalMatchCriteriaLastYearAllTime } },
+                    { $match: { ...dateFilter2, user: userIdString, ...additionalMatchCriteria } },
                     { $addFields: projectFields },
                     {
                         $group: {
@@ -360,7 +362,8 @@ module.exports = (app) => {
                     count: entry.count
                 }));
             
-                const monthsToConsider = timeFilter === 'lastYear' ? 12 : new Date().getFullYear() * 12 + new Date().getMonth() + 1;
+        //        const monthsToConsider = timeFilter === 'lastYear' ? 12 : new Date().getFullYear() * 12 + new Date().getMonth() + 1;
+                const monthsToConsider = 12
                 const pastMonths = Array.from({ length: monthsToConsider }).map((_, i) => {
                     const d = new Date();
                     d.setMonth(d.getMonth() - i);
