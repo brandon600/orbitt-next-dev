@@ -76,6 +76,12 @@ module.exports = (app) => {
                 totalRewards: { $ifNull: ["$currentRewardsEarned", 0] },
                 convertedDate: { $toDate: { $toLong: "$date" } }
             };
+        } else if (activeOption === 'Rewards Redeemed') {
+            additionalMatchCriteria = { visitType: 'Reward' };
+            projectFields = {
+                totalRewards: 0,
+                convertedDate: { $toDate: { $toLong: "$date" } }
+            };
         } else {
             projectFields = {
                 totalRewards: 0, // We don't care about rewards when counting transactions
@@ -135,14 +141,20 @@ module.exports = (app) => {
                 // Depending on activeOption, set the response
                 if (activeOption === 'Total Points Given') {
                     response.dailyVisits = pastDays.map(day => ({ ...day, value: day.totalRewards })).reverse();
-                    console.log(response.dailyVisits);
-                } else { // Assuming 'Transactions' or any other option
+                } else if (activeOption === 'Rewards Redeemed') {
                     response.dailyVisits = pastDays.map(day => ({ ...day, value: day.count })).reverse();
-                    console.log(response.dailyVisits);
+                } else {
+                    response.dailyVisits = pastDays.map(day => ({ ...day, value: day.count })).reverse();
                 }
             } else if (timeFilter === 'lastMonth') {
+                let additionalMatchCriteriaLastMonth = {};
+    
+                if (activeOption === 'Rewards Redeemed') {
+                    additionalMatchCriteriaLastMonth = { visitType: 'Reward' };
+                }
+            
                 const aggregationPipeline = [
-                    { $match: { ...dateFilter, user: userIdString, ...additionalMatchCriteria } },
+                    { $match: { ...dateFilter, user: userIdString, ...additionalMatchCriteria, ...additionalMatchCriteriaLastMonth } },
                     { $addFields: projectFields },
                     {
                         $group: {
@@ -184,7 +196,6 @@ module.exports = (app) => {
                     };
                 });
             
-                // Fill in the values from the results
                 pastWeeks.forEach(week => {
                     const matchingVisit = weeklyVisits.find(
                         visit => visit.year === week.year && visit.week === week.week
@@ -197,13 +208,21 @@ module.exports = (app) => {
             
                 if (activeOption === 'Total Points Given') {
                     response.weeklyVisits = pastWeeks.map(week => ({ ...week, value: week.totalRewards })).reverse();
+                } else if (activeOption === 'Rewards Redeemed') {
+                    response.weeklyVisits = pastWeeks.map(week => ({ ...week, value: week.count })).reverse();
                 } else { // Assuming 'Transactions' or any other option
                     response.weeklyVisits = pastWeeks.map(week => ({ ...week, value: week.count })).reverse();
                 }
 
             } else if (timeFilter === 'last3Months') {
+                let additionalMatchCriteriaLast3Months = {};
+
+                if (activeOption === 'Rewards Redeemed') {
+                    additionalMatchCriteriaLast3Months = { visitType: 'Reward' };
+                }
+            
                 const aggregationPipeline = [
-                    { $match: { ...dateFilter, user: userIdString, ...additionalMatchCriteria } },
+                    { $match: { ...dateFilter, user: userIdString, ...additionalMatchCriteria, ...additionalMatchCriteriaLast3Months } },
                     { $addFields: projectFields },
                     {
                         $group: {
@@ -250,40 +269,29 @@ module.exports = (app) => {
             
                 if (activeOption === 'Total Points Given') {
                     response.monthlyVisits = pastMonths.map(month => ({ ...month, value: month.totalRewards })).reverse();
+                } else if (activeOption === 'Rewards Redeemed') {
+                    response.monthlyVisits = pastMonths.map(month => ({ ...month, value: month.count })).reverse();
                 } else { // Assuming 'Transactions' or any other option
                     response.monthlyVisits = pastMonths.map(month => ({ ...month, value: month.count })).reverse();
                 }
             } else if (timeFilter === 'last6Months') {
+                let additionalMatchCriteriaLast6Months = {};
+
+                if (activeOption === 'Rewards Redeemed') {
+                    additionalMatchCriteriaLast6Months = { visitType: 'Reward' };
+                }
+            
                 const visitsInMonthsCursor = await Model.aggregate([
-                    { $match: { ...dateFilter, user: userIdString } },
-                    {
-                        $addFields: {
-                            convertedDate: {
-                                $toDate: {
-                                    $toDouble: "$date"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        $group: {
-                            _id: {
-                                year: { $year: "$convertedDate" },
-                                month: { $month: "$convertedDate" }
-                            },
-                            count: { $sum: 1 }
-                        }
-                    },
-                    {
-                        $sort: {
-                            '_id.year': 1, '_id.month': 1
-                        }
-                    }
+                    { $match: { ...dateFilter, user: userIdString, ...additionalMatchCriteriaLast6Months } },
+                    { $addFields: { convertedDate: { $toDate: { $toDouble: "$date" } } } },
+                    { $group: { _id: { year: { $year: "$convertedDate" }, month: { $month: "$convertedDate" } }, totalRewards: { $sum: "$totalRewards" }, count: { $sum: 1 } } },
+                    { $sort: { '_id.year': 1, '_id.month': 1 } }
                 ]);
-                
+            
                 const monthlyVisits = visitsInMonthsCursor.map(entry => ({
                     year: entry._id.year,
                     month: entry._id.month,
+                    totalRewards: entry.totalRewards,
                     count: entry.count
                 }));
             
@@ -294,29 +302,42 @@ module.exports = (app) => {
                     return {
                         year: d.getFullYear(),
                         month: d.getMonth() + 1,  // JS months are 0-based
-                        count: 0  // default value
+                        totalRewards: 0,
+                        count: 0
                     };
                 });
             
-                // Step 2: Fill in the gaps
                 pastMonths.forEach(month => {
                     const matchingVisit = monthlyVisits.find(
                         visit => visit.year === month.year && visit.month === month.month
                     );
                     if (matchingVisit) {
+                        month.totalRewards = matchingVisit.totalRewards;
                         month.count = matchingVisit.count;
                     }
                 });
             
-                response.monthlyVisits = pastMonths.reverse();
+                if (activeOption === 'Total Points Given') {
+                    response.monthlyVisits = pastMonths.map(month => ({ ...month, value: month.totalRewards })).reverse();
+                } else if (activeOption === 'Rewards Redeemed') {
+                    response.monthlyVisits = pastMonths.map(month => ({ ...month, value: month.count })).reverse();
+                } else { // Assuming 'Transactions' or any other option
+                    response.monthlyVisits = pastMonths.map(month => ({ ...month, value: month.count })).reverse();
+                }
             } else if (timeFilter === 'lastYear' || timeFilter === 'allTime') {
                 let dateFilter2 = {};
+                let additionalMatchCriteriaLastYearAllTime = {};
+            
                 if (timeFilter === 'lastYear') {
                     dateFilter2 = { date: { $gte: (Date.now() - 365 * 24 * 60 * 60 * 1000).toString() } };
                 }
-
+            
+                if (activeOption === 'Rewards Redeemed') {
+                    additionalMatchCriteriaLastYearAllTime = { visitType: 'Reward' };
+                }
+            
                 const aggregationPipeline = [
-                    { $match: { ...dateFilter2, user: userIdString, ...additionalMatchCriteria } },
+                    { $match: { ...dateFilter2, user: userIdString, ...additionalMatchCriteria, ...additionalMatchCriteriaLastYearAllTime } },
                     { $addFields: projectFields },
                     {
                         $group: {
@@ -330,7 +351,7 @@ module.exports = (app) => {
                     },
                     { $sort: { '_id.year': 1, '_id.month': 1 } }
                 ];
-
+            
                 const results = await Model.aggregate(aggregationPipeline).exec();
                 const monthlyVisits = results.map(entry => ({
                     year: entry._id.year,
@@ -338,8 +359,8 @@ module.exports = (app) => {
                     totalRewards: entry.totalRewards,
                     count: entry.count
                 }));
-
-                const monthsToConsider = 12;
+            
+                const monthsToConsider = timeFilter === 'lastYear' ? 12 : new Date().getFullYear() * 12 + new Date().getMonth() + 1;
                 const pastMonths = Array.from({ length: monthsToConsider }).map((_, i) => {
                     const d = new Date();
                     d.setMonth(d.getMonth() - i);
@@ -350,7 +371,7 @@ module.exports = (app) => {
                         count: 0
                     };
                 });
-
+            
                 pastMonths.forEach(month => {
                     const matchingVisit = monthlyVisits.find(
                         visit => visit.year === month.year && visit.month === month.month
@@ -360,16 +381,17 @@ module.exports = (app) => {
                         month.count = matchingVisit.count;
                     }
                 });
-
+            
                 if (activeOption === 'Total Points Given') {
                     response.monthlyVisits = pastMonths.map(month => ({ ...month, value: month.totalRewards })).reverse();
+                } else if (activeOption === 'Rewards Redeemed') {
+                    response.monthlyVisits = pastMonths.map(month => ({ ...month, value: month.count })).reverse();
                 } else { // Assuming 'Transactions' or any other option
                     response.monthlyVisits = pastMonths.map(month => ({ ...month, value: month.count })).reverse();
                 }
             }
 
             
-    
             // This part is common for all time filters
             const totalCustomers = await Customer.countDocuments({ ...dateFilter, user: userIdString });
             const totalVisits = await Visit.countDocuments({ ...dateFilter, user: userIdString });
@@ -380,7 +402,7 @@ module.exports = (app) => {
                   $match: {
                     ...dateFilter,
                     user: userIdString,
-                    visitType: { $in: ['New User', 'Reward'] }
+                    visitType: { $in: ['New User', 'Purchase'] }
                   }
                 },
                 {
