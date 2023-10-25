@@ -27,18 +27,21 @@ type DailyVisit = {
     month: number;
     day: number;
     count: number;
+    totalRewards: number;
 };
 
 type WeeklyVisit = {
     year: number;
     week: number;
     count: number;
+    totalRewards?: number;
 };
 
 type MonthlyVisit = {
     year: number;
     month: number;
     count: number;
+    totalRewards?: number;
 };
 
 
@@ -54,16 +57,19 @@ type DashboardData = {
         month: number;
         day: number;
         count: number;
+        totalRewards: number;
     }[];
     weeklyVisits?: {
         year: number;
         week: number;
         count: number;
+        totalRewards?: number;
     }[];
     monthlyVisits?: {
         year: number;
         month: number;
         count: number;
+        totalRewards?: number;
     }[];
 };
 
@@ -169,7 +175,7 @@ ChartJS.defaults.font.size = 14;
 ChartJS.defaults.borderColor = 'rgba(54, 162, 235, 0)';
 
 
-function generateBarChartDataForMonth(weeklyVisits: WeeklyVisit[], weeks: number): WeeklyVisit[] {
+function generateBarChartDataForMonth(weeklyVisits: WeeklyVisit[], weeks: number, propertyName: keyof WeeklyVisit): WeeklyVisit[] {
     const currentWeek = getWeek(new Date());
     const currentYear = new Date().getFullYear();
     const pastWeeks: WeeklyVisit[] = Array.from({ length: weeks }).map((_, i) => {
@@ -184,19 +190,23 @@ function generateBarChartDataForMonth(weeklyVisits: WeeklyVisit[], weeks: number
         return {
             year,
             week,
-            count: 0  // default value
+            count: 0,  // default value
+            totalRewards: 0
         };
     });
+
 
     pastWeeks.forEach(week => {
         const matchingVisit = weeklyVisits.find(
             visit => visit.year === week.year && visit.week === week.week
         );
-        if (matchingVisit) {
-            week.count = matchingVisit.count;
+        if (matchingVisit && matchingVisit[propertyName] !== undefined) {
+            week[propertyName] = matchingVisit[propertyName] as number; // you can use type assertion here since you've checked it's not undefined
+        } else {
+            week[propertyName] = 0; // default value when not found or undefined
         }
     });
-
+    
     return pastWeeks.reverse();
 }
 
@@ -208,7 +218,7 @@ function getGradient(ctx: CanvasRenderingContext2D, chartHeight: number, colorSt
 }
 
 
-function generateBarChartData(dailyVisits: DailyVisit[], numOfDays: number = 7, ctx?: CanvasRenderingContext2D) {
+function generateBarChartData(dailyVisits: DailyVisit[], numOfDays: number = 7, propertyName: keyof DailyVisit, ctx?: CanvasRenderingContext2D) {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     console.log(numOfDays)
 
@@ -222,16 +232,21 @@ function generateBarChartData(dailyVisits: DailyVisit[], numOfDays: number = 7, 
         return d.toISOString().split('T')[0]; // YYYY-MM-DD format
     }).reverse();  // Make sure it's in ascending order
 
-    const counts = dates.map(date => {
-        const entry = dailyVisits.find(item => `${item.year}-${String(item.month).padStart(2, '0')}-${String(item.day).padStart(2, '0')}` === date);
-        return entry ? entry.count : 0;
+    const dataValues = dates.map(date => {
+        const entry = dailyVisits.find(item => 
+            `${item.year}-${String(item.month).padStart(2, '0')}-${String(item.day).padStart(2, '0')}` === date
+        );
+
+        console.log('Date:', date, 'Entry:', entry, 'Property Name:', propertyName, 'Value:', entry ? entry[propertyName] ?? 0 : 0);
+
+        return entry ? entry[propertyName] ?? 0 : 0; // Make sure to use propertyName here
     });
 
     return {
         labels: dates.map(date => days[new Date(date).getDay()]),
         datasets: [{
             label: 'Visits',
-            data: counts,
+            data: dataValues,
             backgroundColor: '#7AC1FF',
         }]
     };
@@ -292,8 +307,12 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
     const [timeFilter, setTimeFilter] = useState('allTime');
     const [barChartData, setBarChartData] = useState<any | null>(null);
     const [activeOption, setActiveOption] = useState<string>('Transactions');
+    const propertyName = activeOption === 'Total Points Given' ? 'totalRewards' : 'count';
     const [doughnutChartData, setDoughnutChartData] = useState<DoughnutChartData | null>(null);
     const { userId } = useMemberAuth();
+    const [loading, setLoading] = useState<boolean>(true);
+
+    console.log(activeOption);
 
     
     const storeData = useStore.getState();
@@ -306,17 +325,20 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
     const BarChartComponent: React.FC<BarChartProps> = ({ dailyVisits, weeklyVisits, monthlyVisits }) => {
         let labels, dataValues, datasetLabel;
 
-        if (weeklyVisits && weeklyVisits.length > 0) {
+        console.log(dailyVisits)
+        console.log(propertyName)
+
+         if (weeklyVisits && weeklyVisits.length > 0) {
             labels = weeklyVisits.map(visit => `Week ${visit.week}`);
-            dataValues = weeklyVisits.map(visit => visit.count);
+            dataValues = weeklyVisits.map(visit => visit[propertyName as keyof WeeklyVisit]);
             datasetLabel = 'Weekly Visits';
-        } else if (monthlyVisits && monthlyVisits.length > 0) {
+        }  else if (monthlyVisits && monthlyVisits.length > 0) {
             labels = monthlyVisits.map((_, idx) => `Month ${idx + 1}`);
-            dataValues = monthlyVisits.map(visit => visit.count);
+            dataValues = monthlyVisits.map(visit => visit[propertyName as keyof MonthlyVisit]);
             datasetLabel = 'Monthly Visits';
         } else {
             labels = dailyVisits.map(visit => `${visit.month}/${visit.day}`);
-            dataValues = dailyVisits.map(visit => visit.count);
+            dataValues = dailyVisits.map(visit => visit[propertyName as keyof DailyVisit] ?? 0);
             datasetLabel = 'Daily Visits';
         }
     
@@ -338,12 +360,12 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
     useEffect(() => {
         if ((timeFilter === 'lastWeek' || timeFilter === 'last2Weeks') && dashboardData?.dailyVisits) {
             const numOfDays = timeFilter === 'lastWeek' ? 7 : 14;
-            const newData = generateBarChartData(dashboardData.dailyVisits as DailyVisit[], numOfDays);
+            const newData = generateBarChartData(dashboardData.dailyVisits as DailyVisit[], numOfDays, propertyName);
             setBarChartData(newData);
         } else if (timeFilter === 'lastMonth' && dashboardData?.weeklyVisits) {
-            const newData = generateBarChartDataForMonth(dashboardData.weeklyVisits as WeeklyVisit[], 4);
-            setBarChartData(newData);
-        }    else if (timeFilter === 'last3Months' && dashboardData?.monthlyVisits) {
+                const newData = generateBarChartDataForMonth(dashboardData.weeklyVisits, 4, propertyName as keyof WeeklyVisit);
+                setBarChartData(newData);
+        }  else if (timeFilter === 'last3Months' && dashboardData?.monthlyVisits) {
             const newData = {
                 labels: dashboardData.monthlyVisits.map((_, idx) => `Month ${idx + 1}`),
                 datasets: [{
@@ -386,7 +408,7 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
         }    else {
             setBarChartData(null);
         }
-    }, [timeFilter, dashboardData]);
+    }, [timeFilter, dashboardData, activeOption, propertyName]);
     
 
 
@@ -427,6 +449,7 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
         console.log(activeOption)
         const fetchDataWithFilter = async () => {
             try {
+                setLoading(true);
                 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
                 const response = await fetch(`${apiUrl}/api/dashboard?userId=${userData.userid}&timeFilter=${timeFilter}&activeOption=${activeOption}`);
 
@@ -435,9 +458,12 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
                 }
                 const updatedData = await response.json()
                 setDashboardData(updatedData);
+                setDashboardData(updatedData);
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching dashboard data with filter:', error);
                 showToast('Failed to update dashboard data.', 'error');
+                setLoading(false);
             }
         };
     
@@ -450,7 +476,7 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
     };
 
     useEffect(() => {
-        if (barChartData) {
+        if (barChartData && barChartData.datasets && barChartData.datasets[0]) {
             const doughnutData: DoughnutChartData = {
                 labels: barChartData.labels,
                 datasets: [{
@@ -476,7 +502,6 @@ function Dashboard({ initialDashboardData, userData }: DashboardProps) {
             setDoughnutChartData(null);
         }
     }, [barChartData]);
-
 
     return (
         <FlexDiv>
