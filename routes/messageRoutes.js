@@ -9,7 +9,10 @@ const SentMessage = mongoose.model('sentmessages');
 
 const db = require('../config/keys');
 const { object } = require('prop-types');
-const client = require('twilio')(db.accountSid, db.authToken)
+const client = require('twilio')(db.accountSid, db.authToken);
+
+const { ByteFlow } = require("@byteflow-inc/sdk");
+const sdk = new ByteFlow("DxJfnLUEh-25jQk8c3oCfLnQ2KQ5-xAH@ogna4961TOV-Rt0fedacv");
 
 module.exports = (app) => {
       app.get('/triggered-messages/', async (req, res) => {
@@ -130,11 +133,17 @@ module.exports = (app) => {
           const cusNumberArray = customersToSend.map(customer => `${customer.fullPhoneNumber}`);
   
           cusNumberArray.forEach(thisNumber => {
+            /*
               client.messages.create({
                   body: messageContent,
                   from: `+${user.messagingPhoneNumber}`,
                   to: thisNumber
               }).catch(err => console.log(err));
+              */
+              sdk.sendMessage({
+                message_content: messageContent,
+                destination_number: `+${thisNumber}`
+            }).catch(err => console.log(err));
           });
   
           const newBlastMessage = new BlastMessage({
