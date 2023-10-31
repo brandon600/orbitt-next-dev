@@ -65,6 +65,9 @@ const SentMessage = mongoose.model('sentmessages');
 const Visit = mongoose.model('visits');
 const UpdatedCustomer = mongoose.model('updatedcustomers');
 
+const { ByteFlow } = require("@byteflow-inc/sdk");
+const sdk = new ByteFlow("DxJfnLUEh-25jQk8c3oCfLnQ2KQ5-xAH@ogna4961TOV-Rt0fedacv");
+
 const client = require('twilio')(db.accountSid, db.authToken)
 
 //http://localhost:3000
@@ -114,11 +117,17 @@ const sendMessageToCustomer = async (user, customer, messageTemplate) => {
   const sendNumber = `1${customer.areaCodeNumber}${customer.phoneNumber1}`;
 
   try {
+    /*
     await client.messages.create({
       body: messageText,
       from: `+${user.messagingPhoneNumber}`,
       to: sendNumber
     });
+    */
+    await sdk.sendMessage({
+      message_content: messageText,
+      destination_number: `+${sendNumber}`
+  })
 
     const sentMessage = new SentMessage({
       _id: new mongoose.Types.ObjectId(),
@@ -193,11 +202,17 @@ async function sendMessageToAtRiskCustomer(user, customer, messageTemplate) {
     const sendNumber = `1${customer.areaCodeNumber}${customer.phoneNumber1}`;
 
     try {
+      /*
         await client.messages.create({
             body: messageText,
             from: `+${user.messagingPhoneNumber}`,
             to: sendNumber
         });
+        */
+        await sdk.sendMessage({
+          message_content: messageText,
+          destination_number: `+${sendNumber}`
+      })
 
         const sentMessage = new SentMessage({
             _id: new mongoose.Types.ObjectId(),

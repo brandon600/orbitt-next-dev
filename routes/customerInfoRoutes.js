@@ -13,6 +13,9 @@ const UpdatedCustomer = mongoose.model('updatedcustomers');
 const db = require('../config/keys')
 const client = require('twilio')(db.accountSid, db.authToken)
 
+const { ByteFlow } = require("@byteflow-inc/sdk");
+const sdk = new ByteFlow("DxJfnLUEh-25jQk8c3oCfLnQ2KQ5-xAH@ogna4961TOV-Rt0fedacv");
+
 module.exports = (app) => {
     app.get('/api/customers', (req, res) => {
         const customers = [
@@ -251,11 +254,17 @@ module.exports = (app) => {
             if (mySignUpMessage && mySignUpMessage.active) {
                 const completeSignUpMessage = `Thanks for signing up for the ${companyNameText} loyalty program! You've earned ${signUpRewardValueText} star(s), keep going to earn more rewards. ${mySignUpMessage.textMessageCustomText} ${mySignUpMessage.textMessageDefaultTextEnd2}`;
     
+                /*
                 await client.messages.create({
                     body: completeSignUpMessage,
                     from: `+${user.messagingPhoneNumber}`,
                     to: sendNumber
                 });
+                */
+                await sdk.sendMessage({
+                    message_content: completeSignUpMessage,
+                    destination_number: `+${sendNumber}`
+                })
 
                 console.log('Message sent successfully');
                 let customersReceivedArray = []
@@ -428,11 +437,18 @@ module.exports = (app) => {
                 const sendNumber = customer.fullPhoneNumber;
                 console.log(sendNumber)
 
+                /*
                 await client.messages.create({
                     body: messageContent,
                     from: `+${user.messagingPhoneNumber}`, // assuming userClass has the messagingPhoneNumber
                     to: `+${sendNumber}`
                 });
+                */
+
+                await sdk.sendMessage({
+                    message_content: messageContent,
+                    destination_number: `+${sendNumber}`
+                })
     
                 const newSentMessage = new SentMessage({
                     _id: new mongoose.Types.ObjectId(),
@@ -525,11 +541,17 @@ module.exports = (app) => {
     
                 const sendNumber = customer.fullPhoneNumber;
     
+                /*
                 await client.messages.create({
                     body: messageContent,
                     from: `+${user.messagingPhoneNumber}`, 
                     to: sendNumber
                 });
+                */
+                await sdk.sendMessage({
+                    message_content: messageContent,
+                    destination_number: `+${sendNumber}`
+                })
     
                 const newSentMessage = new SentMessage({
                     _id: new mongoose.Types.ObjectId(),
