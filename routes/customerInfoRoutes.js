@@ -252,7 +252,7 @@ module.exports = (app) => {
             console.log('Triggered Message:', mySignUpMessage);
     
             if (mySignUpMessage && mySignUpMessage.active) {
-                const completeSignUpMessage = `Thanks for signing up for the ${companyNameText} loyalty program! You've earned ${signUpRewardValueText} star(s), keep going to earn more rewards. ${mySignUpMessage.textMessageCustomText} ${mySignUpMessage.textMessageDefaultTextEnd2}`;
+                const completeSignUpMessage = `Thanks for signing up for the ${companyNameText} loyalty program! You've earned ${signUpRewardValueText} point(s), keep going to earn more rewards. ${mySignUpMessage.textMessageCustomText} ${mySignUpMessage.textMessageDefaultTextEnd2}`;
     
                 /*
                 await client.messages.create({
@@ -433,7 +433,7 @@ module.exports = (app) => {
             const myPointsMessage = await TriggeredMessage.findOne({ messageTitle: 'Transaction Message', user: user.userid });
     
             if (myPointsMessage && myPointsMessage.active) {
-                const messageContent = `Congratulations! You've earned ${points} star(s), bringing your total to ${updatedPoints} star(s). ${myPointsMessage.textMessageCustomText} ${myPointsMessage.textMessageDefaultTextEnd1}`;
+                const messageContent = `Congratulations! You've earned ${points} point(s), bringing your total to ${updatedPoints} point(s). ${myPointsMessage.textMessageCustomText} ${myPointsMessage.textMessageDefaultTextEnd1}`;
                 const sendNumber = customer.fullPhoneNumber;
                 console.log(sendNumber)
 
