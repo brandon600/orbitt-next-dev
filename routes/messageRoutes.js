@@ -140,6 +140,7 @@ module.exports = (app) => {
                   to: thisNumber
               }).catch(err => console.log(err));
               */
+             console.log('sending to number sdk');
               sdk.sendMessage({
                 message_content: messageContent,
                 destination_number: `+${thisNumber}`
