@@ -164,6 +164,7 @@ const ActiveDiv = styled.div`
 const EditRewardValue = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: none;
+        cursor: pointer;
 
         p {
             color: ${Colors.shades100};
@@ -255,7 +256,7 @@ const EditRewardValue = styled.div`
                 onClick={handleEditDefaultRewardClick}
             >
                 <Text 
-                    text='Edit Reward Item'
+                    text='Edit'
                 />
             </EditRewardValue>
         </InfoToggleCTA>

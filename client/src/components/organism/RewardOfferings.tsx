@@ -90,10 +90,10 @@ const RewardOfferings: React.FC<RewardOfferingsProps> = ({ rewardsData, onPendin
         <HeadingPlusSubheading>
             <h3
             >
-            Offerings
+            Reward Offers
             </h3>
             <Text
-                text='Create & Manage Rewards'
+                text='Create & Manage Reward Offers'
             />
         </HeadingPlusSubheading>
         <RewardOfferingList>
