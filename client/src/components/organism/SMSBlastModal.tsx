@@ -7,11 +7,21 @@ import ModalTop from '../atoms/ModalTop';
 import Textarea from '../atoms/Textarea';
 import Button from '../atoms/Button';
 import { useStore, AppState } from '../../store/store'; // Import your store
+import DropdownField, { DropdownOption } from '../atoms/DropdownField';
 
 type SMSBlastModalProps = {
     onClose: () => void;
     selectedCustomers: string[];
 }
+
+const tokenOptions: DropdownOption[] = [
+    { label: "Select a token", value: "" },
+    { label: "First Name", value: "{{first_name}}" },
+    { label: "Last Name", value: "{{last_name}}" },
+    { label: "Current Reward Number", value: "{{current_reward_number}}" },
+    { label: "Total Rewards Earned", value: "{{total_rewards_earned}}" },
+    { label: "Total Visits", value: "{{total_visits}}" },
+  ];
 
 const BlastModalContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -99,9 +109,9 @@ const BlastTextareaContainer = styled.div`
 
 const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomers }) => {
     const [blastMessage, setBlastMessage] = useState('');
-    const [availableTokens, setAvailableTokens] = useState(['{{firstName}}', '{{lastName}}', '{{email}}']); 
     const [cursorPosition, setCursorPosition] = useState(0);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    const [selectedToken, setSelectedToken] = useState('');
     const { showToast } = useStore((state: AppState) => ({ showToast: state.showToast }));
 
     const handleSendMesssage = async () => {
@@ -155,6 +165,13 @@ const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomer
         }
     };
 
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const token = event.target.value;
+        handleTokenClick(token);
+        // Reset the select dropdown to the placeholder after inserting a token
+        setSelectedToken('');
+      };    
+
     const handleTextareaChange = (newValue: string) => {
         setBlastMessage(newValue);
     };
@@ -170,6 +187,10 @@ const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomer
         }
     };
   
+    const handleDropdownChange = (value: string) => {
+        handleTokenClick(value); // Insert the token where the cursor is
+        setSelectedToken(''); // Reset the dropdown to the placeholder value
+      };
 
     return (
       <BlastModalContainer>
@@ -183,13 +204,13 @@ const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomer
                     text={`You've selected ${selectedCustomers.length} customer(s) to send this SMS Blast message to`}
                 />
             </BlastModalLabel>
-            <div>
-                {availableTokens.map(token => (
-                    <button key={token} onClick={() => handleTokenClick(token)}>
-                        {token}
-                    </button>
-                ))}
-            </div>
+            <DropdownField 
+                value={selectedToken} 
+                onChange={handleDropdownChange}
+                label="" 
+                useDefaultDropdown={false} 
+                options={tokenOptions}
+            />
             <BlastTextareaContainer>
                 <Textarea 
                     ref={textAreaRef}
