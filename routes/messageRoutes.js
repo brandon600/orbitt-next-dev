@@ -127,12 +127,22 @@ module.exports = (app) => {
               user: user.userid
           });
 
+          if (!customersToSend.length) {
+            return res.status(404).send({ message: 'No customers found.' });
+        }
+
           const objectIdArray = customersToSend.map(customer => customer._id);
   
           // Generate phone numbers from the customers
           const cusNumberArray = customersToSend.map(customer => `${customer.fullPhoneNumber}`);
   
-          cusNumberArray.forEach(thisNumber => {
+          cusNumberArray.forEach((thisNumber, index) => {
+            const customer = customersToSend[index];
+            let personalizedMessage = messageContent;
+            personalizedMessage = personalizedMessage.replace(/{{firstName}}/g, customer.firstName);
+            personalizedMessage = personalizedMessage.replace(/{{lastName}}/g, customer.lastName);
+
+            console.log(`Sending to number ${thisNumber}: ${personalizedMessage}`);
             /*
               client.messages.create({
                   body: messageContent,
@@ -142,10 +152,11 @@ module.exports = (app) => {
               */
              console.log('sending to number sdk');
               sdk.sendMessage({
-                message_content: messageContent,
+                message_content: personalizedMessage,
                 destination_number: `+${thisNumber}`
             }).catch(err => console.log(err));
           });
+
   
           const newBlastMessage = new BlastMessage({
               _id: new mongoose.Types.ObjectId(),
