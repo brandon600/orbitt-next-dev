@@ -139,8 +139,11 @@ module.exports = (app) => {
           cusNumberArray.forEach((thisNumber, index) => {
             const customer = customersToSend[index];
             let personalizedMessage = messageContent;
-            personalizedMessage = personalizedMessage.replace(/{{firstName}}/g, customer.firstName);
-            personalizedMessage = personalizedMessage.replace(/{{lastName}}/g, customer.lastName);
+            personalizedMessage = personalizedMessage.replace(/{{first_name}}/g, customer.firstName);
+            personalizedMessage = personalizedMessage.replace(/{{last_name}}/g, customer.lastName);
+            personalizedMessage = personalizedMessage.replace(/{{current_reward_number}}/g, customer.rewardNumber);
+            personalizedMessage = personalizedMessage.replace(/{{total_rewards_earned}}/g, customer.starsEarned);
+            personalizedMessage = personalizedMessage.replace(/{{total_visits}}/g, customer.totalVisits);
 
             console.log(`Sending to number ${thisNumber}: ${personalizedMessage}`);
             /*
