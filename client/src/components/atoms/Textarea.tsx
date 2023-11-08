@@ -13,6 +13,8 @@ interface TextareaProps extends TextareaStyleProps {
   label?: string;
   value: string;
   onChange: (value: string) => void;
+  onKeyUp?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLTextAreaElement>) => void;
   required?: boolean; // Add a prop to make the input required
   placeholder?: string; // Add the 'placeholder' prop
   disabled?: boolean;
@@ -76,7 +78,7 @@ const TextareaTextarea = styled.textarea`
 
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, value, onChange, required, placeholder, disabled, height }, ref) => {
+  ({ label, value, onChange, onKeyUp, onClick, required, placeholder, disabled, height }, ref) => {
     return (
       <TextareaContainer height={height}>
         {label && (
@@ -88,6 +90,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         <TextareaTextarea
           value={value}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onChange(e.target.value)}
+          onKeyUp={onKeyUp}
+          onClick={onClick}
           required={required}
           placeholder={placeholder}
           disabled={disabled}

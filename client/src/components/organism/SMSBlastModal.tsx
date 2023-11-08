@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import Colors from '../../constants/Colors';
 import StyledMediaQuery from '../../constants/StyledMediaQuery';
@@ -99,6 +99,9 @@ const BlastTextareaContainer = styled.div`
 
 const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomers }) => {
     const [blastMessage, setBlastMessage] = useState('');
+    const [availableTokens, setAvailableTokens] = useState(['{{firstName}}', '{{lastName}}', '{{email}}']); 
+    const [cursorPosition, setCursorPosition] = useState(0);
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const { showToast } = useStore((state: AppState) => ({ showToast: state.showToast }));
 
     const handleSendMesssage = async () => {
@@ -135,6 +138,39 @@ const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomer
         }
     }
 
+    const handleTokenClick = (token: string) => {
+        const messageBeforeCursor = blastMessage.substring(0, cursorPosition);
+        const messageAfterCursor = blastMessage.substring(cursorPosition);
+        const newMessage = `${messageBeforeCursor}${token}${messageAfterCursor}`;
+        setBlastMessage(newMessage);
+
+        // Move cursor position after token
+        const newCursorPosition = cursorPosition + token.length;
+        setCursorPosition(newCursorPosition);
+
+        // Focus the textarea and set the new cursor position
+        if (textAreaRef.current) {
+            textAreaRef.current.focus();
+            textAreaRef.current.setSelectionRange(newCursorPosition, newCursorPosition);
+        }
+    };
+
+    const handleTextareaChange = (newValue: string) => {
+        setBlastMessage(newValue);
+    };
+
+    const handleTextareaClick = (event: React.MouseEvent<HTMLTextAreaElement, MouseEvent>) => {
+        setCursorPosition(event.currentTarget.selectionStart);
+    };
+
+
+    const handleKeyUp = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (textAreaRef.current) {
+        setCursorPosition(textAreaRef.current.selectionStart);
+        }
+    };
+  
+
     return (
       <BlastModalContainer>
         <ModalTop
@@ -147,10 +183,20 @@ const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomer
                     text={`You've selected ${selectedCustomers.length} customer(s) to send this SMS Blast message to`}
                 />
             </BlastModalLabel>
+            <div>
+                {availableTokens.map(token => (
+                    <button key={token} onClick={() => handleTokenClick(token)}>
+                        {token}
+                    </button>
+                ))}
+            </div>
             <BlastTextareaContainer>
                 <Textarea 
+                    ref={textAreaRef}
                     value={blastMessage}
-                    onChange={(value) => setBlastMessage(value)}
+                    onChange={handleTextareaChange}
+                    onKeyUp={handleKeyUp}
+                    onClick={handleTextareaClick}
                     height='100%'
                 />
             </BlastTextareaContainer>
