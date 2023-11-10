@@ -171,24 +171,6 @@ module.exports = (app) => {
             const originalSignUpReward = await OutboundReward.findOne(filter);
 
 
-           //Remove later
-           try {
-            // Update all documents in the Customer collection
-            const updateResult = await Customer.updateMany(
-                {}, // Empty filter means "match all documents"
-                { $set: { receivedMessages: [] } } // Replace 'newField' and 'defaultValue' as needed
-            );
-    
-            console.log(`${updateResult.matchedCount} document(s) matched the filter, updated ${updateResult.modifiedCount} document(s)`);
-            console.log(updatedCustomers);
-        } catch (error) {
-            console.error('Error updating documents:', error);
-        }
-
-
-
-
-
             console.log('Filter for OutboundReward:', filter);
             console.log('Original SignUp Reward:', originalSignUpReward);
     
