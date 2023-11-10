@@ -16,10 +16,11 @@ type SMSBlastModalProps = {
 
 const tokenOptions: DropdownOption[] = [
     { label: "Select a token", value: "" },
+    { label: "Business Name", value: "{{business_name}}" },
     { label: "First Name", value: "{{first_name}}" },
     { label: "Last Name", value: "{{last_name}}" },
-    { label: "Current Reward Number", value: "{{current_reward_number}}" },
-    { label: "Total Rewards Earned", value: "{{total_rewards_earned}}" },
+    { label: "Current Point Total", value: "{{current_point_total}}" },
+    { label: "Total Points Earned", value: "{{total_points_earned}}" },
     { label: "Total Visits", value: "{{total_visits}}" },
   ];
 
@@ -105,7 +106,6 @@ const BlastTextareaContainer = styled.div`
         height: 100%;
     }
 `
-
 
 const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomers }) => {
     const [blastMessage, setBlastMessage] = useState('');

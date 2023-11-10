@@ -141,8 +141,8 @@ module.exports = (app) => {
             let personalizedMessage = messageContent;
             personalizedMessage = personalizedMessage.replace(/{{first_name}}/g, customer.firstName);
             personalizedMessage = personalizedMessage.replace(/{{last_name}}/g, customer.lastName);
-            personalizedMessage = personalizedMessage.replace(/{{current_reward_number}}/g, customer.rewardNumber);
-            personalizedMessage = personalizedMessage.replace(/{{total_rewards_earned}}/g, customer.starsEarned);
+            personalizedMessage = personalizedMessage.replace(/{{current_point_total}}/g, customer.rewardNumber);
+            personalizedMessage = personalizedMessage.replace(/{{total_points_earned}}/g, customer.starsEarned);
             personalizedMessage = personalizedMessage.replace(/{{total_visits}}/g, customer.totalVisits);
 
             console.log(`Sending to number ${thisNumber}: ${personalizedMessage}`);

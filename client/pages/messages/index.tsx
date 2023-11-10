@@ -16,12 +16,72 @@ import { useMemberAuth } from '../../src/util/global/globalHooks';
 import { GetServerSidePropsContext } from 'next';
 import Cookie from 'js-cookie';
 import { FlexDiv, MessagesPageTitle, MessageCellsContainer } from '../../src/pagesource/messages/styles';
+import { DropdownOption } from '@/components/atoms/DropdownField';
 
 
 interface MessagesProps {
     userData: UserData;
     triggeredMessagesData: TriggeredMessageData[];
 }
+
+
+const transactionTokenOptions: DropdownOption[] = [
+  { label: "Select a token", value: "" },
+  { label: "Business Name", value: "{{business_name}}" },
+  { label: "First Name", value: "{{first_name}}" },
+  { label: "Last Name", value: "{{last_name}}" },
+  { label: "Current Point Total", value: "{{current_point_total}}" },
+  { label: "New Point Total", value: "{{new_point_total}}" },
+  { label: "Total Points Earned", value: "{{total_points_earned}}" },
+  { label: "New Total Points Earned", value: "{{new_total_points_earned}}" },
+  { label: "Total Visits", value: "{{total_visits}}" },
+  { label: "Current Points Given", value: "{{current_points_given}}" },
+];
+
+const signUpTokenOptions: DropdownOption[] = [
+  { label: "Select a token", value: "" },
+  { label: "Business Name", value: "{{business_name}}" },
+  { label: "First Name", value: "{{first_name}}" },
+  { label: "Last Name", value: "{{last_name}}" },
+  { label: "Current Points Given", value: "{{current_points_given}}" },
+];
+
+const atRiskTokenOptions: DropdownOption[] = [
+  { label: "Select a token", value: "" },
+  { label: "Business Name", value: "{{business_name}}" },
+  { label: "First Name", value: "{{first_name}}" },
+  { label: "Last Name", value: "{{last_name}}" },
+  { label: "Current Point Total", value: "{{current_point_total}}" },
+  { label: "Total Points Earned", value: "{{total_points_earned}}" },
+  { label: "Total Visits", value: "{{total_visits}}" },
+];
+
+
+const birthdayTokenOptions: DropdownOption[] = [
+  { label: "Select a token", value: "" },
+  { label: "Business Name", value: "{{business_name}}" },
+  { label: "First Name", value: "{{first_name}}" },
+  { label: "Last Name", value: "{{last_name}}" },
+  { label: "Current Point Total", value: "{{current_point_total}}" },
+  { label: "New Point Total", value: "{{new_point_total}}" },
+  { label: "Total Points Earned", value: "{{total_points_earned}}" },
+  { label: "New Total Points Earned", value: "{{new_total_points_earned}}" },
+  { label: "Total Visits", value: "{{total_visits}}" },
+  { label: "Birthday Point Number", value: "{{birthday_point_number}}" },
+];
+
+const rewardTokenOptions: DropdownOption[] = [
+  { label: "Select a token", value: "" },
+  { label: "Business Name", value: "{{business_name}}" },
+  { label: "First Name", value: "{{first_name}}" },
+  { label: "Last Name", value: "{{last_name}}" },
+  { label: "Current Point Total", value: "{{current_point_total}}" },
+  { label: "New Point Total", value: "{{new_point_total}}" },
+  { label: "Total Points Earned", value: "{{total_points_earned}}" },
+  { label: "Total Visits", value: "{{total_visits}}" },
+  { label: "Current Points Redeemed", value: "{{current_points_redeemed}}" },
+  { label: "Name of Reward Redeemed", value: "{{reward_name}}" },
+];
 
  export async function getServerSideProps(context: GetServerSidePropsContext) {
   const userCookie = context.req.cookies.user;
@@ -79,6 +139,14 @@ interface MessagesProps {
         };
     }
 }
+
+const tokenOptionsMapping: Record<string, DropdownOption[]> = {
+  1: transactionTokenOptions,
+  2: signUpTokenOptions,
+  3: atRiskTokenOptions,
+  4: birthdayTokenOptions,
+  5: rewardTokenOptions
+};
 
 function Messages( { triggeredMessagesData: initialTriggeredMessagesData, userData }: MessagesProps) {
     const { data, fetchData, toast, showToast, hideToast } = useStore();
@@ -197,7 +265,6 @@ const storeData = useStore.getState(); // Get the current state of the store
 console.log('Store Data:', storeData); // Log the entire store data
 console.log(triggeredMessagesData);
 
-
     return (
         <FlexDiv>
             <AnimatePresence>
@@ -219,36 +286,40 @@ console.log(triggeredMessagesData);
                 <Text text='Messages' />
             </MessagesPageTitle>
             <MessageCellsContainer>
-                {triggeredMessagesData.map((
-				        { messageNumberId: triggeredMessageNumberId, 
-				          messageTitle: triggeredMessageTitle, 
-                  messageSubtitle: triggeredMessageSubtitle,
-				          textMessageDefaultTextStart: triggeredMessageDefaultStart,
-                  textMessageCustomText: triggeredMessageCustomText,
-                  textMessageDefaultTextEnd1: triggeredMessageDefaultEnd1,
-                  textMessageDefaultTextEnd2: triggeredMessageDefaultEnd2,
-                  active: triggeredMessageActive,
-				        }, index) => (
+            {triggeredMessagesData.map(({
+              messageNumberId: triggeredMessageNumberId,
+              messageTitle: triggeredMessageTitle,
+              messageSubtitle: triggeredMessageSubtitle,
+              textMessageDefaultTextStart: triggeredMessageDefaultStart,
+              textMessageCustomText: triggeredMessageCustomText,
+              textMessageDefaultTextEnd1: triggeredMessageDefaultEnd1,
+              textMessageDefaultTextEnd2: triggeredMessageDefaultEnd2,
+              active: triggeredMessageActive
+            }, index) => {
+              // Determine the correct dropdown options for this message
+              const dropdownOptions = tokenOptionsMapping[triggeredMessageNumberId] || []; // Fallback to an empty array if not found
+
+              return (
                 <MessageCell
-                        key={triggeredMessageNumberId} // Make sure to provide a unique key for each item
-                        // Pass the data to the RewardItem component as props
-                        index={index}
-                        messageNumberId={triggeredMessageNumberId}
-                        messageTitle={triggeredMessageTitle}
-                        messageSubtitle={triggeredMessageSubtitle}
-                        textMessageDefaultTextStart={triggeredMessageDefaultStart}
-                        textMessageCustomText={triggeredMessageCustomText}
-                        textMessageDefaultTextEnd1={triggeredMessageDefaultEnd1}
-                        textMessageDefaultTextEnd2={triggeredMessageDefaultEnd2}
-                        active={currentTriggeredMessageToggles[index]}
-                        onTriggeredMessageToggleChange={handleTriggeredMessagePendingChange}
-                        originalTriggeredMessageValue={originalTriggeredMessageToggles[index]}
-                        editingIndex={editingIndex}
-                        setEditingIndex={setEditingIndex}
-                        hasPendingMessageChanges={hasPendingMessageChanges}
-                        // Add other props as needed
-                    />
-            ))}
+                  key={triggeredMessageNumberId}
+                  index={index}
+                  messageNumberId={triggeredMessageNumberId}
+                  messageTitle={triggeredMessageTitle}
+                  messageSubtitle={triggeredMessageSubtitle}
+                  textMessageDefaultTextStart={triggeredMessageDefaultStart}
+                  textMessageCustomText={triggeredMessageCustomText}
+                  textMessageDefaultTextEnd1={triggeredMessageDefaultEnd1}
+                  textMessageDefaultTextEnd2={triggeredMessageDefaultEnd2}
+                  active={currentTriggeredMessageToggles[index]}
+                  onTriggeredMessageToggleChange={handleTriggeredMessagePendingChange}
+                  originalTriggeredMessageValue={originalTriggeredMessageToggles[index]}
+                  editingIndex={editingIndex}
+                  setEditingIndex={setEditingIndex}
+                  hasPendingMessageChanges={hasPendingMessageChanges}
+                  tokenOptions={dropdownOptions} // Pass the correct dropdown options
+                />
+              );
+            })}
             </MessageCellsContainer>
         </FlexDiv>
     );

@@ -112,20 +112,37 @@ const getCurrentDate = () => {
   return `${todayMonth}-${todayDay}`;
 };
 
-const sendMessageToCustomer = async (user, customer, messageTemplate) => {
-  const messageText = `Hi ${customer.firstName}! ${messageTemplate.textMessageCustomText}`;
+const sendBirthdayMessageToCustomer = async (user, customer, messageTemplate, rewardValue) => {
   const sendNumber = `1${customer.areaCodeNumber}${customer.phoneNumber1}`;
+  
+  const newPointTotal = customer.rewardNumber + rewardValue;
+  const newTotalPointsEarned = customer.starsEarned + rewardValue;
+
+  let personalizedMessage = messageTemplate.textMessageCustomText;
+
+  personalizedMessage = personalizedMessage.replace(/{{business_name}}/g, user.companyName);
+  personalizedMessage = personalizedMessage.replace(/{{first_name}}/g, customer.firstName);
+  personalizedMessage = personalizedMessage.replace(/{{last_name}}/g, customer.lastName);
+  personalizedMessage = personalizedMessage.replace(/{{current_point_total}}/g, customer.rewardNumber.toString());
+  personalizedMessage = personalizedMessage.replace(/{{new_point_total}}/g, newPointTotal.toString());
+  personalizedMessage = personalizedMessage.replace(/{{total_points_earned}}/g, customer.starsEarned.toString());
+  personalizedMessage = personalizedMessage.replace(/{{new_total_points_earned}}/g, newTotalPointsEarned.toString());
+  personalizedMessage = personalizedMessage.replace(/{{total_visits}}/g, customer.totalVisits.toString());
+  personalizedMessage = personalizedMessage.replace(/{{birthday_point_number}}/g, rewardValue.toString());
+
+  const messageContent = `${personalizedMessage}`;
+
 
   try {
     /*
     await client.messages.create({
-      body: messageText,
+      body: messageContent,
       from: `+${user.messagingPhoneNumber}`,
       to: sendNumber
     });
     */
     await sdk.sendMessage({
-      message_content: messageText,
+      message_content: messageContent,
       destination_number: `+${sendNumber}`
   })
 
@@ -135,7 +152,7 @@ const sendMessageToCustomer = async (user, customer, messageTemplate) => {
       user: user.userid,
       date: Date.now(),
       messageTitle: messageTemplate.messageTitle,
-      messageContent: messageText,
+      messageContent: messageContent,
       messageDelay: 0,
       userClass: user,
       userMemberstackId: user.memberstackId,
@@ -176,7 +193,7 @@ async function findBirthdayUsersAndCustomers() {
           };
           await Customer.updateOne(updateQuery, updatedValues);
 
-          await sendMessageToCustomer(user, customer, birthdayMessageTemplate);
+          await sendBirthdayMessageToCustomer(user, customer, birthdayMessageTemplate, rewardValue);
         }
 
         const userUpdateQuery = { userid: user.userid };
@@ -198,19 +215,29 @@ async function findBirthdayUsersAndCustomers() {
 const SIXTY_DAYS_IN_MS = 60 * 24 * 60 * 60 * 1000; // 60 days in milliseconds
 
 async function sendMessageToAtRiskCustomer(user, customer, messageTemplate) {
-    const messageText = `Hi ${customer.firstName}! ${messageTemplate.textMessageCustomText}`;
     const sendNumber = `1${customer.areaCodeNumber}${customer.phoneNumber1}`;
+
+    let personalizedMessage = messageTemplate.textMessageCustomText;
+
+    personalizedMessage = personalizedMessage.replace(/{{business_name}}/g, user.companyName);
+    personalizedMessage = personalizedMessage.replace(/{{first_name}}/g, customer.firstName);
+    personalizedMessage = personalizedMessage.replace(/{{last_name}}/g, customer.lastName);
+    personalizedMessage = personalizedMessage.replace(/{{current_point_total}}/g, customer.rewardNumber.toString());
+    personalizedMessage = personalizedMessage.replace(/{{total_points_earned}}/g, customer.starsEarned.toString());
+    personalizedMessage = personalizedMessage.replace(/{{total_visits}}/g, customer.totalVisits.toString());
+  
+    const messageContent = `${personalizedMessage}`;
 
     try {
       /*
         await client.messages.create({
-            body: messageText,
+            body: messageContent,
             from: `+${user.messagingPhoneNumber}`,
             to: sendNumber
         });
         */
         await sdk.sendMessage({
-          message_content: messageText,
+          message_content: messageContent,
           destination_number: `+${sendNumber}`
       })
 
@@ -220,7 +247,7 @@ async function sendMessageToAtRiskCustomer(user, customer, messageTemplate) {
             user: user.userid,
             date: Date.now(),
             messageTitle: messageTemplate.messageTitle,
-            messageContent: messageText,
+            messageContent: messageContent,
             messageDelay: 0,
             userClass: user,
             userMemberstackId: user.memberstackId,
@@ -278,7 +305,8 @@ async function findAtRiskUsersAndCustomers() {
 
 
 
-cron.schedule('0 9 * * *', async () => {
+//cron.schedule('0 9 * * *', async () => {
+  cron.schedule('* * * * *', async () => {
     findBirthdayUsersAndCustomers();
     findAtRiskUsersAndCustomers();
  });
