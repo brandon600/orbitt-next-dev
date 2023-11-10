@@ -239,21 +239,6 @@ module.exports = (app) => {
   
           await newBlastMessage.save();
   
-          const newSentMessage = new SentMessage({
-              _id: new mongoose.Types.ObjectId(),
-              messageNumberId: 99,
-              user: user,
-              userMemberstackId: user.memberstackId,
-              date: uniqid,
-              messageTitle: 'Blast Message',
-              messageContent: messageContent,
-              messageDelay: 0,
-              userClass: user,
-              customersReceived: objectIdArray,
-          });
-  
-          await newSentMessage.save();
-  
           // Update user stats
           await User.updateOne({ userid: user.userid }, {
               $inc: {

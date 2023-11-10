@@ -156,7 +156,7 @@ const sendBirthdayMessageToCustomer = async (user, customer, messageTemplate, re
       messageDelay: 0,
       userClass: user,
       userMemberstackId: user.memberstackId,
-      customersReceived: [customer]
+      customerReceived: customer
     });
     await sentMessage.save();
   } catch (error) {
@@ -251,7 +251,7 @@ async function sendMessageToAtRiskCustomer(user, customer, messageTemplate) {
             messageDelay: 0,
             userClass: user,
             userMemberstackId: user.memberstackId,
-            customersReceived: [customer]
+            customerReceived: customer
         });
         await sentMessage.save();
     } catch (error) {

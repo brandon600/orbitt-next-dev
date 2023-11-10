@@ -2,7 +2,7 @@ import { CustomerData } from "./CustomerData";
 
 export interface SentMessageData {
     _id: string;
-    customersReceived: CustomerData[];
+    customerReceived: CustomerData;
     messageNumberId: number;
     user: string;
     userMemberstackId: string;

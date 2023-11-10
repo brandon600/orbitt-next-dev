@@ -137,6 +137,8 @@ module.exports = (app) => {
                         matchingDay.count += entry.count;
                     }
                 });
+
+                //Total points given is the only one with the special treatment because we have to look through a deeper level of the object and not just take the count or number.
         
                 // Depending on activeOption, set the response
                 if (activeOption === 'Total Points Given') {
