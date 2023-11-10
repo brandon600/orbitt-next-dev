@@ -14,6 +14,32 @@ const client = require('twilio')(db.accountSid, db.authToken);
 const { ByteFlow } = require("@byteflow-inc/sdk");
 const sdk = new ByteFlow("DxJfnLUEh-25jQk8c3oCfLnQ2KQ5-xAH@ogna4961TOV-Rt0fedacv");
 
+/*
+const SERVICE_PLAN_ID = process.env.SINCH_SERVICE_PLAN_ID;
+const API_TOKEN = process.env.SINCH_API_TOKEN;
+const SINCH_NUMBER = process.env.SINCH_VIRTUAL_NUMBER;
+
+async function sendSinchSMS(toNumber, messageContent) {
+  const response = await fetch(`https://us.sms.api.sinch.com/xms/v1/${SERVICE_PLAN_ID}/batches`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${API_TOKEN}`
+    },
+    body: JSON.stringify({
+      from: SINCH_NUMBER,
+      to: [toNumber],
+      body: messageContent
+    })
+  });
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
+*/
+
+
 module.exports = (app) => {
       app.get('/triggered-messages/', async (req, res) => {
         const { userId } = req.query;
@@ -83,6 +109,9 @@ module.exports = (app) => {
         }
       })  
 
+
+
+
       app.put('/update-triggered-message-content', async (req, res) => {
         const { triggeredMessageDetails, user } = req.body;
     
@@ -132,11 +161,33 @@ module.exports = (app) => {
         }
 
           const objectIdArray = customersToSend.map(customer => customer._id);
+
+
+          //NEW
+          // Function to send SMS using Sinch
+          /*
+        const sendSinchSMS = async (toNumber, personalizedMessage) => {
+          const response = await fetch(`https://us.sms.api.sinch.com/xms/v1/${SERVICE_PLAN_ID}/batches`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${API_TOKEN}`
+              },
+              body: JSON.stringify({
+                  from: SINCH_NUMBER,
+                  to: [toNumber],
+                  body: personalizedMessage
+              })
+          });
+          return response.json();
+      };
+      */
+
   
           // Generate phone numbers from the customers
           const cusNumberArray = customersToSend.map(customer => `${customer.fullPhoneNumber}`);
   
-          cusNumberArray.forEach((thisNumber, index) => {
+          cusNumberArray.forEach(async(thisNumber, index) => {
             const customer = customersToSend[index];
             let personalizedMessage = messageContent;
             personalizedMessage = personalizedMessage.replace(/{{first_name}}/g, customer.firstName);
@@ -153,11 +204,22 @@ module.exports = (app) => {
                   to: thisNumber
               }).catch(err => console.log(err));
               */
+
              console.log('sending to number sdk');
               sdk.sendMessage({
                 message_content: personalizedMessage,
                 destination_number: `+${thisNumber}`
             }).catch(err => console.log(err));
+
+            /*
+            try {
+              const sinchResponse = await sendSinchSMS(customer.fullPhoneNumber, personalizedMessage);
+              console.log('Sinch Response:', sinchResponse);
+          } catch (error) {
+              console.error("Error sending message with Sinch:", error);
+          }
+          */
+
           });
 
   
@@ -212,6 +274,5 @@ module.exports = (app) => {
           res.status(500).send({ message: 'Error sending SMS blast.' });
       }
   });
-
 
 }
