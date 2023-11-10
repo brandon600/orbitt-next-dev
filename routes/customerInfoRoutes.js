@@ -252,8 +252,14 @@ module.exports = (app) => {
             console.log('Triggered Message:', mySignUpMessage);
     
             if (mySignUpMessage && mySignUpMessage.active) {
-                const completeSignUpMessage = `Thanks for signing up for the ${companyNameText} loyalty program! You've earned ${signUpRewardValueText} point(s), keep going to earn more rewards. ${mySignUpMessage.textMessageCustomText} ${mySignUpMessage.textMessageDefaultTextEnd2}`;
-    
+                let personalizedMessage = mySignUpMessage.textMessageCustomText;
+
+                personalizedMessage = personalizedMessage.replace(/{{business_name}}/g, user.companyName);
+                personalizedMessage = personalizedMessage.replace(/{{first_name}}/g, customerFirstName);
+                personalizedMessage = personalizedMessage.replace(/{{last_name}}/g, customerLastName);
+                personalizedMessage = personalizedMessage.replace(/{{current_points_given}}/g, signUpRewardValueText.toString());
+
+                const completeSignUpMessage = `${personalizedMessage}`;
                 /*
                 await client.messages.create({
                     body: completeSignUpMessage,
@@ -402,6 +408,7 @@ module.exports = (app) => {
             const currentPoints = customer.rewardNumber;
             const updatedPoints = currentPoints + parseInt(points); 
             const updatedStarsEarned = customer.starsEarned + parseInt(points);
+            const oldStarsEarned = customer.starsEarned;
     
             customer.rewardNumber = updatedPoints;
             customer.starsEarned = updatedStarsEarned
@@ -436,14 +443,15 @@ module.exports = (app) => {
 
                 let personalizedMessage = myPointsMessage.textMessageCustomText;
 
+                personalizedMessage = personalizedMessage.replace(/{{business_name}}/g, user.companyName);
                 personalizedMessage = personalizedMessage.replace(/{{first_name}}/g, customer.firstName);
                 personalizedMessage = personalizedMessage.replace(/{{last_name}}/g, customer.lastName);
-                personalizedMessage = personalizedMessage.replace(/{{current_reward_number}}/g, updatedPoints.toString());
-                personalizedMessage = personalizedMessage.replace(/{{total_rewards_earned}}/g, updatedStarsEarned.toString());
-                personalizedMessage = personalizedMessage.replace(/{{total_visits}}/g, customer.totalVisits.toString());
-
-                personalizedMessage = personalizedMessage.replace(/{{current_points_given}}/g, points.toString());
+                personalizedMessage = personalizedMessage.replace(/{{current_point_total}}/g, currentPoints.toString());
                 personalizedMessage = personalizedMessage.replace(/{{new_point_total}}/g, updatedPoints.toString());
+                personalizedMessage = personalizedMessage.replace(/{{total_points_earned}}/g, oldStarsEarned.toString());
+                personalizedMessage = personalizedMessage.replace(/{{new_total_points_earned}}/g, updatedStarsEarned.toString());
+                personalizedMessage = personalizedMessage.replace(/{{total_visits}}/g, customer.totalVisits.toString());
+                personalizedMessage = personalizedMessage.replace(/{{current_points_given}}/g, points.toString());
 
                 const messageContent = `${personalizedMessage}`;
 
@@ -518,7 +526,7 @@ module.exports = (app) => {
             if (currentPoints < reward.rewardCost) {
                 return res.status(400).send({ success: false, message: 'Insufficient reward points.' });
             }
-    
+
             const updatedPoints = currentPoints - reward.rewardCost;
             customer.rewardNumber = updatedPoints;
             customer.totalVisits = customer.totalVisits + 1;
@@ -550,8 +558,20 @@ module.exports = (app) => {
             const myRedeemMessage = await TriggeredMessage.findOne({ messageTitle: 'Reward Redeemed Message', user: user.userid }); // This might need a different title, update accordingly
     
             if (myRedeemMessage && myRedeemMessage.active) {
-                const messageContent = `Thank you for being a loyal customer. You've just redeemed ${reward.rewardCost} point(s), bringing your new total to ${updatedPoints} points. ${myRedeemMessage.textMessageCustomText} ${myRedeemMessage.textMessageDefaultTextEnd1}`;
-    
+                let personalizedMessage = myRedeemMessage.textMessageCustomText;
+
+                personalizedMessage = personalizedMessage.replace(/{{business_name}}/g, user.companyName);
+                personalizedMessage = personalizedMessage.replace(/{{first_name}}/g, customer.firstName);
+                personalizedMessage = personalizedMessage.replace(/{{last_name}}/g, customer.lastName);
+                personalizedMessage = personalizedMessage.replace(/{{current_point_total}}/g, currentPoints.toString());
+                personalizedMessage = personalizedMessage.replace(/{{new_point_total}}/g, updatedPoints.toString());
+                personalizedMessage = personalizedMessage.replace(/{{total_points_earned}}/g, customer.starsEarned.toString());
+                personalizedMessage = personalizedMessage.replace(/{{total_visits}}/g, customer.totalVisits.toString());
+                personalizedMessage = personalizedMessage.replace(/{{current_points_redeemed}}/g, reward.rewardCost.toString());
+                personalizedMessage = personalizedMessage.replace(/{{reward_name}}/g, reward.rewardName);
+
+                const messageContent = `${personalizedMessage}`;
+
                 const sendNumber = customer.fullPhoneNumber;
     
                 /*

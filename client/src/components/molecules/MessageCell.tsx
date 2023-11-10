@@ -16,6 +16,7 @@ interface MessageCellProps extends TriggeredMessageData {
     editingIndex: number | null; // Add this property
     hasPendingMessageChanges: boolean; // And this property
     setEditingIndex: (index: number | null) => void;
+    tokenOptions: DropdownOption[];
 }
 
 const tokenOptions: DropdownOption[] = [
@@ -27,6 +28,65 @@ const tokenOptions: DropdownOption[] = [
     { label: "Total Visits", value: "{{total_visits}}" },
     { label: "Current Points Given", value: "{{current_points_given}}" },
     { label: "New Point Total", value: "{{new_point_total}}" },
+  ];
+
+  const transactionTokenOptions: DropdownOption[] = [
+    { label: "Select a token", value: "" },
+    { label: "Business Name", value: "{{business_name}}" },
+    { label: "First Name", value: "{{first_name}}" },
+    { label: "Last Name", value: "{{last_name}}" },
+    { label: "Current Point Total", value: "{{current_point_total}}" },
+    { label: "New Point Total", value: "{{new_point_total}}" },
+    { label: "Total Points Earned", value: "{{total_points_earned}}" },
+    { label: "New Total Points Earned", value: "{{new_total_points_earned}}" },
+    { label: "Total Visits", value: "{{total_visits}}" },
+    { label: "Current Points Given", value: "{{current_points_given}}" },
+  ];
+
+  const signUpTokenOptions: DropdownOption[] = [
+    { label: "Select a token", value: "" },
+    { label: "Business Name", value: "{{business_name}}" },
+    { label: "First Name", value: "{{first_name}}" },
+    { label: "Last Name", value: "{{last_name}}" },
+    { label: "Current Points Given", value: "{{current_points_given}}" },
+  ];
+
+  const atRiskTokenOptions: DropdownOption[] = [
+    { label: "Select a token", value: "" },
+    { label: "Business Name", value: "{{business_name}}" },
+    { label: "First Name", value: "{{first_name}}" },
+    { label: "Last Name", value: "{{last_name}}" },
+    { label: "Current Point Total", value: "{{current_point_total}}" },
+    { label: "Total Points Earned", value: "{{total_points_earned}}" },
+    { label: "Total Visits", value: "{{total_visits}}" },
+  ];
+
+
+  const birthdayTokenOptions: DropdownOption[] = [
+    { label: "Select a token", value: "" },
+    { label: "Business Name", value: "{{business_name}}" },
+    { label: "First Name", value: "{{first_name}}" },
+    { label: "Last Name", value: "{{last_name}}" },
+    { label: "Current Point Total", value: "{{current_point_total}}" },
+    { label: "New Point Total", value: "{{new_point_total}}" },
+    { label: "Total Points Earned", value: "{{total_points_earned}}" },
+    { label: "New Total Points Earned", value: "{{new_total_points_earned}}" },
+    { label: "Total Visits", value: "{{total_visits}}" },
+    { label: "Birthday Point Number", value: "{{birthday_point_number}}" },
+  ];
+
+  const rewardTokenOptions: DropdownOption[] = [
+    { label: "Select a token", value: "" },
+    { label: "Business Name", value: "{{business_name}}" },
+    { label: "First Name", value: "{{first_name}}" },
+    { label: "Last Name", value: "{{last_name}}" },
+    { label: "Current Point Total", value: "{{current_point_total}}" },
+    { label: "New Point Total", value: "{{new_point_total}}" },
+    { label: "Total Points Earned", value: "{{total_points_earned}}" },
+    { label: "New Total Points Earned", value: "{{new_total_points_earned}}" },
+    { label: "Total Visits", value: "{{total_visits}}" },
+    { label: "Current Points Redeemed", value: "{{current_points_redeemed}}" },
+    { label: "Name of Reward Redeemed", value: "{{reward_name}}" },
   ];
 
 
@@ -186,6 +246,7 @@ const MessageCell: React.FC<MessageCellProps> = ({
     editingIndex,
     setEditingIndex,
     index,
+    tokenOptions
   }) => {
 
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -367,7 +428,6 @@ useEffect(() => {
                 options={tokenOptions} // Replace with your actual token options
                 disabled={!isEditing}
             />
-
                 <Textarea
                     value={stagedMessage}
                     onChange={handleTextareaChange}
@@ -376,7 +436,6 @@ useEffect(() => {
                     disabled={!isEditing}
                     ref={textareaRef}
                 />
-
                 <TextMessageBottom>
                     <Text 
                         text={triggeredMessageDefaultEnd1}
