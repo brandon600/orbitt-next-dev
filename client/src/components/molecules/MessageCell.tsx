@@ -8,6 +8,7 @@ import Text from '../subatomic/Text'
 import ToggleSwitch from '../atoms/ToggleSwitch';
 import { TriggeredMessageData } from '@/types/TriggeredMessageData';
 import { useStore, AppState } from '../../store/store'; // Import your store
+import DropdownField, { DropdownOption } from '../atoms/DropdownField';
 
 interface MessageCellProps extends TriggeredMessageData {
     onTriggeredMessageToggleChange: (index: number, newValue: boolean) => void;
@@ -16,6 +17,17 @@ interface MessageCellProps extends TriggeredMessageData {
     hasPendingMessageChanges: boolean; // And this property
     setEditingIndex: (index: number | null) => void;
 }
+
+const tokenOptions: DropdownOption[] = [
+    { label: "Select a token", value: "" },
+    { label: "First Name", value: "{{first_name}}" },
+    { label: "Last Name", value: "{{last_name}}" },
+    { label: "Current Reward Number", value: "{{current_reward_number}}" },
+    { label: "Total Rewards Earned", value: "{{total_rewards_earned}}" },
+    { label: "Total Visits", value: "{{total_visits}}" },
+    { label: "Current Points Given", value: "{{current_points_given}}" },
+    { label: "New Point Total", value: "{{new_point_total}}" },
+  ];
 
 
 const MessageCellContainer = styled.div`
@@ -159,11 +171,6 @@ const TextMessageBottom = styled.div`
     }
 `
 
-
-const handleClicked = () => {
-    console.log('Clicked');
-}
-
 const MessageCell: React.FC<MessageCellProps> = ({
     messageNumberId: triggeredMessageNumberId, 
     messageTitle: triggeredMessageTitle, 
@@ -188,6 +195,53 @@ const MessageCell: React.FC<MessageCellProps> = ({
     const [isActive, setIsActive] = useState(triggeredMessageActive);
     const [isDisabled, setIsDisabled] = useState(false);
     const { showToast } = useStore((state: AppState) => ({ showToast: state.showToast }));
+
+
+    //NEW
+    const [cursorPosition, setCursorPosition] = useState<number>(0);
+    const [selectedToken, setSelectedToken] = useState<string>('');
+
+    //NEW
+    const handleTokenClick = (token: string) => {
+        const messageBeforeCursor = stagedMessage.substring(0, cursorPosition);
+        const messageAfterCursor = stagedMessage.substring(cursorPosition);
+        const newMessage = `${messageBeforeCursor}${token}${messageAfterCursor}`;
+        setStagedMessage(newMessage);
+    
+        const newCursorPosition = cursorPosition + token.length;
+        setCursorPosition(newCursorPosition);
+    
+        textareaRef.current?.focus();
+        textareaRef.current?.setSelectionRange(newCursorPosition, newCursorPosition);
+    };
+    
+
+    //NEW
+    const handleTextareaClick = (event: React.MouseEvent<HTMLTextAreaElement>) => {
+        setCursorPosition(event.currentTarget.selectionStart);
+    };
+
+    //NEW
+    const handleTextareaChange = (newValue: string) => {
+        setStagedMessage(newValue);
+    };
+      
+    
+    //NEW
+    const handleKeyUp = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (textareaRef.current) {
+            setCursorPosition(textareaRef.current.selectionStart);
+        }
+    };    
+
+    //NEW
+    const handleDropdownChange = (value: string) => {
+        handleTokenClick(value); // Insert the token where the cursor is
+        setSelectedToken(''); // Reset the dropdown to the placeholder value
+    };
+    
+    
+
 
     /*
 useEffect(() => {
@@ -306,12 +360,22 @@ useEffect(() => {
                 />
             </TextMessageTop>
             <TextareaAndButtons>
+            <DropdownField 
+                value={selectedToken} 
+                onChange={handleDropdownChange}
+                useDefaultDropdown={false}
+                options={tokenOptions} // Replace with your actual token options
+            />
+
                 <Textarea
                     value={stagedMessage}
-                    onChange={(value) => setStagedMessage(value)}
+                    onChange={handleTextareaChange}
+                    onKeyUp={handleKeyUp}
+                    onClick={handleTextareaClick}
                     disabled={!isEditing}
                     ref={textareaRef}
                 />
+
                 <TextMessageBottom>
                     <Text 
                         text={triggeredMessageDefaultEnd1}
