@@ -35,6 +35,10 @@ const SentMessageSchema = new Schema ({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
+    customerReceived: {
+        type: Schema.Types.ObjectId,
+        ref: 'customers'
+    },
     customersReceived: [{ type: Schema.Types.ObjectId, ref: 'customers' }]
 });
 

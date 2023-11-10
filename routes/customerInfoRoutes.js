@@ -286,7 +286,7 @@ module.exports = (app) => {
                 messageContent: completeSignUpMessage,
                 messageDelay: 0,
                 userClass: user,
-                customersReceived: customersReceivedArray,
+                customerReceived: newCustomer,
                 });
     
                 await newSentMessage.save();
@@ -481,7 +481,7 @@ module.exports = (app) => {
                     messageContent: messageContent,
                     messageDelay: 0,
                     userClass: user,
-                    customersReceived: [customer],
+                    customerReceived: customer,
                 });
     
                 await newSentMessage.save();
@@ -596,7 +596,7 @@ module.exports = (app) => {
                     messageContent: messageContent,
                     messageDelay: 0,
                     userClass: user,
-                    customersReceived: [customer],
+                    customerReceived: customer,
                 });
     
                 await newSentMessage.save();

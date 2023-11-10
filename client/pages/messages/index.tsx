@@ -141,11 +141,11 @@ const rewardTokenOptions: DropdownOption[] = [
 }
 
 const tokenOptionsMapping: Record<string, DropdownOption[]> = {
-  1: transactionTokenOptions,
-  2: signUpTokenOptions,
-  3: atRiskTokenOptions,
+  1: signUpTokenOptions,
+  2: transactionTokenOptions,
+  3: rewardTokenOptions,
   4: birthdayTokenOptions,
-  5: rewardTokenOptions
+  5: atRiskTokenOptions,
 };
 
 function Messages( { triggeredMessagesData: initialTriggeredMessagesData, userData }: MessagesProps) {
