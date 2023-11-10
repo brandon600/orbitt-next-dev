@@ -15,6 +15,7 @@ interface DropdownFieldProps {
   required?: boolean; // Make it possible to mark the field as required
   useDefaultDropdown: boolean;
   options?: DropdownOption[];
+  disabled?: boolean;
 }
 
 const DropdownFieldContainer = styled.div`
@@ -134,7 +135,8 @@ const DropdownField: React.FC<DropdownFieldProps & { useDefaultDropdown: boolean
   label,
   required,
   useDefaultDropdown,
-  options = []
+  options = [],
+  disabled = false
 }) => {
 
   const DefaultDropdown = () => {
@@ -147,6 +149,7 @@ const DropdownField: React.FC<DropdownFieldProps & { useDefaultDropdown: boolean
           value={value}
           onChange={(e) => onChange(e.target.value)}
           required={required} // Add the 'required' attribute conditionally
+          disabled={disabled}
         >
           <option value="value1">Value 1</option>
           <option value="value2">Value 2</option>
@@ -174,6 +177,7 @@ const DropdownField: React.FC<DropdownFieldProps & { useDefaultDropdown: boolean
           value={value}
           onChange={(e) => onChange(e.target.value)}
           required={required} // Add the 'required' attribute conditionally
+          disabled={disabled}
         >
           {renderOptions(options)}
         </DropdownFieldSelect2>

@@ -365,6 +365,7 @@ useEffect(() => {
                 onChange={handleDropdownChange}
                 useDefaultDropdown={false}
                 options={tokenOptions} // Replace with your actual token options
+                disabled={!isEditing}
             />
 
                 <Textarea
