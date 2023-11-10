@@ -19,76 +19,6 @@ interface MessageCellProps extends TriggeredMessageData {
     tokenOptions: DropdownOption[];
 }
 
-const tokenOptions: DropdownOption[] = [
-    { label: "Select a token", value: "" },
-    { label: "First Name", value: "{{first_name}}" },
-    { label: "Last Name", value: "{{last_name}}" },
-    { label: "Current Reward Number", value: "{{current_reward_number}}" },
-    { label: "Total Rewards Earned", value: "{{total_rewards_earned}}" },
-    { label: "Total Visits", value: "{{total_visits}}" },
-    { label: "Current Points Given", value: "{{current_points_given}}" },
-    { label: "New Point Total", value: "{{new_point_total}}" },
-  ];
-
-  const transactionTokenOptions: DropdownOption[] = [
-    { label: "Select a token", value: "" },
-    { label: "Business Name", value: "{{business_name}}" },
-    { label: "First Name", value: "{{first_name}}" },
-    { label: "Last Name", value: "{{last_name}}" },
-    { label: "Current Point Total", value: "{{current_point_total}}" },
-    { label: "New Point Total", value: "{{new_point_total}}" },
-    { label: "Total Points Earned", value: "{{total_points_earned}}" },
-    { label: "New Total Points Earned", value: "{{new_total_points_earned}}" },
-    { label: "Total Visits", value: "{{total_visits}}" },
-    { label: "Current Points Given", value: "{{current_points_given}}" },
-  ];
-
-  const signUpTokenOptions: DropdownOption[] = [
-    { label: "Select a token", value: "" },
-    { label: "Business Name", value: "{{business_name}}" },
-    { label: "First Name", value: "{{first_name}}" },
-    { label: "Last Name", value: "{{last_name}}" },
-    { label: "Current Points Given", value: "{{current_points_given}}" },
-  ];
-
-  const atRiskTokenOptions: DropdownOption[] = [
-    { label: "Select a token", value: "" },
-    { label: "Business Name", value: "{{business_name}}" },
-    { label: "First Name", value: "{{first_name}}" },
-    { label: "Last Name", value: "{{last_name}}" },
-    { label: "Current Point Total", value: "{{current_point_total}}" },
-    { label: "Total Points Earned", value: "{{total_points_earned}}" },
-    { label: "Total Visits", value: "{{total_visits}}" },
-  ];
-
-
-  const birthdayTokenOptions: DropdownOption[] = [
-    { label: "Select a token", value: "" },
-    { label: "Business Name", value: "{{business_name}}" },
-    { label: "First Name", value: "{{first_name}}" },
-    { label: "Last Name", value: "{{last_name}}" },
-    { label: "Current Point Total", value: "{{current_point_total}}" },
-    { label: "New Point Total", value: "{{new_point_total}}" },
-    { label: "Total Points Earned", value: "{{total_points_earned}}" },
-    { label: "New Total Points Earned", value: "{{new_total_points_earned}}" },
-    { label: "Total Visits", value: "{{total_visits}}" },
-    { label: "Birthday Point Number", value: "{{birthday_point_number}}" },
-  ];
-
-  const rewardTokenOptions: DropdownOption[] = [
-    { label: "Select a token", value: "" },
-    { label: "Business Name", value: "{{business_name}}" },
-    { label: "First Name", value: "{{first_name}}" },
-    { label: "Last Name", value: "{{last_name}}" },
-    { label: "Current Point Total", value: "{{current_point_total}}" },
-    { label: "New Point Total", value: "{{new_point_total}}" },
-    { label: "Total Points Earned", value: "{{total_points_earned}}" },
-    { label: "New Total Points Earned", value: "{{new_total_points_earned}}" },
-    { label: "Total Visits", value: "{{total_visits}}" },
-    { label: "Current Points Redeemed", value: "{{current_points_redeemed}}" },
-    { label: "Name of Reward Redeemed", value: "{{reward_name}}" },
-  ];
-
 
 const MessageCellContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -200,45 +130,24 @@ const ButtonContainer = styled.div`
 }
 `
 
-const TextMessageTop = styled.div`
+const DropdownFieldContainer = styled.div`
     @media ${StyledMediaQuery.XS} {
         display: flex;
-        padding: 0;
-        margin: 0;
+        width: 100%;
+    }
 
-        p {
-            color: ${Colors.neutral700};
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 26px;
-        }
+    @media ${StyledMediaQuery.S} {
+        width: 320px;
     }
 `
 
-const TextMessageBottom = styled.div`
-    @media ${StyledMediaQuery.XS} {
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-        margin: 0;
 
-        p {
-            color: ${Colors.neutral700};
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 26px;
-        }
-    }
-`
 
 const MessageCell: React.FC<MessageCellProps> = ({
     messageNumberId: triggeredMessageNumberId, 
     messageTitle: triggeredMessageTitle, 
     messageSubtitle: triggeredMessageSubtitle,
-    textMessageDefaultTextStart: triggeredMessageDefaultStart,
     textMessageCustomText: triggeredMessageCustomText,
-    textMessageDefaultTextEnd1: triggeredMessageDefaultEnd1,
-    textMessageDefaultTextEnd2: triggeredMessageDefaultEnd2,
     active: triggeredMessageActive,
     onTriggeredMessageToggleChange,
     originalTriggeredMessageValue,
@@ -415,19 +324,16 @@ useEffect(() => {
             />
         </MessageTop>
         <MessageContainer>
-            <TextMessageTop>
-                <Text 
-                    text={triggeredMessageDefaultStart} 
-                />
-            </TextMessageTop>
             <TextareaAndButtons>
-            <DropdownField 
-                value={selectedToken} 
-                onChange={handleDropdownChange}
-                useDefaultDropdown={false}
-                options={tokenOptions} // Replace with your actual token options
-                disabled={!isEditing}
-            />
+            <DropdownFieldContainer>
+                <DropdownField 
+                    value={selectedToken} 
+                    onChange={handleDropdownChange}
+                    useDefaultDropdown={false}
+                    options={tokenOptions} // Replace with your actual token options
+                    disabled={!isEditing}
+                />
+            </DropdownFieldContainer>
                 <Textarea
                     value={stagedMessage}
                     onChange={handleTextareaChange}
@@ -436,14 +342,6 @@ useEffect(() => {
                     disabled={!isEditing}
                     ref={textareaRef}
                 />
-                <TextMessageBottom>
-                    <Text 
-                        text={triggeredMessageDefaultEnd1}
-                    />
-                    <Text 
-                        text={triggeredMessageDefaultEnd2}
-                    />
-                </TextMessageBottom>
                 {isEditing ? (
                     <>
                     <BottomButtons>

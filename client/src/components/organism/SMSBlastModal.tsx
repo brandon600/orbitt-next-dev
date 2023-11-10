@@ -107,6 +107,17 @@ const BlastTextareaContainer = styled.div`
     }
 `
 
+const DropdownFieldContainer = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        width: 100%;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        width: 320px;
+    }
+`
+
 const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomers }) => {
     const [blastMessage, setBlastMessage] = useState('');
     const [cursorPosition, setCursorPosition] = useState(0);
@@ -204,13 +215,15 @@ const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomer
                     text={`You've selected ${selectedCustomers.length} customer(s) to send this SMS Blast message to`}
                 />
             </BlastModalLabel>
-            <DropdownField 
-                value={selectedToken} 
-                onChange={handleDropdownChange}
-                label="" 
-                useDefaultDropdown={false} 
-                options={tokenOptions}
-            />
+            <DropdownFieldContainer>
+                <DropdownField 
+                    value={selectedToken} 
+                    onChange={handleDropdownChange}
+                    label="" 
+                    useDefaultDropdown={false} 
+                    options={tokenOptions}
+                />
+            </DropdownFieldContainer>
             <BlastTextareaContainer>
                 <Textarea 
                     ref={textAreaRef}
