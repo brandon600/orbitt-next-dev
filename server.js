@@ -159,6 +159,9 @@ const sendBirthdayMessageToCustomer = async (user, customer, messageTemplate, re
       customerReceived: customer
     });
     await sentMessage.save();
+
+    customer.receivedMessages.unshift(sentMessage);
+    await customer.save();
   } catch (error) {
     console.error("Error sending message:", error);
   }
@@ -254,6 +257,9 @@ async function sendMessageToAtRiskCustomer(user, customer, messageTemplate) {
             customerReceived: customer
         });
         await sentMessage.save();
+
+        customer.receivedMessages.unshift(sentMessage);
+        await customer.save();
     } catch (error) {
         console.error("Error sending message:", error);
     }
@@ -266,7 +272,7 @@ async function findAtRiskUsersAndCustomers() {
         const sixtyDaysAgo = new Date(currentDate - SIXTY_DAYS_IN_MS);
 
         for (const user of users) {
-            const triggeredMessage = await TriggeredMessage.findOne({ messageNumberId: 3, user: user.userid });
+            const triggeredMessage = await TriggeredMessage.findOne({ messageNumberId: 5, user: user.userid });
 
             if (triggeredMessage && triggeredMessage.active) {
                 const customers = await Customer.find({ user: user.userid });

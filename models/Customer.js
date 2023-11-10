@@ -94,6 +94,7 @@ const CustomerSchema = new Schema ({
     },
     visits: [{ type: Schema.Types.ObjectId, ref: 'visits' }],
     receivedBlasts: [{ type: Schema.Types.ObjectId, ref: 'blastmessages' }],
+    receivedMessages: [{ type: Schema.Types.ObjectId, ref: 'sentmessages' }],
     updates: [{ type: Schema.Types.ObjectId, ref: 'updatedcustomers' }]
 });
 
