@@ -290,10 +290,7 @@ console.log(triggeredMessagesData);
               messageNumberId: triggeredMessageNumberId,
               messageTitle: triggeredMessageTitle,
               messageSubtitle: triggeredMessageSubtitle,
-              textMessageDefaultTextStart: triggeredMessageDefaultStart,
               textMessageCustomText: triggeredMessageCustomText,
-              textMessageDefaultTextEnd1: triggeredMessageDefaultEnd1,
-              textMessageDefaultTextEnd2: triggeredMessageDefaultEnd2,
               active: triggeredMessageActive
             }, index) => {
               // Determine the correct dropdown options for this message
@@ -306,10 +303,7 @@ console.log(triggeredMessagesData);
                   messageNumberId={triggeredMessageNumberId}
                   messageTitle={triggeredMessageTitle}
                   messageSubtitle={triggeredMessageSubtitle}
-                  textMessageDefaultTextStart={triggeredMessageDefaultStart}
                   textMessageCustomText={triggeredMessageCustomText}
-                  textMessageDefaultTextEnd1={triggeredMessageDefaultEnd1}
-                  textMessageDefaultTextEnd2={triggeredMessageDefaultEnd2}
                   active={currentTriggeredMessageToggles[index]}
                   onTriggeredMessageToggleChange={handleTriggeredMessagePendingChange}
                   originalTriggeredMessageValue={originalTriggeredMessageToggles[index]}

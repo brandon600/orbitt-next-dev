@@ -305,7 +305,7 @@ async function findAtRiskUsersAndCustomers() {
 
 
 
-  cron.schedule('0 9 * * *', async () => {
+cron.schedule('0 9 * * *', async () => {
     findBirthdayUsersAndCustomers();
     findAtRiskUsersAndCustomers();
  });
