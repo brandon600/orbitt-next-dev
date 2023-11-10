@@ -174,6 +174,8 @@ module.exports = (app) => {
           rewardValueAfter: updatedReward.rewardValue,
           rewardActiveBefore: originalReward.rewardActive,
           rewardActiveAfter: updatedReward.rewardActive,
+          reward: originalReward,
+          rewardid: originalReward.rewardid
           // ... other fields that rely on the updated reward
         });
     

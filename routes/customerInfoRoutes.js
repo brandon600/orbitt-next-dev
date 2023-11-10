@@ -167,7 +167,7 @@ module.exports = (app) => {
             const signUpDate = new Date();
             const companyNameText = user.companyName;
     
-            const filter = { rewardNumberId: 2, user: user.userid };
+            const filter = { rewardNumberId: 1, user: user.userid };
             const originalSignUpReward = await OutboundReward.findOne(filter);
 
 
@@ -333,7 +333,7 @@ module.exports = (app) => {
         console.log('userid', userId);
     
         try {
-            const purchaseReward = await OutboundReward.findOne({ rewardNumberId: 1, user: userId.toString() });
+            const purchaseReward = await OutboundReward.findOne({ rewardNumberId: 2, user: userId.toString() });
             if (!purchaseReward) {
                 return res.status(404).json({ error: 'Data not found' });
             }

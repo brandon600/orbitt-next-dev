@@ -44,6 +44,9 @@ const UserSchema = new Schema ({
     },
     termsConditions: {
         type: String
+    },
+    userReceivedMessages: {
+        type: Array
     }
 });
 
