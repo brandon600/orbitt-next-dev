@@ -433,7 +433,20 @@ module.exports = (app) => {
             const myPointsMessage = await TriggeredMessage.findOne({ messageTitle: 'Transaction Message', user: user.userid });
     
             if (myPointsMessage && myPointsMessage.active) {
-                const messageContent = `Congratulations! You've earned ${points} point(s), bringing your total to ${updatedPoints} point(s). ${myPointsMessage.textMessageCustomText} ${myPointsMessage.textMessageDefaultTextEnd1}`;
+
+                let personalizedMessage = myPointsMessage.textMessageCustomText;
+
+                personalizedMessage = personalizedMessage.replace(/{{first_name}}/g, customer.firstName);
+                personalizedMessage = personalizedMessage.replace(/{{last_name}}/g, customer.lastName);
+                personalizedMessage = personalizedMessage.replace(/{{current_reward_number}}/g, updatedPoints.toString());
+                personalizedMessage = personalizedMessage.replace(/{{total_rewards_earned}}/g, updatedStarsEarned.toString());
+                personalizedMessage = personalizedMessage.replace(/{{total_visits}}/g, customer.totalVisits.toString());
+
+                personalizedMessage = personalizedMessage.replace(/{{current_points_given}}/g, points.toString());
+                personalizedMessage = personalizedMessage.replace(/{{new_point_total}}/g, updatedPoints.toString());
+
+                const messageContent = `${personalizedMessage}`;
+
                 const sendNumber = customer.fullPhoneNumber;
                 console.log(sendNumber)
 
