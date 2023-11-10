@@ -187,7 +187,7 @@ module.exports = (app) => {
           // Generate phone numbers from the customers
           const cusNumberArray = customersToSend.map(customer => `${customer.fullPhoneNumber}`);
   
-          cusNumberArray.forEach(async(thisNumber, index) => {
+          cusNumberArray.forEach((thisNumber, index) => {
             const customer = customersToSend[index];
             let personalizedMessage = messageContent;
             personalizedMessage = personalizedMessage.replace(/{{first_name}}/g, customer.firstName);
