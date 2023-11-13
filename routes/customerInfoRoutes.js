@@ -508,6 +508,16 @@ module.exports = (app) => {
             console.error(err);
             res.status(500).send({ success: false, message: 'Error processing request.' });
         }
+
+        try {
+            await Reward.updateMany(
+                {}, // This empty object means "match all documents"
+                { $set: { redemptions: 0 } } // Set 'redemptions' to 0 for all documents
+            );
+            console.log('All Rewards updated successfully.');
+        } catch (error) {
+            console.error('Error updating Rewards:', error);
+        }
     });
 
 
@@ -537,6 +547,9 @@ module.exports = (app) => {
             customer.totalVisits = customer.totalVisits + 1;
             customer.lastTransactionDate = uniqid;
             await customer.save();
+
+            reward.redemptions = reward.redemptions + 1;
+            await reward.save();
     
             const visit = new Visit({
                 _id: new mongoose.Types.ObjectId(),
