@@ -68,6 +68,7 @@ module.exports = (app) => {
           rewardValue: rewardDetails.value,
           rewardTerms: rewardDetails.terms,
           rewardActive: true,
+          redemptions: 0
       });
       newReward.save()
       .then(() => {
