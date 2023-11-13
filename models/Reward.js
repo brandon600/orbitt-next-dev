@@ -43,6 +43,9 @@ const RewardSchema = new Schema ({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
+    redemptions: {
+        type: Number
+    },
     updates: [{ type: Schema.Types.ObjectId, ref: 'updatedrewards'}]
 });
 
