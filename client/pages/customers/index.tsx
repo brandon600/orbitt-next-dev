@@ -274,12 +274,16 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
 
     const handleSelectAllCustomers = (isSelected: boolean) => {
         if (isSelected) {
-          const allCustomerIds = filteredCustomers.map(customer => customer._id);
+          const allCustomerIds = filteredCustomers.map(customer => customer.customerid);
           setSelectedCustomers(allCustomerIds);
         } else {
           setSelectedCustomers([]);
         }
       };
+
+      const resetSelectedCustomers = () => {
+        setSelectedCustomers([]);
+    };
 
       const areAllCustomersSelected = filteredCustomers.length > 0 && selectedCustomers.length === filteredCustomers.length;
     
@@ -287,7 +291,12 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         <FlexDiv>
             <AddCusButtonWrapper>
             </AddCusButtonWrapper>
-            { (isBlastModalOpen ) && <SMSBlastModal onClose={toggleBlastModal} selectedCustomers={selectedCustomers} />}
+            { (isBlastModalOpen ) && 
+                <SMSBlastModal 
+                    onBlastSent={resetSelectedCustomers} 
+                    onClose={toggleBlastModal} 
+                    selectedCustomers={selectedCustomers} 
+                />}
             <AnimatePresence>
                 {isAddCustomerFormOpen && <AddCustomerForm onClose={handleAddCustomerFormClose} />}
             </AnimatePresence>

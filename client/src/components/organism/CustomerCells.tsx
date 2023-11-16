@@ -74,7 +74,7 @@ const CustomerCells: React.FC<CustomerCellsProps> = ({ onSelectAllCustomers, are
             {customersData.map((customer, index) => (
             <CustomerCell
                 _id={customer._id}
-                key={index}
+                 key={customer.customerid}
                 index={index}
                 visits={customer.visits}
                 receivedBlasts={customer.receivedBlasts}
@@ -102,7 +102,7 @@ const CustomerCells: React.FC<CustomerCellsProps> = ({ onSelectAllCustomers, are
                 birthdayYear={customer.birthdayYear}
                 fullBirthday={customer.fullBirthday}
                 onCustomerSelection={onCustomerSelection}
-                isSelected={selectedCustomers.includes(customer._id)}
+                isSelected={selectedCustomers.includes(customer.customerid)}
             />
         ))}
         </CustomerCellsList>
