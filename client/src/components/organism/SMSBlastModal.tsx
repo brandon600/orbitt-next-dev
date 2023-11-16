@@ -12,6 +12,7 @@ import DropdownField, { DropdownOption } from '../atoms/DropdownField';
 type SMSBlastModalProps = {
     onClose: () => void;
     selectedCustomers: string[];
+    onBlastSent: () => void;
 }
 
 const tokenOptions: DropdownOption[] = [
@@ -118,7 +119,7 @@ const DropdownFieldContainer = styled.div`
     }
 `
 
-const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomers }) => {
+const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomers, onBlastSent }) => {
     const [blastMessage, setBlastMessage] = useState('');
     const [cursorPosition, setCursorPosition] = useState(0);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -147,7 +148,8 @@ const SMSBlastModal: React.FC<SMSBlastModalProps> = ({ onClose, selectedCustomer
             if (!response.ok) {
                 throw new Error(blastData.message || 'Failed to send SMS.');
             }
-
+            onBlastSent();
+            showToast("SMS blast sent successfully!", 'success');
             console.log('SMS sent successfully!');
             onClose();  // Close the modal after sending
         } catch (error) {
