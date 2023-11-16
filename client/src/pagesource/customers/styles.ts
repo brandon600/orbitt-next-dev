@@ -90,9 +90,28 @@ const ButtonWrapper = motion(styled.div`
         align-self: flex-start; 
         position: fixed;
         right: 24px;
-        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.32);
+        border-radius: 6px;
     }
 `);
+
+const ButtonWrapBackground = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: none;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        display: flex;
+        align-self: flex-start; 
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        border-radius: 6px;
+        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.32);
+        background: ${Colors.primary100};
+        height: 56px;
+        width: 170px;
+    }
+`;
 
 const AddCusButtonWrapper = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -170,7 +189,6 @@ const BlastIconButton = motion(styled.div`
         align-items: center;
         border-radius: 50%;
         background: ${Colors.success700};
-        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.32);
 
         svg {
             width: 48px;
@@ -182,6 +200,7 @@ const BlastIconButton = motion(styled.div`
         width: 88px;
         height: 88px;
         left: 24px;
+        bottom: 148px;
 
         svg {
             width: 56px;
@@ -193,6 +212,34 @@ const BlastIconButton = motion(styled.div`
         display: none;
     }
 `)
+
+const BlastIconButtonBackground = styled.div`
+    @media ${StyledMediaQuery.XS} {
+        display: flex;
+        position: fixed;
+        z-index: 80;
+        bottom: 118px;
+        left: 16px;
+        width: 72px;
+        height: 72px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background: ${Colors.primary100};
+        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.32);
+    }
+
+    @media ${StyledMediaQuery.S} {
+        width: 88px;
+        height: 88px;
+        left: 24px;
+        bottom: 148px;
+    }
+
+    @media ${StyledMediaQuery.L} {
+        display: none;
+    }
+`
 
 const HideShowFilters = styled.div`
     @media ${StyledMediaQuery.XS} {
@@ -219,9 +266,11 @@ export {
     PageTitle, 
     FlexDiv, 
     FlexContainer, 
-    AddCusButtonWrapper, 
+    AddCusButtonWrapper,
+    ButtonWrapBackground, 
     ButtonWrapper, 
     BlastIconButton, 
+    BlastIconButtonBackground,
     TableAndSearch, 
     SearchAndFilters, 
     HideShowFilters, 

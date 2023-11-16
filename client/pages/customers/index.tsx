@@ -28,7 +28,7 @@ import { SMSIcon } from '@/components/subatomic/Icons/SMSIcon';
 import { useMemberAuth } from '../../src/util/global/globalHooks';
 import { GetServerSidePropsContext } from 'next';
 import Cookie from 'js-cookie';
-import { TitlePlusButton, PageTitle, FlexDiv, FlexContainer, AddCusButtonWrapper, ButtonWrapper, BlastIconButton, TableAndSearch, SearchAndFilters, HideShowFilters, LabelPlusCells, SelectedCustomersLabel } from '../../src/pagesource/customers/styles';
+import { TitlePlusButton, PageTitle, FlexDiv, FlexContainer, AddCusButtonWrapper, ButtonWrapper, ButtonWrapBackground, BlastIconButton, TableAndSearch, SearchAndFilters, HideShowFilters, LabelPlusCells, SelectedCustomersLabel, BlastIconButtonBackground } from '../../src/pagesource/customers/styles';
 
 interface CustomerProps {
     customersData: CustomerData[];
@@ -155,6 +155,10 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
 
     const [bottomValue, setBottomValue] = useState("118px");
 
+
+    // Set the bottom value based on the screen size for button. Saving code for if we need later.
+
+    /*
     useEffect(() => {
     const updateBottomValue = () => {
         if (window.innerWidth < 720) { // XS
@@ -172,6 +176,7 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
         window.removeEventListener('resize', updateBottomValue);
     };
     }, []);
+    */
 
    // const savedUserData = JSON.parse(Cookie.get('user') || '{}');
    // console.log(savedUserData)
@@ -240,6 +245,10 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
     }
 
     const toggleBlastModal = () => {
+        if (selectedCustomers.length === 0) {
+            showToast("Please select at least one customer to send a blast to.", 'info');
+            return;
+        }
         setIsBlastModalOpen(prevState => !prevState);
     }
 
@@ -291,11 +300,11 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
             )}
             </AnimatePresence>
             <AnimatePresence>
-                {selectedCustomers.length > 0 && (
+                <ButtonWrapBackground>
                     <ButtonWrapper
-                        initial={{ bottom: "0px", opacity: 0 }}  // initial state (hidden to the right)
-                        animate={{ bottom: "24px", opacity: 1 }}  // end state (appears from the right)
-                        exit={{ bottom: "0px", opacity: 0 }}  // exit state (disappears to the right)
+                        initial={{ bottom: "24px", opacity: selectedCustomers.length > 0 ? 1 : 0.5 }}  // initial state (hidden to the right)
+                        animate={{ bottom: "24px", opacity: selectedCustomers.length > 0 ? 1 : 0.5 }}  // end state (appears from the right)
+                        exit={{ bottom: "24px", opacity: 0 }}  // exit state (disappears to the right)
                         transition={{ duration: 0.4, ease: [0.88, 0, 0.16, 1] }} // animation takes 400ms with easeInOut easing
                     >
                         <Button
@@ -306,20 +315,20 @@ function Customers( { customersData, receivedBlastsData, visitsData, sentMessage
                             onClick={toggleBlastModal}
                         />
                     </ButtonWrapper>
-                )}
+                </ButtonWrapBackground>
             </AnimatePresence>
             <AnimatePresence>
-                {selectedCustomers.length > 0 && (
+                <BlastIconButtonBackground>
                     <BlastIconButton
                         onClick={toggleBlastModal}
-                        initial={{ bottom: "0px", opacity: 0 }}  // initial state (hidden to the right)
-                        animate={{ bottom: bottomValue, opacity: 1 }}  // end state (appears from the right)
-                        exit={{ bottom: "0px", opacity: 0 }}  // exit state (disappears to the right)
-                        transition={{ duration: 0.4, ease: [0.88, 0, 0.16, 1] }} // animation takes 400ms with easeInOut easing
+                        initial={{ opacity: selectedCustomers.length > 0 ? 1 : 0.5 }}  // Opacity changes based on selection
+                        animate={{ opacity: selectedCustomers.length > 0 ? 1 : 0.5 }}  // Same here
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4, ease: [0.88, 0, 0.16, 1] }}
                     >
-                       <SMSIcon fill={Colors.shades100} />
-                   </BlastIconButton>
-                )}
+                        <SMSIcon fill={Colors.shades100} />
+                    </BlastIconButton>
+                </BlastIconButtonBackground>
             </AnimatePresence>
             <GlobalStyle />
             <FlexContainer>
