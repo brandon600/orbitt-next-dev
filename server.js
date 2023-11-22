@@ -132,7 +132,7 @@ const sendBirthdayMessageToCustomer = async (user, customer, messageTemplate, re
 
   const messageContent = `${personalizedMessage}`;
 
-
+//
   try {
     /*
     await client.messages.create({
